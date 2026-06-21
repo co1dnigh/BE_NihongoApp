@@ -1,0 +1,42 @@
+CREATE TABLE gacha_items (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    item_type ENUM('FREEZE_STREAK', 'REFILL_HEARTS', 'COSMETIC') NOT NULL,
+    drop_rate DECIMAL(5,4) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    deleted_at DATETIME NULL DEFAULT NULL
+);
+
+CREATE TABLE user_inventories (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    item_id BIGINT NOT NULL,
+    quantity INT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (item_id) REFERENCES gacha_items(id) ON DELETE CASCADE,
+    UNIQUE KEY uk_user_item (user_id, item_id)
+);
+
+CREATE TABLE coin_transactions (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    amount INT NOT NULL, -- Âm là trừ tiền, Dương là cộng tiền
+    transaction_type ENUM('EARN_LESSON', 'BUY_ITEM', 'STREAK_BONUS', 'ADMIN_ADJUST') NOT NULL,
+    reference_id BIGINT COMMENT 'ID tham chiếu tới bài học hoặc vật phẩm',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE inventory_transactions (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    item_id BIGINT NOT NULL,
+    quantity_change INT NOT NULL,
+    source_type ENUM('GACHA_DROP', 'STORE_BUY', 'SYSTEM_GIFT', 'CONSUMED') NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (item_id) REFERENCES gacha_items(id) ON DELETE CASCADE
+);
