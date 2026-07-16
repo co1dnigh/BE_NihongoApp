@@ -1,8 +1,6 @@
 package com.example.nihongo_app.dto.request;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,15 +10,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegisterRequest {
-
-    @Email
-    @NotBlank
-    private String email;
+public class UpdatePhoneRequest {
 
     @NotBlank
-    private String password;
-
-    @Size(max = 100)
-    private String displayName;
+    private String phoneNumber;
 }
