@@ -1,0 +1,4 @@
+INSERT IGNORE INTO learning_items (id, item_type) VALUES (1,'VOCAB'),(2,'VOCAB'),(3,'GRAMMAR'),(4,'GRAMMAR');
+INSERT IGNORE INTO vocabulary (id, kana, kanji, meaning_vi, jlpt_level, learning_item_id) VALUES (1,'ohayo',NULL,'buoi sang','N5',1),(2,'konnichiwa',NULL,'chao chieu','N5',2),(3,'arigato',NULL,'cam on','N5',3);
+INSERT IGNORE INTO grammar_points (id, pattern, explanation_vi, jlpt_level, learning_item_id) VALUES (1,'desu','dong tu la','N5',4),(2,'masu-form','polite form','N5',3);
+INSERT IGNORE INTO questions (id, lesson_id, reference_type, reference_id, question_type, question_text, options_json, correct_answer) VALUES (1,1,'VOCAB',1,'MULTIPLE_CHOICE','ohayo nghia la?','["Buoi sang","Chao chieu"]','Buoi sang'),(2,1,'VOCAB',2,'MULTIPLE_CHOICE','konnichiwa nghia?','["Chao chieu","Xin loi"]','Chao chieu'),(3,1,'GRAMMAR',1,'MULTIPLE_CHOICE','desu la?','["La","Di"]','La');

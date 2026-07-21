@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(docker compose -d 2>&1)",
+      "PowerShell(Edit 'd:\\\\DoAN\\\\docker-compose.yml' -replace '\"3307:3306\"', '\"3306:3306\"')",
+      "PowerShell(docker compose up -d)",
+      "PowerShell(docker compose down 2>&1)",
+      "PowerShell(docker compose up -d 2>&1)"
+    ]
+  }
+}

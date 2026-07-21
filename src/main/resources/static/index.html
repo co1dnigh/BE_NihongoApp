@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NIHONGO App</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px 60px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+        .status {
+            display: inline-block;
+            background: rgba(76, 175, 80, 0.3);
+            padding: 10px 20px;
+            border-radius: 25px;
+            margin-top: 20px;
+        }
+        .endpoints {
+            background: rgba(0,0,0,0.2);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+            text-align: left;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+        .endpoints h3 {
+            margin-top: 0;
+            color: #ffd700;
+        }
+        .endpoints p {
+            margin: 5px 0;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>日本語 NIHONGO App</h1>
+        <p class="subtitle">Học tiếng Nhật một cách thú vị! 🎌</p>
+        <div class="status">Server đang chạy trên port 8080</div>
+
+        <div class="endpoints">
+            <h3>📋 API Endpoints chính:</h3>
+            <p>POST /api/v1/auth/login — Đăng nhập</p>
+            <p>POST /api/v1/auth/refresh — Làm mới token</p>
+            <p>POST /api/v1/gacha/spin — Gacha</p>
+            <p>POST /api/v1/shop/purchase — Mua vật phẩm</p>
+            <p>POST /api/v1/lessons/{id}/complete — Hoàn thành bài học</p>
+            <p>GET /api/v1/wallet/balance — Kiểm tra số dư</p>
+            <p>GET /actuator/health — Kiểm tra health</p>
+        </div>
+    </div>
+</body>
+</html>

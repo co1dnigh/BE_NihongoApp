@@ -1,0 +1,46 @@
+spring:
+  application:
+    name: nihongo-app
+  datasource:
+    url: jdbc:mysql://localhost:3306/nihongo_app?useSSL=false&serverTimezone=Asia/Bangkok&allowPublicKeyRetrieval=true
+    username: app
+    password: app_pass
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+  flyway:
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    clean-disabled: true
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+server:
+  port: 8080
+
+app:
+  jwt:
+    secret: change-me-to-a-strong-secret-key-in-production
+    access-token-ttl-minutes: 15
+    refresh-token-ttl-days: 7
+  cors:
+    allowed-origins: http://localhost:3000,http://localhost:19006,http://localhost:8081,http://localhost:5173,http://localhost:4200
+  logging:
+    loki-url: http://localhost:3100/loki/api/v1/push
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  metrics:
+    export:
+      prometheus:
+        enabled: true

@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-Process -Name java -ErrorAction SilentlyContinue)",
+      "PowerShell(Stop-Process -Force -ErrorAction SilentlyContinue)",
+      "PowerShell(Start-Process \"C:\\\\Program Files\\\\Docker\\\\Docker\\\\Docker Desktop.exe\" -ErrorAction SilentlyContinue)",
+      "PowerShell(docker info 2>&1)",
+      "PowerShell(docker exec nihongo-mysql mysql -u app -papp_pass nihongo_app -e \"SELECT 1 AS connected;\" 2>&1)",
+      "PowerShell(curl -s http://localhost:8080/actuator/health 2>&1)",
+      "Bash(curl.exe -s http://localhost:8080/actuator/health)",
+      "PowerShell(docker exec nihongo-mysql mysql -u app -papp_pass nihongo_app -e \"SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema='nihongo_app' AND table_name LIKE '%refresh%';\" 2>&1)",
+      "PowerShell(docker exec nihongo-mysql mysql -u app -papp_pass nihongo_app -e \"SHOW TABLES LIKE '%refresh%'; DESCRIBE refresh_tokens;\" 2>&1)",
+      "PowerShell(cd d:\\\\DoAN; mvn clean package -DskipTests 2>&1 | Select-Object -Last 5; Get-Process -Name java -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue; Start-Sleep -Seconds 2; Start-Process java -ArgumentList \"-Xmx128m\",\"-Xms64m\",\"-XX:+UseSerialGC\",\"-XX:-UseG1GC\",\"-jar\",\"target/nihongo-app-0.1.0.jar\" -RedirectStandardOutput \"target/app2.out\" -RedirectStandardError \"target/app2.err\" -NoNewWindow; Write-Output \"App started, PID: $\\(\\(Get-Process java -ErrorAction SilentlyContinue\\).Id\\)\")",
+      "PowerShell(docker exec nihongo-mysql mysql -u app -papp_pass -e \"SELECT SCHEMA_NAME FROM information_schema.schemata WHERE schema_name='nihongo_app';\" 2>&1)",
+      "PowerShell(docker exec nihongo-mysql mysql -u app -papp_pass nihongo_app -e \"SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema='nihongo_app' AND TABLE_NAME LIKE '%REFRESH%';\" 2>&1)",
+      "PowerShell(docker exec nihongo-mysql mysql -u app -papp_pass nihongo_app -e \"SELECT TABLE_NAME, TABLE_SCHEMA FROM information_schema.tables WHERE table_schema='nihongo_app' ORDER BY TABLE_NAME;\" 2>&1)",
+      "PowerShell(Get-Process -Name java -ErrorAction SilentlyContinue | Select-Object Id,@{N='MemMB';E={[math]::Round\\($_.WorkingSet64/1MB\\)}},StartTime)",
+      "PowerShell(docker exec nihongo-mysql mysql -u app -papp_pass nihongo_app -e \"SHOW VARIABLES LIKE 'lower_case_table_names';\" 2>&1)",
+      "Bash(mysql.exe -u root --password=\"\" -e \"SELECT user,host FROM mysql.user;\")",
+      "PowerShell(mysqlsh.exe --uri root@localhost:3306 --password=\"\" -e \"SELECT user,host FROM mysql.user;\" 2>&1)",
+      "Bash(curl -s http://localhost:8080/actuator/health/db)",
+      "Bash(curl -s http://localhost:8080/actuator/health/redis)"
+    ]
+  }
+}
