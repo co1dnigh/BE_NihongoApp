@@ -9,12 +9,13 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserSearchResponse {
+public class UploadResponse {
 
-    private Long id;
-    private String displayName;
-    private String avatarUrl;
-    private Integer level;
+    private String fileUrl;
 
-    private boolean isFollowing;
+    private String fileName;
+
+    private String contentType;
+
+    private long size;
 }

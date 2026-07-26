@@ -3,3 +3,35 @@ spring:
     url: jdbc:mysql://localhost:3307/nihongo_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Ho_Chi_Minh
     username: ${DB_USERNAME:nihongo_user}
     password: ${DB_PASSWORD:1234}
+  flyway:
+    clean-disabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 5MB
+      max-request-size: 50MB
+
+app:
+  file:
+    # Duong dan tuyet doi den thu muc luu file (khong co dau '/' cuoi cung)
+    # Local: D:/Project/nihongo-app/uploads
+    # VPS:   /var/www/nihongo-app/uploads
+    # Hoac dung bien moi truong: ${UPLOAD_DIR:D:/Project/nihongo-app/uploads}
+    upload-dir: ${UPLOAD_DIR:D:/Project/nihongo-app/uploads}
+  jwt:
+    secret: change-me-in-dev-change-me-in-dev-change-me-in-dev
+    expiration-ms: 86400000
+
+logging:
+  level:
+    com.example.nihongo_app.security: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.web: INFO

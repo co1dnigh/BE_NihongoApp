@@ -1,46 +1,60 @@
 package com.example.nihongo_app.security;
 
-import com.example.nihongo_app.entity.User;
-import com.example.nihongo_app.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+/**
+ * JWT authentication filter. Loads user details via {@link UserDetailsService}.
+ *
+ * <p>This class is NOT annotated with {@code @Component} on purpose. Registering it via
+ * the {@code SecurityFilterChain} only prevents Spring Boot from auto-registering it as a
+ * global servlet filter (which would run twice and could clobber the SecurityContext).</p>
+ */
+@Slf4j
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
-    private final UserRepository userRepository;
+    private final UserDetailsService userDetailsService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    protected void doFilterInternal(@NonNull HttpServletRequest request,
+                                    @NonNull HttpServletResponse response,
+                                    @NonNull FilterChain filterChain)
             throws ServletException, IOException {
 
         String token = resolveToken(request);
+        log.debug("JWT filter processing {} tokenPresent={}", request.getRequestURI(), StringUtils.hasText(token));
+
         if (StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)) {
             String email = jwtTokenProvider.getEmailFromToken(token);
-            Optional<User> userOptional = userRepository.findByEmail(email);
-
-            if (userOptional.isPresent() && SecurityContextHolder.getContext().getAuthentication() == null) {
-                User user = userOptional.get();
+            try {
+                UserDetails userDetails = userDetailsService.loadUserByUsername(email);
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        user.getEmail(),
+                        userDetails,
                         null,
-                    List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole()))
+                        userDetails.getAuthorities()
                 );
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+                log.debug("JWT filter authenticated user={} authorities={}",
+                        email, userDetails.getAuthorities());
+            } catch (UsernameNotFoundException ex) {
+                log.debug("JWT filter: no user for email={}", email);
             }
         }
 

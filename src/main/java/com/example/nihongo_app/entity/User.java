@@ -2,12 +2,15 @@ package com.example.nihongo_app.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -49,6 +52,35 @@ public class User {
     @Column(nullable = false, length = 50)
     private String role;
 
+    // --- Gamification: NULL cho Admin, mặc định hợp lệ cho Learner ---
+    @Column(name = "level")
+    private Integer level;
+
+    @Column(name = "exp")
+    private Integer exp;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "current_league")
+    private League currentLeague;
+
+    @Column(name = "current_energy")
+    private Integer currentEnergy;
+
+    @Column(name = "max_energy")
+    private Integer maxEnergy;
+
+    @Column(name = "last_energy_reset_date")
+    private LocalDate lastEnergyResetDate;
+
+    @Column(name = "coins")
+    private Integer coins;
+
+    @Column(name = "current_streak")
+    private Integer currentStreak;
+
+    @Column(name = "longest_streak")
+    private Integer longestStreak;
+
     @Column(name = "created_at", insertable = false, updatable = false)
     private LocalDateTime createdAt;
 
@@ -66,6 +98,19 @@ public class User {
         }
         if (updatedAt == null) {
             updatedAt = now;
+        }
+
+        // Admin không chơi game → để NULL.
+        // Learner mặc định: level=1, exp=0, energy=25/25, coins=0, streak=0, league=BRONZE.
+        if ("LEARNER".equals(role)) {
+            if (level == null) level = 1;
+            if (exp == null) exp = 0;
+            if (currentLeague == null) currentLeague = League.BRONZE;
+            if (currentEnergy == null) currentEnergy = 25;
+            if (maxEnergy == null) maxEnergy = 25;
+            if (coins == null) coins = 0;
+            if (currentStreak == null) currentStreak = 0;
+            if (longestStreak == null) longestStreak = 0;
         }
     }
 

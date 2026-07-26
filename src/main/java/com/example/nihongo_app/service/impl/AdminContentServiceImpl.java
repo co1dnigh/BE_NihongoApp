@@ -1,0 +1,151 @@
+package com.example.nihongo_app.service.impl;
+
+import com.example.nihongo_app.dto.request.CreateLessonRequest;
+import com.example.nihongo_app.dto.request.CreateQuestionRequest;
+import com.example.nihongo_app.dto.request.CreateTopicRequest;
+import com.example.nihongo_app.dto.request.QuestionOptionRequest;
+import com.example.nihongo_app.dto.response.LessonResponse;
+import com.example.nihongo_app.dto.response.QuestionResponse;
+import com.example.nihongo_app.dto.response.TopicResponse;
+import com.example.nihongo_app.entity.Lesson;
+import com.example.nihongo_app.entity.LessonQuestion;
+import com.example.nihongo_app.entity.LessonQuestionOption;
+import com.example.nihongo_app.entity.Topic;
+import com.example.nihongo_app.repository.LessonQuestionOptionRepository;
+import com.example.nihongo_app.repository.LessonQuestionRepository;
+import com.example.nihongo_app.repository.LessonRepository;
+import com.example.nihongo_app.repository.TopicRepository;
+import com.example.nihongo_app.service.AdminContentService;
+import java.util.List;
+import java.util.stream.IntStream;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
+
+@Service
+@RequiredArgsConstructor
+public class AdminContentServiceImpl implements AdminContentService {
+
+    private final TopicRepository topicRepository;
+    private final LessonRepository lessonRepository;
+    private final LessonQuestionRepository questionRepository;
+    private final LessonQuestionOptionRepository optionRepository;
+
+    @Override
+    @Transactional
+    public TopicResponse createTopic(CreateTopicRequest request) {
+        Topic topic = topicRepository.save(Topic.builder()
+                .title(request.getTitle().trim())
+                .description(request.getDescription())
+                .orderIndex(request.getOrderIndex())
+                .build());
+        return toTopicResponse(topic);
+    }
+
+    @Override
+    @Transactional
+    public LessonResponse createLesson(CreateLessonRequest request) {
+        if (!topicRepository.existsById(request.getTopicId())) {
+            throw notFound("Topic not found: " + request.getTopicId());
+        }
+
+        Lesson.LessonType type = request.getLessonType();
+        Integer orderIndex = request.getOrderIndex();
+
+        if (type == Lesson.LessonType.JUMP_TEST) {
+            // JUMP_TEST không có toạ độ trên đường đi -> ép null
+            orderIndex = null;
+        } else if (orderIndex == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "orderIndex is required for " + type + " lessons");
+        }
+
+        Lesson lesson = lessonRepository.save(Lesson.builder()
+                .topicId(request.getTopicId())
+                .title(request.getTitle() == null ? null : request.getTitle().trim())
+                .lessonType(type)
+                .orderIndex(orderIndex)
+                .configJson(request.getConfigJson())
+                .build());
+        return toLessonResponse(lesson);
+    }
+
+    @Override
+    @Transactional
+    public QuestionResponse createQuestion(CreateQuestionRequest request) {
+        if (!lessonRepository.existsById(request.getLessonId())) {
+            throw notFound("Lesson not found: " + request.getLessonId());
+        }
+        validateOptions(request.getOptions());
+
+        LessonQuestion question = questionRepository.save(LessonQuestion.builder()
+                .lessonId(request.getLessonId())
+                .questionType(request.getQuestionType())
+                .questionText(request.getQuestionText())
+                .audioUrl(request.getAudioUrl())
+                .imageUrl(request.getImageUrl())
+                .metadataJson(request.getMetadataJson())
+                .build());
+
+        List<LessonQuestionOption> options = IntStream.range(0, request.getOptions().size())
+                .mapToObj(index -> toOption(question.getId(), request.getOptions().get(index), index))
+                .toList();
+        List<LessonQuestionOption> savedOptions = optionRepository.saveAll(options);
+        return toQuestionResponse(question, savedOptions);
+    }
+
+    private void validateOptions(List<QuestionOptionRequest> options) {
+        if (options.stream().noneMatch(option -> Boolean.TRUE.equals(option.getIsCorrect()))) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "At least one option must be correct");
+        }
+        options.forEach(option -> {
+            boolean hasValue = (option.getOptionText() != null && !option.getOptionText().isBlank())
+                    || (option.getImageUrl() != null && !option.getImageUrl().isBlank())
+                    || (option.getAudioUrl() != null && !option.getAudioUrl().isBlank());
+            if (!hasValue) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Each option must have content");
+            }
+        });
+    }
+
+    private LessonQuestionOption toOption(Long questionId, QuestionOptionRequest request, int index) {
+        return LessonQuestionOption.builder()
+                .questionId(questionId)
+                .optionText(request.getOptionText())
+                .imageUrl(request.getImageUrl())
+                .audioUrl(request.getAudioUrl())
+                .correct(request.getIsCorrect())
+                .orderIndex(request.getOrderIndex() == null ? index + 1 : request.getOrderIndex())
+                .metadataJson(request.getMetadataJson())
+                .build();
+    }
+
+    private TopicResponse toTopicResponse(Topic topic) {
+        return TopicResponse.builder().id(topic.getId()).title(topic.getTitle())
+                .description(topic.getDescription()).orderIndex(topic.getOrderIndex()).build();
+    }
+
+    private LessonResponse toLessonResponse(Lesson lesson) {
+        return LessonResponse.builder().id(lesson.getId()).topicId(lesson.getTopicId())
+                .title(lesson.getTitle()).lessonType(lesson.getLessonType())
+                .orderIndex(lesson.getOrderIndex()).configJson(lesson.getConfigJson()).build();
+    }
+
+    private QuestionResponse toQuestionResponse(LessonQuestion question, List<LessonQuestionOption> options) {
+        return QuestionResponse.builder().id(question.getId()).lessonId(question.getLessonId())
+                .questionType(question.getQuestionType()).questionText(question.getQuestionText())
+                .audioUrl(question.getAudioUrl()).imageUrl(question.getImageUrl())
+                .metadataJson(question.getMetadataJson())
+                .options(options.stream().map(option -> QuestionResponse.OptionResponse.builder()
+                        .id(option.getId()).optionText(option.getOptionText()).imageUrl(option.getImageUrl())
+                        .audioUrl(option.getAudioUrl()).isCorrect(option.getCorrect()).orderIndex(option.getOrderIndex())
+                        .metadataJson(option.getMetadataJson())
+                        .build()).toList()).build();
+    }
+
+    private ResponseStatusException notFound(String message) {
+        return new ResponseStatusException(HttpStatus.NOT_FOUND, message);
+    }
+}

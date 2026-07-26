@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserService {
                 .id(user.getId())
                 .displayName(user.getDisplayName())
                 .avatarUrl(null)
-                .level(null)
+                .level(user.getLevel())
                 .build();
     }
 
@@ -173,7 +173,7 @@ public class UserServiceImpl implements UserService {
                 .displayName(targetUser.getDisplayName())
                 .username(targetUser.getUsername())
                 .avatarUrl(null)
-                .level(null)
+                .level(targetUser.getLevel())
                 .isFollowing(currentUserId != null
                         && targetUser.getId() != null
                     && userRepository.existsFollowRelation(currentUserId, targetUser.getId()) > 0)
