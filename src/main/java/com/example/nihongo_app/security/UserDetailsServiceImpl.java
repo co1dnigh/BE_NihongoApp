@@ -19,6 +19,9 @@ import org.springframework.stereotype.Service;
  * the SecurityContextHolder, providing a {@code UserDetailsService} keeps Spring Boot's
  * default autoconfiguration happy and gives us a clean integration point for future
  * Spring Security features (e.g. {@code AuthenticationManagerBuilder}, DaoAuthenticationProvider).</p>
+ *
+ * <p>Trả về {@link AppUserPrincipal} để nhúng {@code userId} vào principal, tránh
+ * gọi lại {@code UserRepository} ở tầng controller.</p>
  */
 @Service
 @RequiredArgsConstructor
@@ -33,9 +36,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         String authority = "ROLE_" + (user.getRole() == null ? "" : user.getRole());
 
-        return new org.springframework.security.core.userdetails.User(
+        return new AppUserPrincipal(
+                user.getId(),
                 user.getEmail(),
-                user.getPasswordHash() == null ? "" : user.getPasswordHash(),
+                user.getPasswordHash(),
                 List.of(new SimpleGrantedAuthority(authority))
         );
     }

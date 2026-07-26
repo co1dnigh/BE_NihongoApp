@@ -98,16 +98,30 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(buildBody(HttpStatus.FORBIDDEN, "Bạn không có quyền thực hiện thao tác này", null));
     }
 
-    // ===== 6. Exception nghiệp vụ tự định nghĩa, vd NotFoundException của bạn =====
-    // Ví dụ mẫu, sửa lại theo exception thật của bạn nếu có:
-    /*
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<Object> handleNotFound(ResourceNotFoundException ex) {
+    // ===== 6. Exception nghiệp vụ tự định nghĩa =====
+    @ExceptionHandler(com.example.nihongo_app.exception.ResourceNotFoundException.class)
+    public ResponseEntity<Object> handleNotFound(
+            com.example.nihongo_app.exception.ResourceNotFoundException ex) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(buildBody(HttpStatus.NOT_FOUND, ex.getMessage(), null));
     }
-    */
+
+    @ExceptionHandler(com.example.nihongo_app.exception.LessonLockedException.class)
+    public ResponseEntity<Object> handleLessonLocked(
+            com.example.nihongo_app.exception.LessonLockedException ex) {
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(buildBody(HttpStatus.FORBIDDEN, ex.getMessage(), null));
+    }
+
+    @ExceptionHandler(com.example.nihongo_app.exception.InsufficientEnergyException.class)
+    public ResponseEntity<Object> handleInsufficientEnergy(
+            com.example.nihongo_app.exception.InsufficientEnergyException ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(buildBody(HttpStatus.BAD_REQUEST, ex.getMessage(), null));
+    }
 
     // ===== 7. Bắt tất cả lỗi còn sót lại (fallback cuối cùng, tránh lộ stack trace) =====
     @ExceptionHandler(Exception.class)
