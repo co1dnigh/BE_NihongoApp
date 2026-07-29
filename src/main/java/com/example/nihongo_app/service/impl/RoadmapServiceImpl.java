@@ -14,7 +14,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,63 +51,44 @@ public class RoadmapServiceImpl implements RoadmapService {
             progressByLesson.put(p.getLessonId(), p);
         }
 
-        // Topic đầu tiên (orderIndex nhỏ nhất) là mốc mở khoá mặc định.
-        Integer firstTopicOrderIndex = topics.stream()
-                .map(Topic::getOrderIndex)
-                .filter(Objects::nonNull)
-                .min(Comparator.naturalOrder())
-                .orElse(null);
+        // Tính status cho TẤT CẢ lesson 1 lần duy nhất: cờ "bài NORMAL trước đã
+        // COMPLETED" được carry xuyên suốt các Topic (topics đã sắp theo orderIndex).
+        Map<Long, Status> statusByLesson = unlockPolicy.computeStatuses(topics, progressByLesson);
 
         return topics.stream()
-                .map(topic -> {
-                    boolean isFirstTopic = firstTopicOrderIndex != null
-                            && Objects.equals(firstTopicOrderIndex, topic.getOrderIndex());
-                    return toTopicResponse(topic, isFirstTopic, progressByLesson);
-                })
+                .map(topic -> toTopicResponse(topic, statusByLesson, progressByLesson))
                 .toList();
     }
 
     private RoadmapTopicResponse toTopicResponse(Topic topic,
-                                                 boolean isFirstTopic,
+                                                 Map<Long, Status> statusByLesson,
                                                  Map<Long, UserLessonProgress> progressByLesson) {
         List<Lesson> sortedLessons = topic.getLessons().stream()
                 .sorted(Comparator.comparing(Lesson::getOrderIndex,
                         Comparator.nullsLast(Comparator.naturalOrder())))
                 .toList();
 
-        List<RoadmapLessonResponse> lessonResponses = new java.util.ArrayList<>(sortedLessons.size());
-        // Bài NORMAL đầu tiên của Topic đầu tiên luôn UNLOCKED (mặc định).
-        boolean previousNormalCompleted = isFirstTopic && !sortedLessons.isEmpty()
-                && sortedLessons.get(0).getLessonType() == com.example.nihongo_app.entity.Lesson.LessonType.NORMAL;
+        List<RoadmapLessonResponse> lessonResponses = sortedLessons.stream()
+                .map(lesson -> {
+                    UserLessonProgress progress = progressByLesson.get(lesson.getId());
+                    Status status = statusByLesson.get(lesson.getId());
+                    Integer starsEarned = unlockPolicy.computeStars(lesson, progress);
 
-        for (Lesson lesson : sortedLessons) {
-            UserLessonProgress progress = progressByLesson.get(lesson.getId());
-            Status status = unlockPolicy.computeOne(lesson, isFirstTopic, previousNormalCompleted, progress);
-            Integer starsEarned = unlockPolicy.computeStars(lesson, progress);
-
-            lessonResponses.add(RoadmapLessonResponse.builder()
-                    .lessonId(lesson.getId())
-                    .title(lesson.getTitle())
-                    .lessonType(lesson.getLessonType())
-                    .orderIndex(lesson.getOrderIndex())
-                    .status(status)
-                    .starsEarned(starsEarned)
-                    .build());
-
-            if (lesson.getLessonType() == com.example.nihongo_app.entity.Lesson.LessonType.NORMAL) {
-                previousNormalCompleted = isCompleted(progress);
-            }
-        }
+                    return RoadmapLessonResponse.builder()
+                            .lessonId(lesson.getId())
+                            .title(lesson.getTitle())
+                            .lessonType(lesson.getLessonType())
+                            .orderIndex(lesson.getOrderIndex())
+                            .status(status)
+                            .starsEarned(starsEarned)
+                            .build();
+                })
+                .toList();
 
         return RoadmapTopicResponse.builder()
                 .topicId(topic.getId())
                 .topicTitle(topic.getTitle())
                 .lessons(lessonResponses)
                 .build();
-    }
-
-    private boolean isCompleted(UserLessonProgress progress) {
-        return progress != null
-                && progress.getStatus() == UserLessonProgress.ProgressStatus.COMPLETED;
     }
 }

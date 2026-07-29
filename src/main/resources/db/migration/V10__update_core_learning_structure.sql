@@ -9,9 +9,12 @@ CREATE TABLE topics (
     deleted_at DATETIME NULL DEFAULT NULL
 );
 
+-- 1b. Chủ đề mặc định cho các bài học đã tồn tại trước migration này
+INSERT INTO topics (title, description, order_index) VALUES ('Chưa phân loại', 'Chủ đề mặc định cho bài học cũ', 0);
+
 -- 2. Cập nhật bảng Bài học (lessons)
 ALTER TABLE lessons
-    ADD COLUMN topic_id BIGINT NOT NULL AFTER id,
+    ADD COLUMN topic_id BIGINT NOT NULL DEFAULT 1 AFTER id,
     ADD COLUMN lesson_type ENUM('NORMAL', 'TIMED_REVIEW', 'JUMP_TEST') DEFAULT 'NORMAL' AFTER order_index,
     ADD COLUMN config_json JSON COMMENT 'Lưu luật chơi riêng: time_limit_sec, entry_cost, star_thresholds' AFTER lesson_type,
     ADD CONSTRAINT fk_lesson_topic FOREIGN KEY (topic_id) REFERENCES topics(id) ON DELETE CASCADE;
