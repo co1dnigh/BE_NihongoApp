@@ -11,6 +11,7 @@ import java.util.Locale;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -21,6 +22,7 @@ public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
@@ -40,7 +42,7 @@ public class AuthServiceImpl implements AuthService {
 
         User user = User.builder()
                 .email(request.getEmail())
-                .passwordHash(request.getPassword())
+                .passwordHash(passwordEncoder.encode(request.getPassword()))
                 .displayName(displayName)
                 .username(username)
                 .role("LEARNER")
@@ -56,7 +58,7 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new BadCredentialsException("Invalid email or password"));
 
-        if (!request.getPassword().equals(user.getPasswordHash())) {
+        if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
             throw new BadCredentialsException("Invalid email or password");
         }
 

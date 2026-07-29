@@ -11,4 +11,6 @@ public interface LessonQuestionOptionRepository extends JpaRepository<LessonQues
      * tie-break bằng {@code id ASC} để giữ thứ tự ổn định khi shuffle.
      */
     List<LessonQuestionOption> findAllByQuestionIdOrderByOrderIndexAscIdAsc(Long questionId);
+
+    List<LessonQuestionOption> findAllByQuestionIdOrderByOrderIndexAsc(Long questionId);
 }

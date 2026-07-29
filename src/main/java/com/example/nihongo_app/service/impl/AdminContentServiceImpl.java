@@ -5,8 +5,11 @@ import com.example.nihongo_app.dto.request.CreateQuestionRequest;
 import com.example.nihongo_app.dto.request.CreateTopicRequest;
 import com.example.nihongo_app.dto.request.QuestionOptionRequest;
 import com.example.nihongo_app.dto.response.LessonResponse;
+import com.example.nihongo_app.dto.response.LessonWithQuestionsResponse;
 import com.example.nihongo_app.dto.response.QuestionResponse;
+import com.example.nihongo_app.dto.response.QuestionWithOptionsResponse;
 import com.example.nihongo_app.dto.response.TopicResponse;
+import com.example.nihongo_app.dto.response.TopicWithLessonsResponse;
 import com.example.nihongo_app.entity.Lesson;
 import com.example.nihongo_app.entity.LessonQuestion;
 import com.example.nihongo_app.entity.LessonQuestionOption;
@@ -147,5 +150,116 @@ public class AdminContentServiceImpl implements AdminContentService {
 
     private ResponseStatusException notFound(String message) {
         return new ResponseStatusException(HttpStatus.NOT_FOUND, message);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<TopicWithLessonsResponse> getAllTopics() {
+        return topicRepository.findAllActiveWithLessons().stream()
+                .map(this::toTopicWithLessonsResponse)
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public TopicWithLessonsResponse getTopicById(Long id) {
+        Topic topic = topicRepository.findByIdWithLessonsOrdered(id)
+                .orElseThrow(() -> notFound("Topic not found: " + id));
+        return toTopicWithLessonsResponse(topic);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public LessonWithQuestionsResponse getLessonById(Long id) {
+        Lesson lesson = lessonRepository.findById(id)
+                .orElseThrow(() -> notFound("Lesson not found: " + id));
+        List<LessonQuestion> questions = questionRepository.findAllByLessonIdOrderByIdAsc(id);
+        return toLessonWithQuestionsResponse(lesson, questions);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public QuestionWithOptionsResponse getQuestionById(Long id) {
+        LessonQuestion question = questionRepository.findById(id)
+                .orElseThrow(() -> notFound("Question not found: " + id));
+        List<LessonQuestionOption> options = optionRepository.findAllByQuestionIdOrderByOrderIndexAsc(id);
+        return toQuestionWithOptionsResponse(question, options);
+    }
+
+    private TopicWithLessonsResponse toTopicWithLessonsResponse(Topic topic) {
+        List<TopicWithLessonsResponse.LessonSummaryResponse> lessonSummaries =
+                topic.getLessons().stream()
+                        .sorted((a, b) -> {
+                            if (a.getOrderIndex() == null && b.getOrderIndex() == null) return a.getId().compareTo(b.getId());
+                            if (a.getOrderIndex() == null) return 1;
+                            if (b.getOrderIndex() == null) return -1;
+                            return a.getOrderIndex().compareTo(b.getOrderIndex());
+                        })
+                        .map(lesson -> TopicWithLessonsResponse.LessonSummaryResponse.builder()
+                                .id(lesson.getId())
+                                .title(lesson.getTitle())
+                                .lessonType(lesson.getLessonType().name())
+                                .orderIndex(lesson.getOrderIndex())
+                                .questionCount((int) questionRepository.findAllByLessonIdOrderByIdAsc(lesson.getId()).size())
+                                .build())
+                        .toList();
+
+        return TopicWithLessonsResponse.builder()
+                .id(topic.getId())
+                .title(topic.getTitle())
+                .description(topic.getDescription())
+                .orderIndex(topic.getOrderIndex())
+                .lessons(lessonSummaries)
+                .build();
+    }
+
+    private LessonWithQuestionsResponse toLessonWithQuestionsResponse(Lesson lesson, List<LessonQuestion> questions) {
+        List<LessonWithQuestionsResponse.QuestionSummaryResponse> questionSummaries = questions.stream()
+                .map(q -> {
+                    List<LessonQuestionOption> options = optionRepository.findAllByQuestionIdOrderByOrderIndexAsc(q.getId());
+                    int correctCount = (int) options.stream().filter(LessonQuestionOption::getCorrect).count();
+                    return LessonWithQuestionsResponse.QuestionSummaryResponse.builder()
+                            .id(q.getId())
+                            .questionType(q.getQuestionType().name())
+                            .questionText(q.getQuestionText())
+                            .audioUrl(q.getAudioUrl())
+                            .imageUrl(q.getImageUrl())
+                            .optionCount(options.size())
+                            .correctCount(correctCount)
+                            .build();
+                }).toList();
+
+        return LessonWithQuestionsResponse.builder()
+                .id(lesson.getId())
+                .topicId(lesson.getTopicId())
+                .title(lesson.getTitle())
+                .lessonType(lesson.getLessonType().name())
+                .orderIndex(lesson.getOrderIndex())
+                .configJson(lesson.getConfigJson())
+                .questions(questionSummaries)
+                .build();
+    }
+
+    private QuestionWithOptionsResponse toQuestionWithOptionsResponse(LessonQuestion question, List<LessonQuestionOption> options) {
+        return QuestionWithOptionsResponse.builder()
+                .id(question.getId())
+                .lessonId(question.getLessonId())
+                .questionType(question.getQuestionType().name())
+                .questionText(question.getQuestionText())
+                .audioUrl(question.getAudioUrl())
+                .imageUrl(question.getImageUrl())
+                .metadataJson(question.getMetadataJson())
+                .options(options.stream()
+                        .map(opt -> QuestionWithOptionsResponse.OptionResponse.builder()
+                                .id(opt.getId())
+                                .optionText(opt.getOptionText())
+                                .imageUrl(opt.getImageUrl())
+                                .audioUrl(opt.getAudioUrl())
+                                .isCorrect(opt.getCorrect())
+                                .orderIndex(opt.getOrderIndex())
+                                .metadataJson(opt.getMetadataJson())
+                                .build())
+                        .toList())
+                .build();
     }
 }

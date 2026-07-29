@@ -2,10 +2,25 @@ package com.example.nihongo_app.repository;
 
 import com.example.nihongo_app.entity.Topic;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 public interface TopicRepository extends JpaRepository<Topic, Long> {
+
+    Optional<Topic> findByIdAndDeletedAtIsNull(Long id);
+
+    @Query("""
+            SELECT DISTINCT t
+            FROM Topic t
+            JOIN FETCH t.lessons l
+            WHERE t.id = :id AND t.deletedAt IS NULL
+            ORDER BY
+                CASE WHEN l.orderIndex IS NULL THEN 1 ELSE 0 END ASC,
+                l.orderIndex ASC,
+                l.id ASC
+            """)
+    Optional<Topic> findByIdWithLessonsOrdered(Long id);
 
     /**
      * Lấy toàn bộ Topic đang active (chưa xoá mềm) cùng toàn bộ Lesson thuộc Topic

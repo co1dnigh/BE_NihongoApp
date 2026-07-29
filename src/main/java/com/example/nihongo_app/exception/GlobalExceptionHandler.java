@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -96,6 +98,22 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.FORBIDDEN)
                 .body(buildBody(HttpStatus.FORBIDDEN, "Bạn không có quyền thực hiện thao tác này", null));
+    }
+
+    // ===== 5b. Sai email hoặc password khi đăng nhập =====
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<Object> handleBadCredentials(BadCredentialsException ex) {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(buildBody(HttpStatus.UNAUTHORIZED, "Email hoặc mật khẩu không đúng", null));
+    }
+
+    // ===== 5c. Các lỗi Authentication khác (vô hiệu hoá tài khoản, lockout...) =====
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<Object> handleAuthentication(AuthenticationException ex) {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(buildBody(HttpStatus.UNAUTHORIZED, ex.getMessage(), null));
     }
 
     // ===== 6. Exception nghiệp vụ tự định nghĩa =====
