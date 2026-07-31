@@ -14,12 +14,21 @@ import java.util.List;
 public interface AdminContentService {
 
     TopicResponse createTopic(CreateTopicRequest request);
+    TopicResponse updateTopic(Long id, CreateTopicRequest request);
+    void deleteTopic(Long id);
     List<TopicWithLessonsResponse> getAllTopics();
     TopicWithLessonsResponse getTopicById(Long id);
 
     LessonResponse createLesson(CreateLessonRequest request);
+    LessonResponse updateLesson(Long id, CreateLessonRequest request);
+    void deleteLesson(Long id);
+    List<LessonResponse> getAllLessons();
     LessonWithQuestionsResponse getLessonById(Long id);
 
     QuestionResponse createQuestion(CreateQuestionRequest request);
+    QuestionResponse updateQuestion(Long id, CreateQuestionRequest request);
+    void deleteQuestion(Long id);
     QuestionWithOptionsResponse getQuestionById(Long id);
+    
+    List<QuestionWithOptionsResponse> getAllQuestions();
 }

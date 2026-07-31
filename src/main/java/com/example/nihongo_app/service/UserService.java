@@ -4,12 +4,18 @@ import com.example.nihongo_app.dto.request.SyncContactsRequest;
 import com.example.nihongo_app.dto.request.UpdatePhoneRequest;
 import com.example.nihongo_app.dto.request.UpdateProfileRequest;
 import com.example.nihongo_app.dto.response.AuthResponse;
+import com.example.nihongo_app.dto.response.AdminSummaryResponse;
 import com.example.nihongo_app.dto.response.UserOverviewResponse;
 import com.example.nihongo_app.dto.response.UserSearchResponse;
 import com.example.nihongo_app.dto.response.UserProfileResponse;
 import java.util.List;
 
 public interface UserService {
+
+    List<AdminSummaryResponse> getAllUsers();
+    AdminSummaryResponse getUserById(Long id);
+    AdminSummaryResponse updateUser(Long id, UpdateProfileRequest request);
+    void deleteUser(Long id);
 
     void updatePhoneNumber(String email, UpdatePhoneRequest request);
 

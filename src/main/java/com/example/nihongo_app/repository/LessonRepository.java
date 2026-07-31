@@ -26,4 +26,17 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
                 l.id ASC
             """)
     List<Lesson> findAllByTopicIdOrdered(@Param("topicId") Long topicId);
+
+    @Query("""
+            SELECT l
+            FROM Lesson l
+            JOIN l.topic t
+            WHERE t.deletedAt IS NULL
+            ORDER BY
+                t.orderIndex ASC,
+                CASE WHEN l.orderIndex IS NULL THEN 1 ELSE 0 END ASC,
+                l.orderIndex ASC,
+                l.id ASC
+            """)
+    List<Lesson> findAllActiveOrdered();
 }

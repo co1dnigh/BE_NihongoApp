@@ -13,7 +13,7 @@ public interface TopicRepository extends JpaRepository<Topic, Long> {
     @Query("""
             SELECT DISTINCT t
             FROM Topic t
-            JOIN FETCH t.lessons l
+            LEFT JOIN FETCH t.lessons l
             WHERE t.id = :id AND t.deletedAt IS NULL
             ORDER BY
                 CASE WHEN l.orderIndex IS NULL THEN 1 ELSE 0 END ASC,
@@ -26,7 +26,7 @@ public interface TopicRepository extends JpaRepository<Topic, Long> {
      * Lấy toàn bộ Topic đang active (chưa xoá mềm) cùng toàn bộ Lesson thuộc Topic
      * chỉ bằng 1 câu query duy nhất (tránh N+1).
      *
-     * <p>{@code DISTINCT} cần thiết vì {@code JOIN FETCH} với quan hệ OneToMany sẽ
+    * <p>{@code DISTINCT} cần thiết vì {@code LEFT JOIN FETCH} với quan hệ OneToMany sẽ
      * sinh ra Cartesian product, làm trùng {@code Topic} trong kết quả.</p>
      *
      * <p>Sắp xếp theo {@code topic.orderIndex} trước, sau đó {@code lesson.orderIndex}
@@ -35,7 +35,7 @@ public interface TopicRepository extends JpaRepository<Topic, Long> {
     @Query("""
             SELECT DISTINCT t
             FROM Topic t
-            JOIN FETCH t.lessons l
+            LEFT JOIN FETCH t.lessons l
             WHERE t.deletedAt IS NULL
             ORDER BY t.orderIndex ASC, l.orderIndex ASC
             """)

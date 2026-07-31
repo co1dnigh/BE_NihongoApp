@@ -20,6 +20,7 @@ import com.example.nihongo_app.repository.LessonRepository;
 import com.example.nihongo_app.repository.TopicRepository;
 import com.example.nihongo_app.service.AdminContentService;
 import java.util.List;
+import java.time.LocalDateTime;
 import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -45,6 +46,26 @@ public class AdminContentServiceImpl implements AdminContentService {
                 .orderIndex(request.getOrderIndex())
                 .build());
         return toTopicResponse(topic);
+    }
+
+    @Override
+    @Transactional
+    public TopicResponse updateTopic(Long id, CreateTopicRequest request) {
+        Topic topic = topicRepository.findByIdAndDeletedAtIsNull(id)
+                .orElseThrow(() -> notFound("Topic not found: " + id));
+        topic.setTitle(request.getTitle().trim());
+        topic.setDescription(request.getDescription());
+        topic.setOrderIndex(request.getOrderIndex());
+        return toTopicResponse(topicRepository.save(topic));
+    }
+
+    @Override
+    @Transactional
+    public void deleteTopic(Long id) {
+        Topic topic = topicRepository.findByIdAndDeletedAtIsNull(id)
+                .orElseThrow(() -> notFound("Topic not found: " + id));
+        topic.setDeletedAt(LocalDateTime.now());
+        topicRepository.save(topic);
     }
 
     @Override
@@ -77,6 +98,37 @@ public class AdminContentServiceImpl implements AdminContentService {
 
     @Override
     @Transactional
+    public LessonResponse updateLesson(Long id, CreateLessonRequest request) {
+        Lesson lesson = lessonRepository.findById(id)
+                .orElseThrow(() -> notFound("Lesson not found: " + id));
+        if (!topicRepository.existsById(request.getTopicId())) {
+            throw notFound("Topic not found: " + request.getTopicId());
+        }
+
+        Integer orderIndex = request.getOrderIndex();
+        if (request.getLessonType() == Lesson.LessonType.JUMP_TEST) {
+            orderIndex = null;
+        }
+
+        lesson.setTopicId(request.getTopicId());
+        lesson.setTitle(request.getTitle().trim());
+        lesson.setLessonType(request.getLessonType());
+        lesson.setOrderIndex(orderIndex);
+        lesson.setConfigJson(request.getConfigJson());
+        return toLessonResponse(lessonRepository.save(lesson));
+    }
+
+    @Override
+    @Transactional
+    public void deleteLesson(Long id) {
+        if (!lessonRepository.existsById(id)) {
+            throw notFound("Lesson not found: " + id);
+        }
+        lessonRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
     public QuestionResponse createQuestion(CreateQuestionRequest request) {
         if (!lessonRepository.existsById(request.getLessonId())) {
             throw notFound("Lesson not found: " + request.getLessonId());
@@ -97,6 +149,42 @@ public class AdminContentServiceImpl implements AdminContentService {
                 .toList();
         List<LessonQuestionOption> savedOptions = optionRepository.saveAll(options);
         return toQuestionResponse(question, savedOptions);
+    }
+
+    @Override
+    @Transactional
+    public QuestionResponse updateQuestion(Long id, CreateQuestionRequest request) {
+        LessonQuestion question = questionRepository.findById(id)
+                .orElseThrow(() -> notFound("Question not found: " + id));
+        if (!lessonRepository.existsById(request.getLessonId())) {
+            throw notFound("Lesson not found: " + request.getLessonId());
+        }
+        validateOptions(request.getOptions());
+
+        question.setLessonId(request.getLessonId());
+        question.setQuestionType(request.getQuestionType());
+        question.setQuestionText(request.getQuestionText());
+        question.setAudioUrl(request.getAudioUrl());
+        question.setImageUrl(request.getImageUrl());
+        question.setMetadataJson(request.getMetadataJson());
+        LessonQuestion savedQuestion = questionRepository.save(question);
+
+        optionRepository.deleteAllByQuestionId(id);
+        List<LessonQuestionOption> options = IntStream.range(0, request.getOptions().size())
+                .mapToObj(index -> toOption(savedQuestion.getId(), request.getOptions().get(index), index))
+                .toList();
+        List<LessonQuestionOption> savedOptions = optionRepository.saveAll(options);
+        return toQuestionResponse(savedQuestion, savedOptions);
+    }
+
+    @Override
+    @Transactional
+    public void deleteQuestion(Long id) {
+        if (!questionRepository.existsById(id)) {
+            throw notFound("Question not found: " + id);
+        }
+        optionRepository.deleteAllByQuestionId(id);
+        questionRepository.deleteById(id);
     }
 
     private void validateOptions(List<QuestionOptionRequest> options) {
@@ -166,6 +254,14 @@ public class AdminContentServiceImpl implements AdminContentService {
         Topic topic = topicRepository.findByIdWithLessonsOrdered(id)
                 .orElseThrow(() -> notFound("Topic not found: " + id));
         return toTopicWithLessonsResponse(topic);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<LessonResponse> getAllLessons() {
+        return lessonRepository.findAllActiveOrdered().stream()
+                .map(this::toLessonResponse)
+                .toList();
     }
 
     @Override
@@ -262,4 +358,19 @@ public class AdminContentServiceImpl implements AdminContentService {
                         .toList())
                 .build();
     }
-}
+
+@Override
+    public List<QuestionWithOptionsResponse> getAllQuestions() {
+        // 1. Lấy toàn bộ câu hỏi từ Database
+        List<LessonQuestion> questions = questionRepository.findAll();
+        
+        // 2. Lặp qua từng câu hỏi, lấy các option đi kèm và map sang DTO
+        return questions.stream()
+                .map(q -> {
+                    List<LessonQuestionOption> options = optionRepository.findAllByQuestionIdOrderByOrderIndexAsc(q.getId());
+                    return toQuestionWithOptionsResponse(q, options);
+                })
+                .toList();
+    }
+} // Chú ý giữ lại dấu ngoặc nhọn đóng của class ở cuối cùng nhé
+    
