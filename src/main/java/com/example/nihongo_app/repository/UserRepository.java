@@ -10,6 +10,10 @@ import org.springframework.data.repository.query.Param;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
+    List<User> findAllByDeletedAtIsNull();
+
+    Optional<User> findByIdAndDeletedAtIsNull(Long id);
+
     Optional<User> findByEmail(String email);
 
     // 1. THÊM MỚI: Dùng cho tính năng quét mã QR (Tìm user theo username)

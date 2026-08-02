@@ -4,6 +4,7 @@ import com.example.nihongo_app.dto.request.SyncContactsRequest;
 import com.example.nihongo_app.dto.request.UpdatePhoneRequest;
 import com.example.nihongo_app.dto.request.UpdateProfileRequest;
 import com.example.nihongo_app.dto.response.AuthResponse;
+import com.example.nihongo_app.dto.response.AdminSummaryResponse;
 import com.example.nihongo_app.dto.response.UserOverviewResponse;
 import com.example.nihongo_app.dto.response.UserSearchResponse;
 import com.example.nihongo_app.dto.response.UserProfileResponse;
@@ -27,6 +28,47 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<AdminSummaryResponse> getAllUsers() {
+        return userRepository.findAllByDeletedAtIsNull().stream()
+                .map(this::toAdminSummaryResponse)
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public AdminSummaryResponse getUserById(Long id) {
+        User user = userRepository.findByIdAndDeletedAtIsNull(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        return toAdminSummaryResponse(user);
+    }
+
+    @Override
+    @Transactional
+    public AdminSummaryResponse updateUser(Long id, UpdateProfileRequest request) {
+        User user = userRepository.findByIdAndDeletedAtIsNull(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
+        String username = request.getUsername().trim();
+        if (!username.equals(user.getUsername()) && userRepository.existsByUsername(username)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Username already taken");
+        }
+
+        user.setDisplayName(request.getDisplayName().trim());
+        user.setUsername(username);
+        return toAdminSummaryResponse(userRepository.save(user));
+    }
+
+    @Override
+    @Transactional
+    public void deleteUser(Long id) {
+        User user = userRepository.findByIdAndDeletedAtIsNull(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        user.setDeletedAt(java.time.LocalDateTime.now());
+        userRepository.save(user);
+    }
 
     @Override
     @Transactional
@@ -69,6 +111,16 @@ public class UserServiceImpl implements UserService {
                 .displayName(user.getDisplayName())
                 .avatarUrl(null)
                 .level(user.getLevel())
+                .build();
+    }
+
+    private AdminSummaryResponse toAdminSummaryResponse(User user) {
+        return AdminSummaryResponse.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .username(user.getUsername())
+                .displayName(user.getDisplayName())
+                .role(user.getRole())
                 .build();
     }
 

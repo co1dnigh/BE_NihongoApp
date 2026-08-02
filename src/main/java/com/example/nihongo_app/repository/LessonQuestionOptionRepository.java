@@ -13,4 +13,6 @@ public interface LessonQuestionOptionRepository extends JpaRepository<LessonQues
     List<LessonQuestionOption> findAllByQuestionIdOrderByOrderIndexAscIdAsc(Long questionId);
 
     List<LessonQuestionOption> findAllByQuestionIdOrderByOrderIndexAsc(Long questionId);
+
+    void deleteAllByQuestionId(Long questionId);
 }
