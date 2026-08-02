@@ -52,7 +52,7 @@ public class User {
     @Column(nullable = false, length = 50)
     private String role;
 
-    // --- Gamification: NULL cho Admin, mặc định hợp lệ cho Learner ---
+    // --- Gamification ---
     @Column(name = "level")
     private Integer level;
 
@@ -68,6 +68,15 @@ public class User {
 
     @Column(name = "max_energy")
     private Integer maxEnergy;
+
+    @Column(name = "last_streak_date")
+    private LocalDate lastStreakDate;
+
+    @Column(name = "streak_freeze_count")
+    private Integer streakFreezeCount;
+
+    @Column(name = "streak_freeze_awarded")
+    private Boolean streakFreezeAwarded;
 
     @Column(name = "last_energy_reset_date")
     private LocalDate lastEnergyResetDate;
@@ -100,14 +109,12 @@ public class User {
             updatedAt = now;
         }
 
-        // Admin không chơi game → để NULL.
-        // Learner mặc định: level=1, exp=0, energy=25/25, coins=0, streak=0, league=BRONZE.
         if ("LEARNER".equals(role)) {
             if (level == null) level = 1;
             if (exp == null) exp = 0;
             if (currentLeague == null) currentLeague = League.BRONZE;
-            if (currentEnergy == null) currentEnergy = 25;
-            if (maxEnergy == null) maxEnergy = 25;
+            if (currentEnergy == null) currentEnergy = 5;
+            if (maxEnergy == null) maxEnergy = 5;
             if (coins == null) coins = 0;
             if (currentStreak == null) currentStreak = 0;
             if (longestStreak == null) longestStreak = 0;

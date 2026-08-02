@@ -28,6 +28,8 @@ import com.example.nihongo_app.repository.UserLessonProgressRepository;
 import com.example.nihongo_app.repository.UserRepository;
 import com.example.nihongo_app.service.LessonAttemptService;
 import com.example.nihongo_app.service.LessonUnlockPolicy;
+import com.example.nihongo_app.service.StreakService;
+import com.example.nihongo_app.service.EnergyService;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -67,6 +69,8 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
     private final UserExpLogRepository expLogRepository;
     private final TopicRepository topicRepository;
     private final LessonUnlockPolicy unlockPolicy;
+    private final StreakService streakService;
+    private final EnergyService energyService;
 
     // ============================ START ============================
 
@@ -239,6 +243,21 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
                     .sourceType(sourceType)
                     .referenceId(lesson.getId())
                     .build());
+        }
+
+        if (passed) {
+            streakService.checkAndUpdateStreak(userId);
+            int streakBonus = calculateStreakBonus(user.getCurrentStreak());
+            if (streakBonus > 0) {
+                user.setExp((user.getExp() == null ? 0 : user.getExp()) + streakBonus);
+                userRepository.save(user);
+                expLogRepository.save(UserExpLog.builder()
+                        .userId(userId)
+                        .expGained(streakBonus)
+                        .sourceType(UserExpLog.SourceType.NEW_LESSON)
+                        .referenceId(lesson.getId())
+                        .build());
+            }
         }
 
         return SubmitLessonResponse.builder()
@@ -462,6 +481,10 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
      * Fisher-Yates shuffle dung de dao thu tu cau hoi va dap an.
      * Su dung Math.random() (khong can SecureRandom cho use case game).
      */
+    private int calculateStreakBonus(Integer currentStreak) {
+        return (currentStreak != null && currentStreak >= 7) ? 5 : 0;
+    }
+
     private <T> List<T> shuffle(List<T> source) {
         List<T> list = new ArrayList<>(source);
         for (int i = list.size() - 1; i > 0; i--) {
