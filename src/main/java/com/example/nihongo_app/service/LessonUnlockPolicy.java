@@ -17,27 +17,6 @@ import org.springframework.stereotype.Component;
 /**
  * Helper dùng chung để tính trạng thái hiển thị (LOCKED / UNLOCKED / COMPLETED) của một
  * {@link Lesson} trong lộ trình học của một user.
- *
- * <p>Mục đích: cả {@code RoadmapService} (vẽ bản đồ) và {@code LessonAttemptService}
- * (API /start, /submit, /cancel) đều phải ra cùng một quyết định cho một bài học.
- * Gom logic vào đây để tránh duplicate code và đảm bảo trước-sau nhất quán.</p>
- *
- * <h3>Thuật toán</h3>
- * <ul>
- *   <li>Bài đã có {@code user_lesson_progress.status = COMPLETED} → COMPLETED.</li>
- *   <li>Bài {@code JUMP_TEST} → luôn UNLOCKED.</li>
- *   <li>Bài NORMAL / TIMED_REVIEW:
- *     <ul>
- *       <li>Bài NORMAL đầu tiên của Topic đầu tiên (orderIndex nhỏ nhất toàn hệ thống)
- *           → UNLOCKED mặc định.</li>
- *       <li>Ngược lại → UNLOCKED nếu bài NORMAL ngay trước nó đã COMPLETED.</li>
- *       <li>Còn lại → LOCKED.</li>
- *     </ul>
- *   </li>
- * </ul>
- *
- * <p>Helper này chỉ <b>đọc</b> (read-only), không ghi database. Mọi thao tác ghi (upsert
- * progress, trừ năng lượng, cộng EXP) đều do service gọi helper này thực hiện.</p>
  */
 @Component
 @RequiredArgsConstructor
@@ -48,22 +27,13 @@ public class LessonUnlockPolicy {
 
     /**
      * Xét trạng thái của 1 bài học bất kỳ cho 1 user.
-     *
-     * <p>Thực hiện 2 query:
-     * <ol>
-     *   <li>Lấy toàn bộ lesson thuộc cùng topic với {@code lesson}, sắp xếp theo orderIndex.</li>
-     *   <li>Lấy toàn bộ progress của user (1 query duy nhất).</li>
-     * </ol>
-     *
-     * <p>Phù hợp với các tình huống chỉ cần xét 1 bài (ví dụ API /start).</p>
+     * Duyệt qua toàn bộ hệ thống để đảm bảo trạng thái liên tục giữa các topic.
      *
      * @param lesson bài học cần xét trạng thái
      * @param userId id user hiện tại
-     * @param isFirstTopic {@code true} nếu bài nằm trong topic có orderIndex nhỏ nhất
-     *                    toàn hệ thống (service gọi cần xác định flag này).
      */
-    public Status evaluate(Lesson lesson, Long userId, boolean isFirstTopic) {
-        List<Lesson> siblings = lessonRepository.findAllByTopicIdOrdered(lesson.getTopicId());
+    public Status evaluate(Lesson lesson, Long userId) {
+        List<Lesson> allLessons = lessonRepository.findAllActiveOrdered();
 
         List<UserLessonProgress> userProgresses = progressRepository.findAllByUserId(userId);
         Map<Long, UserLessonProgress> progressByLesson = new HashMap<>(userProgresses.size() * 2);
@@ -71,19 +41,19 @@ public class LessonUnlockPolicy {
             progressByLesson.put(p.getLessonId(), p);
         }
 
-        boolean previousNormalCompleted = isFirstTopic && isFirstLessonOfTopic(siblings);
+        boolean previousNormalCompleted = true; // Bài NORMAL đầu tiên của hệ thống luôn được unlock
         Status result = Status.LOCKED;
 
-        for (Lesson sibling : siblings) {
-            UserLessonProgress progress = progressByLesson.get(sibling.getId());
-            Status status = computeOne(sibling, isFirstTopic, previousNormalCompleted, progress);
+        for (Lesson currentLesson : allLessons) {
+            UserLessonProgress progress = progressByLesson.get(currentLesson.getId());
+            Status status = computeOne(currentLesson, previousNormalCompleted, progress);
 
-            if (Objects.equals(sibling.getId(), lesson.getId())) {
+            if (Objects.equals(currentLesson.getId(), lesson.getId())) {
                 result = status;
                 break;
             }
 
-            if (sibling.getLessonType() == LessonType.NORMAL) {
+            if (currentLesson.getLessonType() == LessonType.NORMAL) {
                 previousNormalCompleted = isCompleted(progress);
             }
         }
@@ -92,11 +62,9 @@ public class LessonUnlockPolicy {
 
     /**
      * Hàm lõi: tính trạng thái cho 1 lesson, với cờ "bài NORMAL trước đã COMPLETED"
-     * đã có sẵn. Dùng cho {@code RoadmapServiceImpl} để khỏi truy vấn lại database
-     * (giữ nguyên hiệu năng vẽ bản đồ).
+     * đã có sẵn.
      */
     public Status computeOne(Lesson lesson,
-                             boolean isFirstTopic,
                              boolean previousNormalCompleted,
                              UserLessonProgress progress) {
         if (isCompleted(progress)) {
@@ -124,17 +92,5 @@ public class LessonUnlockPolicy {
 
     private boolean isCompleted(UserLessonProgress progress) {
         return progress != null && progress.getStatus() == ProgressStatus.COMPLETED;
-    }
-
-    /**
-     * Trong topic hiện tại, bài đầu tiên (theo orderIndex) có phải là bài NORMAL không?
-     * Nếu đúng → bài đầu của topic đầu hệ thống được UNLOCKED mặc định.
-     */
-    private boolean isFirstLessonOfTopic(List<Lesson> sortedSiblings) {
-        if (sortedSiblings.isEmpty()) {
-            return false;
-        }
-        Lesson first = sortedSiblings.get(0);
-        return first.getLessonType() == LessonType.NORMAL;
     }
 }

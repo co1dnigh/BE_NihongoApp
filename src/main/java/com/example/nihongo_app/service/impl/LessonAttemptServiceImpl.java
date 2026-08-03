@@ -82,7 +82,7 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
                         "Khong tim thay bai hoc voi id=" + lessonId));
 
         // 1. Kiem tra unlock qua policy (cung thuat toan voi roadmap).
-        Status status = unlockPolicy.evaluate(lesson, userId, isFirstTopicOfSystem(lesson));
+        Status status = unlockPolicy.evaluate(lesson, userId);
         if (status == Status.LOCKED) {
             throw new LessonLockedException(
                     "Bai hoc nay chua duoc mo khoa. Hay hoan thanh bai truoc do truoc.");
@@ -329,24 +329,6 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
             progress.setUnlockedAt(LocalDateTime.now());
         }
         progressRepository.save(progress);
-    }
-
-    /**
-     * Tra ve true neu lesson thuoc topic co orderIndex nho nhat toan he thong.
-     */
-    private boolean isFirstTopicOfSystem(Lesson lesson) {
-        List<Topic> topics = topicRepository.findAllActiveWithLessons();
-        Integer minOrder = topics.stream()
-                .map(Topic::getOrderIndex)
-                .filter(Objects::nonNull)
-                .min(Comparator.naturalOrder())
-                .orElse(null);
-        if (minOrder == null) {
-            return false;
-        }
-        return topics.stream()
-                .filter(t -> Objects.equals(t.getOrderIndex(), minOrder))
-                .anyMatch(t -> Objects.equals(t.getId(), lesson.getTopicId()));
     }
 
     /**
