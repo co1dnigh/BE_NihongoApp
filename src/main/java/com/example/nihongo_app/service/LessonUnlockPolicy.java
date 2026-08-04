@@ -3,10 +3,12 @@ package com.example.nihongo_app.service;
 import com.example.nihongo_app.dto.response.RoadmapLessonResponse.Status;
 import com.example.nihongo_app.entity.Lesson;
 import com.example.nihongo_app.entity.Lesson.LessonType;
+import com.example.nihongo_app.entity.Topic;
 import com.example.nihongo_app.entity.UserLessonProgress;
 import com.example.nihongo_app.entity.UserLessonProgress.ProgressStatus;
-import com.example.nihongo_app.repository.LessonRepository;
+import com.example.nihongo_app.repository.TopicRepository;
 import com.example.nihongo_app.repository.UserLessonProgressRepository;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,9 +30,11 @@ import org.springframework.stereotype.Component;
  *   <li>Bài {@code JUMP_TEST} → luôn UNLOCKED.</li>
  *   <li>Bài NORMAL / TIMED_REVIEW:
  *     <ul>
- *       <li>Bài NORMAL đầu tiên của Topic đầu tiên (orderIndex nhỏ nhất toàn hệ thống)
- *           → UNLOCKED mặc định.</li>
- *       <li>Ngược lại → UNLOCKED nếu bài NORMAL ngay trước nó đã COMPLETED.</li>
+ *       <li>Bài NORMAL đầu tiên toàn hệ thống (topic có orderIndex nhỏ nhất, bài có
+ *           orderIndex nhỏ nhất) → UNLOCKED mặc định.</li>
+ *       <li>Ngược lại → UNLOCKED nếu bài NORMAL ngay trước nó đã COMPLETED. Cờ này được
+ *           CARRY xuyên suốt Topic: bài đầu tiên của Topic N+1 dựa vào trạng thái bài
+ *           NORMAL cuối cùng của Topic N, chứ không reset về false khi sang Topic mới.</li>
  *       <li>Còn lại → LOCKED.</li>
  *     </ul>
  *   </li>
@@ -43,27 +47,21 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class LessonUnlockPolicy {
 
-    private final LessonRepository lessonRepository;
+    private final TopicRepository topicRepository;
     private final UserLessonProgressRepository progressRepository;
 
     /**
      * Xét trạng thái của 1 bài học bất kỳ cho 1 user.
      *
-     * <p>Thực hiện 2 query:
-     * <ol>
-     *   <li>Lấy toàn bộ lesson thuộc cùng topic với {@code lesson}, sắp xếp theo orderIndex.</li>
-     *   <li>Lấy toàn bộ progress của user (1 query duy nhất).</li>
-     * </ol>
-     *
-     * <p>Phù hợp với các tình huống chỉ cần xét 1 bài (ví dụ API /start).</p>
+     * <p>Tính trạng thái của TOÀN BỘ lesson trong hệ thống (qua {@link #computeStatuses})
+     * rồi lấy ra đúng bài cần xét, để đảm bảo cờ "bài NORMAL trước đã COMPLETED" được
+     * carry xuyên suốt các Topic giống hệt {@code RoadmapServiceImpl}.</p>
      *
      * @param lesson bài học cần xét trạng thái
      * @param userId id user hiện tại
-     * @param isFirstTopic {@code true} nếu bài nằm trong topic có orderIndex nhỏ nhất
-     *                    toàn hệ thống (service gọi cần xác định flag này).
      */
-    public Status evaluate(Lesson lesson, Long userId, boolean isFirstTopic) {
-        List<Lesson> siblings = lessonRepository.findAllByTopicIdOrdered(lesson.getTopicId());
+    public Status evaluate(Lesson lesson, Long userId) {
+        List<Topic> topics = topicRepository.findAllActiveWithLessons();
 
         List<UserLessonProgress> userProgresses = progressRepository.findAllByUserId(userId);
         Map<Long, UserLessonProgress> progressByLesson = new HashMap<>(userProgresses.size() * 2);
@@ -71,20 +69,39 @@ public class LessonUnlockPolicy {
             progressByLesson.put(p.getLessonId(), p);
         }
 
-        boolean previousNormalCompleted = isFirstTopic && isFirstLessonOfTopic(siblings);
-        Status result = Status.LOCKED;
+        Map<Long, Status> statusByLesson = computeStatuses(topics, progressByLesson);
+        return statusByLesson.getOrDefault(lesson.getId(), Status.LOCKED);
+    }
 
-        for (Lesson sibling : siblings) {
-            UserLessonProgress progress = progressByLesson.get(sibling.getId());
-            Status status = computeOne(sibling, isFirstTopic, previousNormalCompleted, progress);
+    /**
+     * Tính trạng thái cho TẤT CẢ lesson thuộc {@code topicsOrdered} (đã sắp theo
+     * {@code topic.orderIndex} rồi {@code lesson.orderIndex}, xem
+     * {@link com.example.nihongo_app.repository.TopicRepository#findAllActiveWithLessons()}).
+     *
+     * <p>Cờ "bài NORMAL trước đã COMPLETED" được carry liên tục qua từng Topic (không
+     * reset về false ở đầu mỗi Topic) — đây là điểm mấu chốt để bài đầu tiên của 1 Topic
+     * mở khoá đúng khi Topic trước đó vừa hoàn thành.</p>
+     */
+    public Map<Long, Status> computeStatuses(List<Topic> topicsOrdered,
+                                             Map<Long, UserLessonProgress> progressByLesson) {
+        Map<Long, Status> result = new HashMap<>();
+        // Bài NORMAL đầu tiên toàn hệ thống luôn UNLOCKED mặc định.
+        boolean previousNormalCompleted = true;
 
-            if (Objects.equals(sibling.getId(), lesson.getId())) {
-                result = status;
-                break;
-            }
+        for (Topic topic : topicsOrdered) {
+            List<Lesson> sortedLessons = topic.getLessons().stream()
+                    .sorted(Comparator.comparing(Lesson::getOrderIndex,
+                            Comparator.nullsLast(Comparator.naturalOrder())))
+                    .toList();
 
-            if (sibling.getLessonType() == LessonType.NORMAL) {
-                previousNormalCompleted = isCompleted(progress);
+            for (Lesson lesson : sortedLessons) {
+                UserLessonProgress progress = progressByLesson.get(lesson.getId());
+                Status status = computeOne(lesson, previousNormalCompleted, progress);
+                result.put(lesson.getId(), status);
+
+                if (lesson.getLessonType() == LessonType.NORMAL) {
+                    previousNormalCompleted = isCompleted(progress);
+                }
             }
         }
         return result;
@@ -92,11 +109,9 @@ public class LessonUnlockPolicy {
 
     /**
      * Hàm lõi: tính trạng thái cho 1 lesson, với cờ "bài NORMAL trước đã COMPLETED"
-     * đã có sẵn. Dùng cho {@code RoadmapServiceImpl} để khỏi truy vấn lại database
-     * (giữ nguyên hiệu năng vẽ bản đồ).
+     * đã có sẵn (đã carry đúng qua các Topic trước đó).
      */
     public Status computeOne(Lesson lesson,
-                             boolean isFirstTopic,
                              boolean previousNormalCompleted,
                              UserLessonProgress progress) {
         if (isCompleted(progress)) {
@@ -124,17 +139,5 @@ public class LessonUnlockPolicy {
 
     private boolean isCompleted(UserLessonProgress progress) {
         return progress != null && progress.getStatus() == ProgressStatus.COMPLETED;
-    }
-
-    /**
-     * Trong topic hiện tại, bài đầu tiên (theo orderIndex) có phải là bài NORMAL không?
-     * Nếu đúng → bài đầu của topic đầu hệ thống được UNLOCKED mặc định.
-     */
-    private boolean isFirstLessonOfTopic(List<Lesson> sortedSiblings) {
-        if (sortedSiblings.isEmpty()) {
-            return false;
-        }
-        Lesson first = sortedSiblings.get(0);
-        return first.getLessonType() == LessonType.NORMAL;
     }
 }

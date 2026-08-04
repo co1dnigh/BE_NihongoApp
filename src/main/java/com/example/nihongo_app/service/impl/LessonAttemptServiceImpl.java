@@ -11,7 +11,6 @@ import com.example.nihongo_app.entity.Lesson;
 import com.example.nihongo_app.entity.Lesson.LessonType;
 import com.example.nihongo_app.entity.LessonQuestion;
 import com.example.nihongo_app.entity.LessonQuestionOption;
-import com.example.nihongo_app.entity.Topic;
 import com.example.nihongo_app.entity.User;
 import com.example.nihongo_app.entity.UserExpLog;
 import com.example.nihongo_app.entity.UserLessonProgress;
@@ -22,7 +21,6 @@ import com.example.nihongo_app.exception.ResourceNotFoundException;
 import com.example.nihongo_app.repository.LessonQuestionOptionRepository;
 import com.example.nihongo_app.repository.LessonQuestionRepository;
 import com.example.nihongo_app.repository.LessonRepository;
-import com.example.nihongo_app.repository.TopicRepository;
 import com.example.nihongo_app.repository.UserExpLogRepository;
 import com.example.nihongo_app.repository.UserLessonProgressRepository;
 import com.example.nihongo_app.repository.UserRepository;
@@ -30,9 +28,7 @@ import com.example.nihongo_app.service.LessonAttemptService;
 import com.example.nihongo_app.service.LessonUnlockPolicy;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -65,7 +61,6 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
     private final UserLessonProgressRepository progressRepository;
     private final UserRepository userRepository;
     private final UserExpLogRepository expLogRepository;
-    private final TopicRepository topicRepository;
     private final LessonUnlockPolicy unlockPolicy;
 
     // ============================ START ============================
@@ -78,7 +73,7 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
                         "Khong tim thay bai hoc voi id=" + lessonId));
 
         // 1. Kiem tra unlock qua policy (cung thuat toan voi roadmap).
-        Status status = unlockPolicy.evaluate(lesson, userId, isFirstTopicOfSystem(lesson));
+        Status status = unlockPolicy.evaluate(lesson, userId);
         if (status == Status.LOCKED) {
             throw new LessonLockedException(
                     "Bai hoc nay chua duoc mo khoa. Hay hoan thanh bai truoc do truoc.");
@@ -310,24 +305,6 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
             progress.setUnlockedAt(LocalDateTime.now());
         }
         progressRepository.save(progress);
-    }
-
-    /**
-     * Tra ve true neu lesson thuoc topic co orderIndex nho nhat toan he thong.
-     */
-    private boolean isFirstTopicOfSystem(Lesson lesson) {
-        List<Topic> topics = topicRepository.findAllActiveWithLessons();
-        Integer minOrder = topics.stream()
-                .map(Topic::getOrderIndex)
-                .filter(Objects::nonNull)
-                .min(Comparator.naturalOrder())
-                .orElse(null);
-        if (minOrder == null) {
-            return false;
-        }
-        return topics.stream()
-                .filter(t -> Objects.equals(t.getOrderIndex(), minOrder))
-                .anyMatch(t -> Objects.equals(t.getId(), lesson.getTopicId()));
     }
 
     /**
