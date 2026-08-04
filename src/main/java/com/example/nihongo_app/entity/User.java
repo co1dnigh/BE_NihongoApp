@@ -29,93 +29,102 @@ import lombok.Setter;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include
-    private Long id;
+@Id
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+@EqualsAndHashCode.Include
+private Long id;
 
-    @Column(nullable = false, unique = true, length = 255)
-    private String email;
+@Column(nullable = false, unique = true, length = 255)
+private String email;
 
-    @Column(unique = true, length = 50)
-    private String username;
+@Column(unique = true, length = 50)
+private String username;
 
-    @Column(name = "phone_number", unique = true)
-    private String phoneNumber;
+@Column(name = "phone_number", unique = true)
+private String phoneNumber;
 
-    @Column(name = "password_hash", length = 255)
-    private String passwordHash;
+@Column(name = "password_hash", length = 255)
+private String passwordHash;
 
-    @Column(name = "display_name", nullable = false, length = 100)
-    private String displayName;
+@Column(name = "display_name", nullable = false, length = 100)
+private String displayName;
 
-    @Column(nullable = false, length = 50)
-    private String role;
+@Column(nullable = false, length = 50)
+private String role;
 
-    // --- Gamification: NULL cho Admin, mặc định hợp lệ cho Learner ---
-    @Column(name = "level")
-    private Integer level;
+// --- Gamification ---
+@Column(name = "level")
+private Integer level;
 
-    @Column(name = "exp")
-    private Integer exp;
+@Column(name = "exp")
+private Integer exp;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "current_league")
-    private League currentLeague;
+@Enumerated(EnumType.STRING)
+@Column(name = "current_league")
+private League currentLeague;
 
-    @Column(name = "current_energy")
-    private Integer currentEnergy;
+@Column(name = "current_energy")
+private Integer currentEnergy;
 
-    @Column(name = "max_energy")
-    private Integer maxEnergy;
+@Column(name = "max_energy")
+private Integer maxEnergy;
 
-    @Column(name = "last_energy_reset_date")
-    private LocalDate lastEnergyResetDate;
+@Column(name = "last_streak_date")
+private LocalDate lastStreakDate;
 
-    @Column(name = "coins")
-    private Integer coins;
+@Column(name = "streak_freeze_count")
+private Integer streakFreezeCount;
 
-    @Column(name = "current_streak")
-    private Integer currentStreak;
+@Column(name = "streak_freeze_awarded")
+private Boolean streakFreezeAwarded;
 
-    @Column(name = "longest_streak")
-    private Integer longestStreak;
+@Column(name = "last_energy_reset_date")
+private LocalDate lastEnergyResetDate;
 
-    @Column(name = "created_at", insertable = false, updatable = false)
-    private LocalDateTime createdAt;
+@Column(name = "coins")
+private Integer coins;
 
-    @Column(name = "updated_at", insertable = false, updatable = false)
-    private LocalDateTime updatedAt;
+@Column(name = "current_streak")
+private Integer currentStreak;
 
-    @Column(name = "deleted_at")
-    private LocalDateTime deletedAt;
+@Column(name = "longest_streak")
+private Integer longestStreak;
 
-    @PrePersist
-    void onCreate() {
-        LocalDateTime now = LocalDateTime.now();
-        if (createdAt == null) {
-            createdAt = now;
-        }
-        if (updatedAt == null) {
-            updatedAt = now;
-        }
+@Column(name = "created_at", insertable = false, updatable = false)
+private LocalDateTime createdAt;
 
-        // Admin không chơi game → để NULL.
-        // Learner mặc định: level=1, exp=0, energy=25/25, coins=0, streak=0, league=BRONZE.
-        if ("LEARNER".equals(role)) {
-            if (level == null) level = 1;
-            if (exp == null) exp = 0;
-            if (currentLeague == null) currentLeague = League.BRONZE;
-            if (currentEnergy == null) currentEnergy = 25;
-            if (maxEnergy == null) maxEnergy = 25;
-            if (coins == null) coins = 0;
-            if (currentStreak == null) currentStreak = 0;
-            if (longestStreak == null) longestStreak = 0;
-        }
+@Column(name = "updated_at", insertable = false, updatable = false)
+private LocalDateTime updatedAt;
+
+@Column(name = "deleted_at")
+private LocalDateTime deletedAt;
+
+@PrePersist
+void onCreate() {
+    LocalDateTime now = LocalDateTime.now();
+    if (createdAt == null) {
+        createdAt = now;
+    }
+    if (updatedAt == null) {
+        updatedAt = now;
     }
 
-    @PreUpdate
-    void onUpdate() {
-        updatedAt = LocalDateTime.now();
+    if ("LEARNER".equals(role)) {
+        if (level == null) level = 1;
+        if (exp == null) exp = 0;
+        if (currentLeague == null) currentLeague = League.BRONZE;
+        if (currentEnergy == null) currentEnergy = 5;
+        if (maxEnergy == null) maxEnergy = 5;
+        if (coins == null) coins = 0;
+        if (currentStreak == null) currentStreak = 0;
+        if (longestStreak == null) longestStreak = 0;
+        if (streakFreezeCount == null) streakFreezeCount = 0;
+        if (streakFreezeAwarded == null) streakFreezeAwarded = false;
     }
+}
+
+@PreUpdate
+void onUpdate() {
+    updatedAt = LocalDateTime.now();
+}
 }

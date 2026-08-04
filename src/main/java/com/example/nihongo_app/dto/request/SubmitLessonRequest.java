@@ -2,6 +2,7 @@ package com.example.nihongo_app.dto.request;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import java.util.List;
 import lombok.Data;
 
 /**
@@ -47,4 +48,13 @@ public class SubmitLessonRequest {
      * Nếu FE quên gửi hoặc gửi sai, BE sẽ tự suy ra lại từ DB.
      */
     private Boolean isReplay;
+
+    /** Danh sách câu trả lời của user, FE gửi lại toàn bộ answers để BE đếm số câu sai. */
+    private List<AnswerDto> answers;
+
+    @lombok.Data
+    public static class AnswerDto {
+        private Long questionId;
+        private Boolean isCorrect;
+    }
 }
