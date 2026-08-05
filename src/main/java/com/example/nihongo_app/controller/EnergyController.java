@@ -3,6 +3,8 @@ package com.example.nihongo_app.controller;
 import com.example.nihongo_app.dto.response.EnergyResponse;
 import com.example.nihongo_app.security.AppUserPrincipal;
 import com.example.nihongo_app.service.EnergyService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,11 +19,13 @@ import org.springframework.http.HttpStatus;
 @RestController
 @RequestMapping("/api/v1/users/me/energy")
 @RequiredArgsConstructor
+@Tag(name = "Energy", description = "Năng lượng để bắt đầu bài học")
 public class EnergyController {
 
 private final EnergyService energyService;
 
 @GetMapping
+@Operation(summary = "Xem năng lượng hiện tại (tự động hồi theo số ngày trôi qua trước khi trả về)")
 public ResponseEntity<EnergyResponse> getEnergy(Authentication authentication) {
 Long userId = resolveUserId(authentication);
 energyService.recoverEnergy(userId);
@@ -35,6 +39,7 @@ return ResponseEntity.ok(response);
 }
 
 @PostMapping("/practice")
+@Operation(summary = "Cộng thêm 1 năng lượng (thưởng luyện tập)")
 public ResponseEntity<EnergyResponse> practice(Authentication authentication) {
 Long userId = resolveUserId(authentication);
 energyService.addEnergy(userId, 1);
@@ -48,6 +53,7 @@ return ResponseEntity.ok(response);
 }
 
 @PostMapping("/refill")
+@Operation(summary = "Hồi đầy năng lượng ngay bằng cách trừ coin (400 coin/lần)")
 public ResponseEntity<EnergyResponse> refill(Authentication authentication) {
 Long userId = resolveUserId(authentication);
 energyService.refillWithCoins(userId);

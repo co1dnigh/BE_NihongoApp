@@ -6,6 +6,8 @@ import com.example.nihongo_app.dto.response.StartLessonResponse;
 import com.example.nihongo_app.dto.response.SubmitLessonResponse;
 import com.example.nihongo_app.security.AppUserPrincipal;
 import com.example.nihongo_app.service.LessonAttemptService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -32,11 +34,13 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 @RequestMapping("/api/v1/lessons")
 @RequiredArgsConstructor
+@Tag(name = "Lesson Attempt", description = "Vòng đời 1 lượt làm bài: start / submit / cancel")
 public class LessonAttemptController {
 
     private final LessonAttemptService lessonAttemptService;
 
     @PostMapping("/{id}/start")
+    @Operation(summary = "Bắt đầu làm 1 bài học: kiểm tra mở khoá, trừ năng lượng, phát đề (câu hỏi đã shuffle)")
     public ResponseEntity<StartLessonResponse> startLesson(@PathVariable("id") Long lessonId,
                                                           Authentication authentication) {
         Long userId = requireUserId(authentication);
@@ -44,6 +48,7 @@ public class LessonAttemptController {
     }
 
     @PostMapping("/{id}/submit")
+    @Operation(summary = "Nộp bài: chấm điểm, cộng EXP/coin, cập nhật streak + Daily Quest, trả kết quả hoàn thành")
     public ResponseEntity<SubmitLessonResponse> submitLesson(@PathVariable("id") Long lessonId,
                                                              @Valid @RequestBody SubmitLessonRequest request,
                                                              Authentication authentication) {
@@ -53,6 +58,7 @@ public class LessonAttemptController {
     }
 
     @PostMapping("/{id}/cancel")
+    @Operation(summary = "Huỷ lượt làm bài đang dở dang, hoàn lại năng lượng đã trừ lúc start")
     public ResponseEntity<CancelLessonResponse> cancelLesson(@PathVariable("id") Long lessonId,
                                                              Authentication authentication) {
         Long userId = requireUserId(authentication);

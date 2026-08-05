@@ -2,6 +2,8 @@ package com.example.nihongo_app.controller;
 
 import com.example.nihongo_app.dto.response.UploadResponse;
 import com.example.nihongo_app.service.FileService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +23,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 @RestController
 @RequestMapping("/api/v1/uploads")
 @RequiredArgsConstructor
+@Tag(name = "File Upload", description = "Upload ảnh/audio (dùng cho câu hỏi, đáp án...)")
 public class FileController {
 
     private final FileService fileService;
@@ -28,6 +31,7 @@ public class FileController {
     // ============== SINGLE FILE ==============
 
     @PostMapping(value = "/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "Upload 1 ảnh, trả về URL đã lưu")
     public ResponseEntity<UploadResponse> uploadImage(
             @RequestParam(value = "file", required = false) MultipartFile file,
             @RequestParam(value = "image", required = false) MultipartFile image,
@@ -37,6 +41,7 @@ public class FileController {
     }
 
     @PostMapping(value = "/audio", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "Upload 1 file âm thanh, trả về URL đã lưu")
     public ResponseEntity<UploadResponse> uploadAudio(
             @RequestParam(value = "file", required = false) MultipartFile file,
             @RequestParam(value = "audio", required = false) MultipartFile audio,
@@ -48,6 +53,7 @@ public class FileController {
     // ============== MULTI FILE (BATCH) ==============
 
     @PostMapping(value = "/images/batch", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "Upload nhiều ảnh cùng lúc")
     public ResponseEntity<List<UploadResponse>> uploadImagesBatch(
             @RequestParam(value = "files", required = false) List<MultipartFile> files,
             @RequestParam(value = "file", required = false) List<MultipartFile> file,
@@ -58,6 +64,7 @@ public class FileController {
     }
 
     @PostMapping(value = "/audio/batch", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "Upload nhiều file âm thanh cùng lúc")
     public ResponseEntity<List<UploadResponse>> uploadAudiosBatch(
             @RequestParam(value = "files", required = false) List<MultipartFile> files,
             @RequestParam(value = "file", required = false) List<MultipartFile> file,

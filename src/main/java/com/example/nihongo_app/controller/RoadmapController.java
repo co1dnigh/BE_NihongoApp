@@ -3,6 +3,8 @@ package com.example.nihongo_app.controller;
 import com.example.nihongo_app.dto.response.RoadmapTopicResponse;
 import com.example.nihongo_app.security.AppUserPrincipal;
 import com.example.nihongo_app.service.RoadmapService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,11 +25,13 @@ import org.springframework.http.HttpStatus;
 @RestController
 @RequestMapping("/api/v1/topics")
 @RequiredArgsConstructor
+@Tag(name = "Roadmap", description = "Lộ trình học (Topic + Lesson kèm trạng thái khoá/mở)")
 public class RoadmapController {
 
     private final RoadmapService roadmapService;
 
     @GetMapping
+    @Operation(summary = "Lấy lộ trình học của user hiện tại (danh sách Topic, mỗi Topic kèm Lesson + trạng thái LOCKED/UNLOCKED/COMPLETED)")
     public ResponseEntity<List<RoadmapTopicResponse>> getRoadmap(Authentication authentication) {
         // AppUserPrincipal được JwtAuthenticationFilter set vào SecurityContextHolder,
         // giúp lấy userId trực tiếp mà không cần query thêm UserRepository.
