@@ -47,6 +47,19 @@ EnergyResponse response = EnergyResponse.builder()
 return ResponseEntity.ok(response);
 }
 
+@PostMapping("/ads")
+public ResponseEntity<EnergyResponse> watchAd(Authentication authentication) {
+    Long userId = resolveUserId(authentication);
+    energyService.watchAd(userId);
+    var user = energyService.getUserForRead(userId);
+    EnergyResponse response = EnergyResponse.builder()
+            .currentEnergy(Objects.requireNonNullElse(user.getCurrentEnergy(), 0))
+            .maxEnergy(Objects.requireNonNullElse(user.getMaxEnergy(), 0))
+            .lastRecoveryDate(user.getLastEnergyResetDate() != null ? user.getLastEnergyResetDate().toString() : null)
+            .build();
+    return ResponseEntity.ok(response);
+}
+
 @PostMapping("/refill")
 public ResponseEntity<EnergyResponse> refill(Authentication authentication) {
 Long userId = resolveUserId(authentication);

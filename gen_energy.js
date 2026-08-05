@@ -1,0 +1,10 @@
+const fs = require('fs');
+const p = 'D:/123/BE_NihongoApp/src/main/java/com/example/nihongo_app/service/EnergyService.java';
+let c = fs.readFileSync(p,'utf8');
+c = c.replace('import java.time.LocalDate;','import java.time.LocalDateTime;\nimport java.time.Duration;\nimport java.util.concurrent.ThreadLocalRandom;');
+c = c.replace(/localDate today = LocalDate\.now\(\)/i,'LocalDateTime now = LocalDateTime.now()');
+c = c.replace(/LocalDate lastReset = user\.getLastEnergyResetDate\(\)/,'LocalDateTime lastReset = user.getLastEnergyResetDate()');
+c = c.replace(/long daysBetween[\s\S]*?int recoveryCount = \(int\) daysBetween;/,'long elapsedSeconds = Duration.between(lastReset, now).getSeconds();\n      int recoveryCount = (int) (elapsedSeconds / RECOVERY_INTERVAL_SECONDS);');
+c = c.replace(/user\.setLastEnergyResetDate\(today\)/,'user.setLastEnergyResetDate(now.minusSeconds((int)(elapsedSeconds % RECOVERY_INTERVAL_SECONDS)))');
+fs.writeFileSync(p,c,'utf8');
+console.log('EnergyService patched');

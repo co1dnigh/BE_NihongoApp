@@ -69,17 +69,14 @@ private Integer currentEnergy;
 @Column(name = "max_energy")
 private Integer maxEnergy;
 
-@Column(name = "last_streak_date")
-private LocalDate lastStreakDate;
-
-@Column(name = "streak_freeze_count")
-private Integer streakFreezeCount;
-
-@Column(name = "streak_freeze_awarded")
-private Boolean streakFreezeAwarded;
-
 @Column(name = "last_energy_reset_date")
-private LocalDate lastEnergyResetDate;
+private LocalDateTime lastEnergyResetDate;
+
+@Column(name = "last_ad_watch_date")
+private LocalDateTime lastAdWatchDate;
+
+@Column(name = "combo_count")
+private Integer comboCount;
 
 @Column(name = "coins")
 private Integer coins;
@@ -89,6 +86,15 @@ private Integer currentStreak;
 
 @Column(name = "longest_streak")
 private Integer longestStreak;
+
+@Column(name = "streak_freeze_count")
+private Integer streakFreezeCount;
+
+@Column(name = "streak_freeze_awarded")
+private Boolean streakFreezeAwarded;
+
+@Column(name = "last_streak_date")
+private LocalDate lastStreakDate;
 
 @Column(name = "created_at", insertable = false, updatable = false)
 private LocalDateTime createdAt;
@@ -113,13 +119,14 @@ void onCreate() {
         if (level == null) level = 1;
         if (exp == null) exp = 0;
         if (currentLeague == null) currentLeague = League.BRONZE;
-        if (currentEnergy == null) currentEnergy = 5;
-        if (maxEnergy == null) maxEnergy = 5;
+        if (currentEnergy == null) currentEnergy = 25;
+        if (maxEnergy == null) maxEnergy = 25;
         if (coins == null) coins = 0;
         if (currentStreak == null) currentStreak = 0;
         if (longestStreak == null) longestStreak = 0;
         if (streakFreezeCount == null) streakFreezeCount = 0;
         if (streakFreezeAwarded == null) streakFreezeAwarded = false;
+        if (comboCount == null) comboCount = 0;
     }
 }
 

@@ -80,6 +80,7 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
         Lesson lesson = lessonRepository.findById(lessonId)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Khong tim thay bai hoc voi id=" + lessonId));
+boolean isReplay = false;
 
         // 1. Kiem tra unlock qua policy (cung thuat toan voi roadmap).
         Status status = unlockPolicy.evaluate(lesson, userId, isFirstTopicOfSystem(lesson));
@@ -88,24 +89,6 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
                     "Bai hoc nay chua duoc mo khoa. Hay hoan thanh bai truoc do truoc.");
         }
 
-        // 2. Phan nhanh replay: bai da COMPLETED -> cho phep lam lai, mien phi energy,
-        //    EXP se bi giam khi submit (xem resolveExpXxx). Van giu starsEarned cu (neu co).
-        boolean isReplay = (status == Status.COMPLETED);
-        int totalEnergy = isReplay ? 0 : resolveEntryCost(lesson);
-
-        // 3. Tru nang luong user (chi khi lan dau, replay khong mat energy).
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "Khong tim thay user voi id=" + userId));
-        if (!isReplay) {
-            if (user.getCurrentEnergy() == null || user.getCurrentEnergy() < totalEnergy) {
-                throw new InsufficientEnergyException(
-                        "Khong du nang luong. Can " + totalEnergy
-                                + " nang luong, hien co " + (user.getCurrentEnergy() == null ? 0 : user.getCurrentEnergy()));
-            }
-            user.setCurrentEnergy(user.getCurrentEnergy() - totalEnergy);
-            userRepository.save(user);
-        }
 
         // 4. Upsert progress thanh IN_PROGRESS (replay cung reset de bai duoc tinh la dang hoc).
         upsertProgress(userId, lesson, ProgressStatus.IN_PROGRESS, null);
@@ -148,7 +131,7 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
         return StartLessonResponse.builder()
                 .lessonId(lesson.getId())
                 .lessonType(lesson.getLessonType())
-                .totalEnergyDeducted(totalEnergy)
+                .totalEnergyDeducted(0)
                 .isReplay(isReplay)
                 .questions(questionResponses)
                 .build();
@@ -204,8 +187,48 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
         if (isReplay && expGained > 0) {
             double ratio = resolveReplayExpRatio(lesson);
             expGained = Math.max(1, (int) Math.round(expGained * ratio));
-        }
+ }
 
+// Tinh nang luong theo tung cau tra loi (per-question energy).
+energyService.recoverEnergy(userId);
+User userForEnergy = userRepository.findById(userId)
+    .orElseThrow(() -> new ResourceNotFoundException("Khong tim thay user voi id=" + userId));
+int maxEnergy = Objects.requireNonNullElse(userForEnergy.getMaxEnergy(), 25);
+int currentEnergy = Objects.requireNonNullElse(userForEnergy.getCurrentEnergy(), 0);
+
+if (req.getAnswers() != null && !req.getAnswers().isEmpty()) {
+    int totalCost = 0;
+    int comboCount = Objects.requireNonNullElse(userForEnergy.getComboCount(), 0);
+    int comboReward = 0;
+    java.util.Random rnd = new java.util.Random();
+
+    for (SubmitLessonRequest.AnswerDto ans : req.getAnswers()) {
+        int cost = 1; // base: 1 energy per question
+        if (!Boolean.TRUE.equals(ans.getIsCorrect())) {
+            cost += rnd.nextInt(2) + 1; // penalty 1-2 for wrong answer
+        } else {
+            comboCount++;
+            if (comboCount == 5) {
+                comboReward += rnd.nextInt(5) + 1; // reward 1-5 at combo 5
+                comboCount = 0;
+            }
+        }
+        totalCost += cost;
+    }
+
+    // Check sufficiency
+    if (currentEnergy < totalCost - comboReward) {
+        throw new InsufficientEnergyException(
+            "Khong du nang luong. Can " + (totalCost - comboReward)
+            + ", hien co " + currentEnergy);
+    }
+
+    // Apply deduction + reward
+    int newEnergy = Math.min(currentEnergy - totalCost + comboReward, maxEnergy);
+    userForEnergy.setCurrentEnergy(newEnergy);
+    userForEnergy.setComboCount(comboCount);
+    userRepository.save(userForEnergy);
+}
         // Cap nhat progress + (neu JUMP_TEST pass) danh dau tat ca bai NORMAL trong topic.
         boolean isTopicCompleted = false;
         var priorProgressOpt = progressRepository.findByUserIdAndLessonId(userId, lessonId);
@@ -266,7 +289,7 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
                 .starsEarned(starsEarned)
                 .isTopicCompleted(isTopicCompleted)
                 .message(passed ? "Tuyet voi, ban da hoan thanh bai hoc!" : "Hay tiep tuc co gang!")
-                .currentEnergy(user.getCurrentEnergy())
+                .currentEnergy(java.util.Objects.requireNonNullElse(user.getCurrentEnergy(), 0))
                 .build();
     }
 
@@ -284,25 +307,10 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
                         "Khong tim thay user voi id=" + userId));
 
         // Tinh lai entry cost de biet can hoan bao nhieu.
-        int refund = resolveEntryCost(lesson);
-
-        // Chi hoan neu progress dang IN_PROGRESS (lan truoc user da /start nhung chua /submit).
-        // Neu da COMPLETED (kha nang user goi cancel nham), khong lam gi ca.
-        var progressOpt = progressRepository.findByUserIdAndLessonId(userId, lessonId);
-        boolean needRefund = progressOpt.isPresent()
-                && progressOpt.get().getStatus() == ProgressStatus.IN_PROGRESS;
-
-        if (needRefund) {
-            int currentEnergy = user.getCurrentEnergy() == null ? 0 : user.getCurrentEnergy();
-            int maxEnergy = user.getMaxEnergy() == null ? currentEnergy + refund : user.getMaxEnergy();
-            int newEnergy = Math.min(currentEnergy + refund, maxEnergy);
-            user.setCurrentEnergy(newEnergy);
-            userRepository.save(user);
-        }
-
+    // Cancel khong hoan energy vi startLesson da khong tru nua.
         return CancelLessonResponse.builder()
-                .energyRefunded(needRefund ? refund : 0)
-                .currentEnergy(user.getCurrentEnergy())
+                .energyRefunded(0)
+                .currentEnergy(java.util.Objects.requireNonNullElse(user.getCurrentEnergy(), 0))
                 .status("LOCKED")
                 .build();
     }

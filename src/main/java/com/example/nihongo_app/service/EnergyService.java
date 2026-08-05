@@ -1,118 +1,129 @@
 package com.example.nihongo_app.service;
 
+import com.example.nihongo_app.dto.response.EnergyResponse;
 import com.example.nihongo_app.entity.User;
 import com.example.nihongo_app.exception.InsufficientCoinsException;
 import com.example.nihongo_app.exception.InsufficientEnergyException;
 import com.example.nihongo_app.exception.ResourceNotFoundException;
 import com.example.nihongo_app.repository.UserRepository;
-import java.time.LocalDate;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import java.time.LocalDateTime;
+import java.time.Duration;
+import java.util.Objects;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 @RequiredArgsConstructor
 public class EnergyService {
 
-    private final UserRepository userRepository;
-    private static final int MAX_ENERGY = 5;
-    private static final int REFILL_COST_COINS = 10;
+  private final UserRepository userRepository;
+  private static final int MAX_ENERGY = 25;
+  private static final int RECOVERY_INTERVAL_SECONDS = 3600;
+  private static final int AD_COOLDOWN_SECONDS = 1800;
+  private static final int REFILL_COST_COINS = 10;
 
-    @Transactional
-    public void recoverEnergy(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + userId));
-
-        LocalDate today = LocalDate.now();
-        LocalDate lastReset = user.getLastEnergyResetDate();
-
-        if (lastReset == null) {
-            user.setLastEnergyResetDate(today);
-            userRepository.save(user);
-            return;
-        }
-
-        long daysBetween = java.time.temporal.ChronoUnit.DAYS.between(lastReset, today);
-        int recoveryCount = (int) daysBetween;
-
-        if (recoveryCount > 0) {
-            int currentEnergy = Objects.requireNonNullElse(user.getCurrentEnergy(), 0);
-            int maxEnergy = Objects.requireNonNullElse(user.getMaxEnergy(), MAX_ENERGY);
-
-            if (currentEnergy < maxEnergy) {
-                int newEnergy = Math.min(currentEnergy + recoveryCount, maxEnergy);
-                user.setCurrentEnergy(newEnergy);
-            }
-
-            user.setLastEnergyResetDate(today);
-            userRepository.save(user);
-        }
+  @Transactional
+  public void recoverEnergy(Long userId) {
+    User user = userRepository.findById(userId)
+        .orElseThrow(() -> new ResourceNotFoundException("User not found: " + userId));
+    LocalDateTime now = LocalDateTime.now();
+    LocalDateTime lastReset = user.getLastEnergyResetDate();
+    if (lastReset == null) {
+      user.setLastEnergyResetDate(now);
+      userRepository.save(user);
+      return;
     }
-
-    @Transactional
-    public int deductEnergy(Long userId, int amount) {
-        if (amount <= 0) return 0;
-
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + userId));
-
-        recoverEnergy(userId);
-
-        int currentEnergy = Objects.requireNonNullElse(user.getCurrentEnergy(), 0);
-        if (currentEnergy < amount) {
-            throw new InsufficientEnergyException(
-                    "Khong du nang luong. Can " + amount + ", hien co " + currentEnergy);
-        }
-
-        user.setCurrentEnergy(currentEnergy - amount);
-        userRepository.save(user);
-        return currentEnergy - amount;
+    long elapsedSeconds = Duration.between(lastReset, now).getSeconds();
+    int recoveryCount = (int) (elapsedSeconds / RECOVERY_INTERVAL_SECONDS);
+    if (recoveryCount > 0) {
+      int currentEnergy = Objects.requireNonNullElse(user.getCurrentEnergy(), 0);
+      int maxEnergy = Objects.requireNonNullElse(user.getMaxEnergy(), MAX_ENERGY);
+      if (currentEnergy < maxEnergy) {
+        int newEnergy = Math.min(currentEnergy + recoveryCount, maxEnergy);
+        user.setCurrentEnergy(newEnergy);
+      }
+      user.setLastEnergyResetDate(now.minusSeconds((int)(elapsedSeconds % RECOVERY_INTERVAL_SECONDS)));
+      userRepository.save(user);
     }
+  }
 
-    @Transactional
-    public void refillWithCoins(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + userId));
-
-        recoverEnergy(userId);
-
-        int maxEnergy = Objects.requireNonNullElse(user.getMaxEnergy(), MAX_ENERGY);
-        int currentEnergy = Objects.requireNonNullElse(user.getCurrentEnergy(), 0);
-
-        if (currentEnergy >= maxEnergy) {
-            throw new IllegalStateException("Nang luong da day, khong can nap");
-        }
-
-        int coins = Objects.requireNonNullElse(user.getCoins(), 0);
-        if (coins < REFILL_COST_COINS) {
-            throw new InsufficientCoinsException(
-                    "Khong du coins. Can " + REFILL_COST_COINS + ", hien co " + coins);
-        }
-
-        user.setCoins(coins - REFILL_COST_COINS);
-        user.setCurrentEnergy(maxEnergy);
-        userRepository.save(user);
+  @Transactional
+  public int deductEnergy(Long userId, int amount) {
+    if (amount <= 0) return 0;
+    User user = userRepository.findById(userId)
+        .orElseThrow(() -> new ResourceNotFoundException("User not found: " + userId));
+    recoverEnergy(userId);
+    int currentEnergy = Objects.requireNonNullElse(user.getCurrentEnergy(), 0);
+    if (currentEnergy < amount) {
+      throw new InsufficientEnergyException(
+          "Khong du nang luong. Can " + amount + ", hien co " + currentEnergy);
     }
+    user.setCurrentEnergy(currentEnergy - amount);
+    userRepository.save(user);
+    return currentEnergy - amount;
+  }
 
-    @Transactional
-    public void addEnergy(Long userId, int amount) {
-        if (amount <= 0) return;
-
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + userId));
-
-        int maxEnergy = Objects.requireNonNullElse(user.getMaxEnergy(), MAX_ENERGY);
-        int currentEnergy = Objects.requireNonNullElse(user.getCurrentEnergy(), 0);
-
-        user.setCurrentEnergy(Math.min(currentEnergy + amount, maxEnergy));
-        userRepository.save(user);
+  @Transactional
+  public void refillWithCoins(Long userId) {
+    User user = userRepository.findById(userId)
+        .orElseThrow(() -> new ResourceNotFoundException("User not found: " + userId));
+    recoverEnergy(userId);
+    int maxEnergy = Objects.requireNonNullElse(user.getMaxEnergy(), MAX_ENERGY);
+    int currentEnergy = Objects.requireNonNullElse(user.getCurrentEnergy(), 0);
+    if (currentEnergy >= maxEnergy) {
+      throw new IllegalStateException("Nang luong da day, khong can nap");
     }
-
-    @org.springframework.transaction.annotation.Transactional(propagation = Propagation.REQUIRES_NEW)
-    public User getUserForRead(Long userId) {
-        return userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + userId));
+    int coins = Objects.requireNonNullElse(user.getCoins(), 0);
+    if (coins < REFILL_COST_COINS) {
+      throw new InsufficientCoinsException(
+          "Khong du coins. Can " + REFILL_COST_COINS + ", hien co " + coins);
     }
+    user.setCoins(coins - REFILL_COST_COINS);
+    user.setCurrentEnergy(maxEnergy);
+    userRepository.save(user);
+  }
+
+  @Transactional
+  public void addEnergy(Long userId, int amount) {
+    if (amount <= 0) return;
+    recoverEnergy(userId);
+    User user = userRepository.findById(userId)
+        .orElseThrow(() -> new ResourceNotFoundException("User not found: " + userId));
+    int maxEnergy = Objects.requireNonNullElse(user.getMaxEnergy(), MAX_ENERGY);
+    int currentEnergy = Objects.requireNonNullElse(user.getCurrentEnergy(), 0);
+    user.setCurrentEnergy(Math.min(currentEnergy + amount, maxEnergy));
+    userRepository.save(user);
+  }
+
+  @Transactional
+  public void watchAd(Long userId) {
+    recoverEnergy(userId);
+    User user = userRepository.findById(userId)
+        .orElseThrow(() -> new ResourceNotFoundException("User not found: " + userId));
+    int maxEnergy = Objects.requireNonNullElse(user.getMaxEnergy(), MAX_ENERGY);
+    int currentEnergy = Objects.requireNonNullElse(user.getCurrentEnergy(), 0);
+    if (currentEnergy >= maxEnergy) {
+      throw new IllegalStateException("Nang luong da day, khong can xem quang cao");
+    }
+    LocalDateTime now = LocalDateTime.now();
+    LocalDateTime lastAdWatch = user.getLastAdWatchDate();
+    if (lastAdWatch != null) {
+      long elapsedSeconds = Duration.between(lastAdWatch, now).getSeconds();
+      if (elapsedSeconds < AD_COOLDOWN_SECONDS) {
+        throw new IllegalStateException("Vui long cho " + ((AD_COOLDOWN_SECONDS - elapsedSeconds) / 60) + " phut de xem quang cao lan nua");
+      }
+    }
+    user.setCurrentEnergy(Math.min(currentEnergy + 1, maxEnergy));
+    user.setLastAdWatchDate(now);
+    userRepository.save(user);
+  }
+
+  @org.springframework.transaction.annotation.Transactional(propagation = Propagation.REQUIRES_NEW)
+  public User getUserForRead(Long userId) {
+    return userRepository.findById(userId)
+        .orElseThrow(() -> new ResourceNotFoundException("User not found: " + userId));
+  }
 }
