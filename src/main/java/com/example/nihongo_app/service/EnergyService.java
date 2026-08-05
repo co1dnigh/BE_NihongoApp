@@ -18,7 +18,7 @@ public class EnergyService {
 
     private final UserRepository userRepository;
     private static final int MAX_ENERGY = 5;
-    private static final int REFILL_COST_COINS = 10;
+    private static final int REFILL_COST_COINS = 400;
 
     @Transactional
     public void recoverEnergy(Long userId) {

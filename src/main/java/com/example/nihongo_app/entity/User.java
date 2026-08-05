@@ -81,6 +81,9 @@ private Boolean streakFreezeAwarded;
 @Column(name = "last_energy_reset_date")
 private LocalDate lastEnergyResetDate;
 
+@Column(name = "last_chest_opened_date")
+private LocalDate lastChestOpenedDate;
+
 @Column(name = "coins")
 private Integer coins;
 

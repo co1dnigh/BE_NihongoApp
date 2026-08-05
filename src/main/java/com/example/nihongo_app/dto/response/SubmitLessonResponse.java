@@ -24,6 +24,9 @@ public class SubmitLessonResponse {
     /** EXP mà user vừa nhận được từ lần nộp bài này (đã được cộng vào {@code users.exp}). */
     Integer expEarned;
 
+    /** Coin mà user vừa nhận được từ lần nộp bài này (đã được cộng vào {@code users.coins}). */
+    Integer coinsEarned;
+
     /**
      * Số sao đạt được (chỉ có ý nghĩa với TIMED_REVIEW).
      * Các loại bài khác luôn là 0.

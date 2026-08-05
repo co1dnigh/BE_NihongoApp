@@ -7,10 +7,13 @@ import com.example.nihongo_app.dto.response.StartLessonResponse;
 import com.example.nihongo_app.dto.response.StartLessonResponse.StartLessonOption;
 import com.example.nihongo_app.dto.response.StartLessonResponse.StartLessonQuestion;
 import com.example.nihongo_app.dto.response.SubmitLessonResponse;
+import com.example.nihongo_app.entity.CoinTransaction;
+import com.example.nihongo_app.entity.CoinTransaction.TransactionType;
 import com.example.nihongo_app.entity.Lesson;
 import com.example.nihongo_app.entity.Lesson.LessonType;
 import com.example.nihongo_app.entity.LessonQuestion;
 import com.example.nihongo_app.entity.LessonQuestionOption;
+import com.example.nihongo_app.entity.QuestDefinition.QuestType;
 import com.example.nihongo_app.entity.User;
 import com.example.nihongo_app.entity.UserExpLog;
 import com.example.nihongo_app.entity.UserLessonProgress;
@@ -18,12 +21,14 @@ import com.example.nihongo_app.entity.UserLessonProgress.ProgressStatus;
 import com.example.nihongo_app.exception.InsufficientEnergyException;
 import com.example.nihongo_app.exception.LessonLockedException;
 import com.example.nihongo_app.exception.ResourceNotFoundException;
+import com.example.nihongo_app.repository.CoinTransactionRepository;
 import com.example.nihongo_app.repository.LessonQuestionOptionRepository;
 import com.example.nihongo_app.repository.LessonQuestionRepository;
 import com.example.nihongo_app.repository.LessonRepository;
 import com.example.nihongo_app.repository.UserExpLogRepository;
 import com.example.nihongo_app.repository.UserLessonProgressRepository;
 import com.example.nihongo_app.repository.UserRepository;
+import com.example.nihongo_app.service.DailyQuestService;
 import com.example.nihongo_app.service.LessonAttemptService;
 import com.example.nihongo_app.service.LessonUnlockPolicy;
 import com.example.nihongo_app.service.StreakService;
@@ -31,6 +36,7 @@ import com.example.nihongo_app.service.EnergyService;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -66,6 +72,17 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
     private final LessonUnlockPolicy unlockPolicy;
     private final StreakService streakService;
     private final EnergyService energyService;
+    private final CoinTransactionRepository coinTransactionRepository;
+    private final DailyQuestService dailyQuestService;
+
+    private static final int NORMAL_COIN_BASE = 8;
+    private static final int NORMAL_COIN_PERFECT_BONUS = 4;
+    private static final int TIMED_REVIEW_COIN_BASE = 6;
+    private static final int TIMED_REVIEW_COIN_PERFECT_BONUS = 3;
+    private static final int JUMP_TEST_COIN_REWARD = 20;
+    private static final int STREAK_MILESTONE_7_BONUS = 50;
+    private static final int STREAK_MILESTONE_30_BONUS = 200;
+    private static final int STREAK_MILESTONE_100_BONUS = 1000;
 
     // ============================ START ============================
 
@@ -169,18 +186,22 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
 
         // Tinh toan theo loai bai.
         int expGained;
+        int coinsGained;
         int starsEarned = 0;
         boolean passed;
         UserExpLog.SourceType sourceType;
+        boolean perfectLesson = req.getTotalMistakes() != null && req.getTotalMistakes() == 0;
 
         switch (lesson.getLessonType()) {
             case NORMAL -> {
                 expGained = resolveNormalExp(lesson);
+                coinsGained = NORMAL_COIN_BASE + (perfectLesson ? NORMAL_COIN_PERFECT_BONUS : 0);
                 passed = true;
                 sourceType = UserExpLog.SourceType.NEW_LESSON;
             }
             case TIMED_REVIEW -> {
                 expGained = resolveTimedReviewExp(lesson);
+                coinsGained = TIMED_REVIEW_COIN_BASE + (perfectLesson ? TIMED_REVIEW_COIN_PERFECT_BONUS : 0);
                 starsEarned = resolveStars(lesson, req);
                 passed = true;
                 sourceType = UserExpLog.SourceType.REVIEW_LESSON;
@@ -188,17 +209,23 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
             case JUMP_TEST -> {
                 passed = req.getHeartsRemaining() != null && req.getHeartsRemaining() > 0;
                 expGained = passed ? resolveJumpTestExp(lesson) : 0;
+                coinsGained = passed ? JUMP_TEST_COIN_REWARD : 0;
                 sourceType = UserExpLog.SourceType.JUMP_TEST;
             }
             default -> throw new IllegalArgumentException(
                     "Loai bai hoc khong ho tro: " + lesson.getLessonType());
         }
 
-        // Replay: giam EXP (vd chi con 30% so voi lan dau).
+        // Replay: giam EXP + coin (vd chi con 30% so voi lan dau), tranh farm bang cach lam lai lien tuc.
         // JUMP_TEST replay van duoc tinh la NEW_LESSON/REVIEW_LESSON vi khong con "nhay coc".
-        if (isReplay && expGained > 0) {
+        if (isReplay) {
             double ratio = resolveReplayExpRatio(lesson);
-            expGained = Math.max(1, (int) Math.round(expGained * ratio));
+            if (expGained > 0) {
+                expGained = Math.max(1, (int) Math.round(expGained * ratio));
+            }
+            if (coinsGained > 0) {
+                coinsGained = Math.max(1, (int) Math.round(coinsGained * ratio));
+            }
         }
 
         // Cap nhat progress + (neu JUMP_TEST pass) danh dau tat ca bai NORMAL trong topic.
@@ -241,6 +268,27 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
         }
 
         if (passed) {
+            // Cong coin nhan duoc + ghi log giao dich.
+            if (coinsGained > 0) {
+                user.setCoins(Objects.requireNonNullElse(user.getCoins(), 0) + coinsGained);
+                userRepository.save(user);
+                coinTransactionRepository.save(CoinTransaction.builder()
+                        .userId(userId)
+                        .amount(coinsGained)
+                        .transactionType(TransactionType.EARN_LESSON)
+                        .referenceId(lesson.getId())
+                        .build());
+            }
+
+            // Cap nhat tien do Daily Quest.
+            dailyQuestService.recordProgress(userId, QuestType.COMPLETE_LESSONS, 1);
+            if (req.getTotalCorrect() != null && req.getTotalCorrect() > 0) {
+                dailyQuestService.recordProgress(userId, QuestType.CORRECT_ANSWERS, req.getTotalCorrect());
+            }
+            if (perfectLesson) {
+                dailyQuestService.recordProgress(userId, QuestType.PERFECT_LESSON, 1);
+            }
+
             streakService.checkAndUpdateStreak(userId);
             int streakBonus = calculateStreakBonus(user.getCurrentStreak());
             if (streakBonus > 0) {
@@ -253,11 +301,30 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
                         .referenceId(lesson.getId())
                         .build());
             }
+
+            // Thuong coin khi vua dat moc streak (7/30/100 ngay) - rieng biet voi streakBonus EXP o tren.
+            int updatedStreak = Objects.requireNonNullElse(user.getCurrentStreak(), 0);
+            int milestoneCoinBonus = switch (updatedStreak) {
+                case 7 -> STREAK_MILESTONE_7_BONUS;
+                case 30 -> STREAK_MILESTONE_30_BONUS;
+                case 100 -> STREAK_MILESTONE_100_BONUS;
+                default -> 0;
+            };
+            if (milestoneCoinBonus > 0) {
+                user.setCoins(Objects.requireNonNullElse(user.getCoins(), 0) + milestoneCoinBonus);
+                userRepository.save(user);
+                coinTransactionRepository.save(CoinTransaction.builder()
+                        .userId(userId)
+                        .amount(milestoneCoinBonus)
+                        .transactionType(TransactionType.STREAK_BONUS)
+                        .build());
+            }
         }
 
         return SubmitLessonResponse.builder()
                 .status(passed ? "COMPLETED" : "IN_PROGRESS")
                 .expEarned(expGained)
+                .coinsEarned(passed ? coinsGained : 0)
                 .starsEarned(starsEarned)
                 .isTopicCompleted(isTopicCompleted)
                 .message(passed ? "Tuyet voi, ban da hoan thanh bai hoc!" : "Hay tiep tuc co gang!")

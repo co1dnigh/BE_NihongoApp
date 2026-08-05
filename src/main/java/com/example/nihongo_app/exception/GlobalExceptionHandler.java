@@ -141,6 +141,22 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(buildBody(HttpStatus.BAD_REQUEST, ex.getMessage(), null));
     }
 
+    @ExceptionHandler(com.example.nihongo_app.exception.InsufficientCoinsException.class)
+    public ResponseEntity<Object> handleInsufficientCoins(
+            com.example.nihongo_app.exception.InsufficientCoinsException ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(buildBody(HttpStatus.BAD_REQUEST, ex.getMessage(), null));
+    }
+
+    @ExceptionHandler(com.example.nihongo_app.exception.ChestNotAvailableException.class)
+    public ResponseEntity<Object> handleChestNotAvailable(
+            com.example.nihongo_app.exception.ChestNotAvailableException ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(buildBody(HttpStatus.BAD_REQUEST, ex.getMessage(), null));
+    }
+
     // ===== 7. Bắt tất cả lỗi còn sót lại (fallback cuối cùng, tránh lộ stack trace) =====
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleAll(Exception ex) {
