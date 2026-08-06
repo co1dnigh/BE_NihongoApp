@@ -83,6 +83,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(buildBody(HttpStatus.BAD_REQUEST, ex.getMessage(), null));
     }
 
+    // ===== 3c. Vi pham dieu kien nghiep vu (vd nang luong da day, chua het cooldown...) =====
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<Object> handleIllegalState(IllegalStateException ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(buildBody(HttpStatus.BAD_REQUEST, ex.getMessage(), null));
+    }
+
     // ===== 4. Vi phạm ràng buộc DB (trùng unique key, foreign key không tồn tại...) =====
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<Object> handleDataIntegrityViolation(DataIntegrityViolationException ex) {

@@ -79,7 +79,10 @@ private Integer streakFreezeCount;
 private Boolean streakFreezeAwarded;
 
 @Column(name = "last_energy_reset_date")
-private LocalDate lastEnergyResetDate;
+private LocalDateTime lastEnergyResetDate;
+
+@Column(name = "last_ad_watch_date")
+private LocalDateTime lastAdWatchDate;
 
 @Column(name = "last_chest_opened_date")
 private LocalDate lastChestOpenedDate;
