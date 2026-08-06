@@ -53,7 +53,7 @@ return ResponseEntity.ok(response);
 }
 
 @PostMapping("/ads")
-@Operation(summary = "Xem quảng cáo để hồi thêm 1 năng lượng (cooldown 30 phút/lần)")
+@Operation(summary = "Xem quảng cáo để hồi thêm 5 năng lượng (cooldown 30 phút/lần)")
 public ResponseEntity<EnergyResponse> watchAd(Authentication authentication) {
 Long userId = resolveUserId(authentication);
 energyService.watchAd(userId);

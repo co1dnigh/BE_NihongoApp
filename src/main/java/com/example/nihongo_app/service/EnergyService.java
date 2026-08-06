@@ -22,6 +22,7 @@ public class EnergyService {
     private static final int REFILL_COST_COINS = 400;
     private static final int RECOVERY_INTERVAL_SECONDS = 3600;
     private static final int AD_COOLDOWN_SECONDS = 1800;
+    private static final int AD_REWARD_ENERGY = 5;
 
     /**
      * Hoi nang luong thu dong: +1 nang luong moi {@value #RECOVERY_INTERVAL_SECONDS} giay
@@ -60,8 +61,8 @@ public class EnergyService {
     }
 
     /**
-     * Hoi 1 nang luong bang cach xem quang cao, cach nhau toi thieu
-     * {@value #AD_COOLDOWN_SECONDS} giay giua 2 lan.
+     * Hoi {@value #AD_REWARD_ENERGY} nang luong bang cach xem quang cao (rewarded ad),
+     * cach nhau toi thieu {@value #AD_COOLDOWN_SECONDS} giay giua 2 lan.
      */
     @Transactional
     public void watchAd(Long userId) {
@@ -87,7 +88,7 @@ public class EnergyService {
             }
         }
 
-        user.setCurrentEnergy(Math.min(currentEnergy + 1, maxEnergy));
+        user.setCurrentEnergy(Math.min(currentEnergy + AD_REWARD_ENERGY, maxEnergy));
         user.setLastAdWatchDate(now);
         userRepository.save(user);
     }

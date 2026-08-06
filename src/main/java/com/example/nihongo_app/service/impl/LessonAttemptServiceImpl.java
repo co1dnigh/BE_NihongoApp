@@ -83,6 +83,8 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
     private static final int STREAK_MILESTONE_7_BONUS = 50;
     private static final int STREAK_MILESTONE_30_BONUS = 200;
     private static final int STREAK_MILESTONE_100_BONUS = 1000;
+    /** Khop voi max_energy mac dinh (5) de user day nang luong luon start duoc it nhat 1 bai. */
+    private static final int DEFAULT_ENTRY_COST_ENERGY = 5;
 
     // ============================ START ============================
 
@@ -397,15 +399,21 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
      * Tinh entry cost tu configJson.
      * <ul>
      *   <li>Neu configJson.co {@code entryCostEnergy} -> dung no (uu tien).</li>
-     *   <li>Neu khong -> dung {@code questionsPerSession} (mac dinh 10) de khop voi so cau user se lam.</li>
+     *   <li>Neu khong -> dung {@link #DEFAULT_ENTRY_COST_ENERGY}.</li>
      * </ul>
+     *
+     * <p>Truoc day fallback ve {@code questionsPerSession} (mac dinh 10), nhung tu khi
+     * {@code max_energy} mac dinh ha xuong 5 (xem {@code EnergyService.MAX_ENERGY}), gia tri
+     * 10 khien khong learner nao start noi bai nao ca du day nang luong. Tach rieng hang so
+     * nay khoi so cau hoi/session de 2 khai niem doc lap: 1 lesson van co the co 10 cau
+     * nhung chi ton 5 nang luong de vao hoc.
      */
     private int resolveEntryCost(Lesson lesson) {
         JsonNode config = lesson.getConfigJson();
         if (config != null && config.has("entryCostEnergy")) {
             return config.get("entryCostEnergy").asInt();
         }
-        return resolveQuestionsPerSession(lesson);
+        return DEFAULT_ENTRY_COST_ENERGY;
     }
 
     private int resolveNormalExp(Lesson lesson) {
