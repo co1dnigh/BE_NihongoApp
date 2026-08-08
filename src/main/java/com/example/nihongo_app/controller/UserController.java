@@ -7,6 +7,7 @@ import com.example.nihongo_app.dto.response.AuthResponse;
 import com.example.nihongo_app.dto.response.UserOverviewResponse;
 import com.example.nihongo_app.dto.response.UserProfileResponse;
 import com.example.nihongo_app.dto.response.UserSearchResponse;
+import com.example.nihongo_app.dto.response.UserStatsResponse;
 import com.example.nihongo_app.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,6 +32,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     private final UserService userService;
+
+    @GetMapping("/me")
+    @Operation(summary = "Lấy toàn bộ trạng thái gamification của user hiện tại (level/exp/league/coins/energy/streak) trong 1 lần gọi — dùng để FE hydrate UI ngay sau khi có token")
+    public ResponseEntity<UserStatsResponse> getMyStats(Principal principal) {
+        return ResponseEntity.ok(userService.getMyStats(principal.getName()));
+    }
 
     @PutMapping("/me/phone")
     @Operation(summary = "Cập nhật số điện thoại của user hiện tại")

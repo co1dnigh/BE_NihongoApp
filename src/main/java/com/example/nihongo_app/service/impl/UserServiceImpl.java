@@ -8,9 +8,11 @@ import com.example.nihongo_app.dto.response.AdminSummaryResponse;
 import com.example.nihongo_app.dto.response.UserOverviewResponse;
 import com.example.nihongo_app.dto.response.UserSearchResponse;
 import com.example.nihongo_app.dto.response.UserProfileResponse;
+import com.example.nihongo_app.dto.response.UserStatsResponse;
 import com.example.nihongo_app.entity.User;
 import com.example.nihongo_app.repository.UserRepository;
 import com.example.nihongo_app.security.JwtTokenProvider;
+import com.example.nihongo_app.service.EnergyService;
 import com.example.nihongo_app.service.UserService;
 import java.util.Collections;
 import java.util.List;
@@ -28,6 +30,37 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
+    private final EnergyService energyService;
+
+    @Override
+    @Transactional
+    public UserStatsResponse getMyStats(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
+        // Hoi nang luong thu dong truoc khi doc, de currentEnergy luon chinh xac ngay ca khi
+        // FE chi goi endpoint nay ma khong goi rieng GET /energy.
+        if (user.getId() != null) {
+            energyService.recoverEnergy(user.getId());
+        }
+
+        return UserStatsResponse.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .displayName(user.getDisplayName())
+                .username(user.getUsername())
+                .role(user.getRole())
+                .level(user.getLevel())
+                .exp(user.getExp())
+                .currentLeague(user.getCurrentLeague())
+                .coins(user.getCoins())
+                .currentEnergy(user.getCurrentEnergy())
+                .maxEnergy(user.getMaxEnergy())
+                .currentStreak(user.getCurrentStreak())
+                .longestStreak(user.getLongestStreak())
+                .streakFreezeCount(user.getStreakFreezeCount())
+                .build();
+    }
 
     @Override
     @Transactional(readOnly = true)

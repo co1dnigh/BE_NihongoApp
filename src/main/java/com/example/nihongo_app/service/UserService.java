@@ -8,9 +8,12 @@ import com.example.nihongo_app.dto.response.AdminSummaryResponse;
 import com.example.nihongo_app.dto.response.UserOverviewResponse;
 import com.example.nihongo_app.dto.response.UserSearchResponse;
 import com.example.nihongo_app.dto.response.UserProfileResponse;
+import com.example.nihongo_app.dto.response.UserStatsResponse;
 import java.util.List;
 
 public interface UserService {
+
+    UserStatsResponse getMyStats(String email);
 
     List<AdminSummaryResponse> getAllUsers();
     AdminSummaryResponse getUserById(Long id);

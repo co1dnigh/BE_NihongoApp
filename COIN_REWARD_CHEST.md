@@ -4,8 +4,9 @@
 > (dựa trên `integration/energy-streak-lesson-fix`, đã bao gồm sẵn fix lỗi mở khoá bài học
 > xuyên Topic + hệ thống Energy/Streak của nhánh `EnegyStreak`).
 >
-> Gồm 3 commit: tính năng lõi (`10735c8`), tài liệu Swagger/OpenAPI (`e2fb53d`), và bộ test
-> (`8706c60`).
+> Tài liệu này được cập nhật dần theo các đợt commit trên nhánh: tính năng lõi coin/quest/chest,
+> tài liệu Swagger/OpenAPI, bộ test, fix bug năng lượng, và gần nhất là **thiết kế lại toàn bộ
+> kinh tế năng lượng** (xem [mục 4.5](#45-năng-lượng-energy)).
 
 ## Mục lục
 
@@ -132,14 +133,19 @@ ALTER TABLE coin_transactions
 | File | Thay đổi |
 |---|---|
 | `service/StreakService.java` | Thêm `buyStreakFreeze(userId)`: giá cố định **200 coin**, tăng `streakFreezeCount`, ném `InsufficientCoinsException` nếu thiếu coin. Không đụng tới `checkAndUpdateStreak()` có sẵn của nhánh `EnegyStreak`. |
-| `service/EnergyService.java` | Đổi hằng số `REFILL_COST_COINS` từ **10 → 400** coin/lần hồi đầy năng lượng, theo đúng thiết kế kinh tế (hồi tim tốn 350-500 gems). |
-| `service/impl/LessonAttemptServiceImpl.java` | Bổ sung trong `submitLesson()`: tính `coinsGained` theo loại bài + bonus "không sai câu nào", nhân tỉ lệ replay giống cách EXP đã làm; gọi `dailyQuestService.recordProgress(...)` cho từng loại quest liên quan; thưởng coin khi vừa **đạt đúng** mốc streak 7/30/100 ngày (tách biệt với `calculateStreakBonus` — thưởng EXP mỗi ngày streak ≥7 mà đồng đội đã thêm). |
+| `service/EnergyService.java` | Đổi `REFILL_COST_COINS` 10→400; và ở đợt sau, **thiết kế lại toàn bộ thang năng lượng**: `MAX_ENERGY` 5→25, hồi tự nhiên +1/giờ→+5/giờ (xem [4.5](#45-năng-lượng-energy)). |
+| `service/impl/LessonAttemptServiceImpl.java` | Bổ sung trong `submitLesson()`: tính `coinsGained` theo loại bài + bonus "không sai câu nào", nhân tỉ lệ replay giống cách EXP đã làm; gọi `dailyQuestService.recordProgress(...)` cho từng loại quest liên quan; thưởng coin khi vừa **đạt đúng** mốc streak 7/30/100 ngày (tách biệt với `calculateStreakBonus` — thưởng EXP mỗi ngày streak ≥7 mà đồng đội đã thêm); **hoàn một phần năng lượng** đã trừ lúc `/start` tuỳ kết quả bài (xem [4.5](#45-năng-lượng-energy)). |
+| `entity/User.java` *(đợt sau)* | Default `currentEnergy`/`maxEnergy` khi tạo Learner mới: 5→25. |
 
 ### DTO mới
 `ChestOpenResponse` (`coinsRewarded`, `currentCoins`), `ChestStatusResponse` (`available`,
 `alreadyOpenedToday`, `questsCompleted`, `questsRequired`), `QuestResponse` (`questId`, `title`,
 `questType`, `currentProgress`, `targetValue`, `completed`). `SubmitLessonResponse` thêm field
 `coinsEarned` (song song với `expEarned` đã có).
+
+`UserStatsResponse` *(đợt sau)* — gộp toàn bộ trạng thái gamification (`level`, `exp`,
+`currentLeague`, `coins`, `currentEnergy`, `maxEnergy`, `currentStreak`, `longestStreak`,
+`streakFreezeCount`) trong 1 DTO, trả về bởi `GET /api/v1/users/me`. Xem [4.6](#46-api-tổng-hợp-trạng-thái-get-usersme).
 
 ### Exception mới
 `ChestNotAvailableException` (400) — theo đúng pattern `LessonLockedException`.
@@ -149,7 +155,8 @@ sẵn từ nhánh `EnegyStreak` — exception này được `EnergyController.re
 
 ### Controller mới/sửa
 `ChestController`, `QuestController` (mới); `StreakController` được mở rộng thêm endpoint mua
-Freeze (xem [API Reference](#5-api-reference)).
+Freeze; `UserController` *(đợt sau)* thêm `GET /me` trả `UserStatsResponse` (xem
+[API Reference](#5-api-reference)).
 
 ---
 
@@ -201,6 +208,64 @@ Không thoả 1 trong 2 → `ChestNotAvailableException` (400). Thoả cả 2 �
 **30–100 coin** ở server (`ThreadLocalRandom`, không cho client tự roll để tránh gian lận), cộng
 vào `user.coins`, set `lastChestOpenedDate = today`, ghi `CoinTransaction(DAILY_CHEST)`.
 
+### 4.5 Năng lượng (Energy)
+
+**Đã thiết kế lại** so với đợt merge `EnegyStreak` ban đầu. Ban đầu (nhánh `EnegyStreak`) đặt `max_energy = 5`, và khi merge vào đây thì
+`resolveEntryCost()` mặc định fallback về `questionsPerSession` (10) — **10 > 5** khiến không
+learner nào start được bài nào cả (xem mục 8 lịch sử). Sau khi cân nhắc, đã **thiết kế lại toàn
+bộ thang đo** thay vì chỉ vá số:
+
+| Thông số | Giá trị |
+|---|---|
+| `max_energy` mặc định user mới (`User.onCreate`) | **25** |
+| Chi phí bắt đầu 1 bài (`DEFAULT_ENTRY_COST_ENERGY`) | **10** |
+| Hoàn lại nếu bài **hoàn hảo** (`totalMistakes == 0`) | **+5** (tốn ròng 5) |
+| Hoàn lại nếu bài **khá** (`totalMistakes` 1–2) | **+2** (tốn ròng 8) |
+| Hồi tự nhiên (`RECOVERY_AMOUNT_PER_INTERVAL`/giờ) | **+5/giờ** (đầy sau 5 tiếng) |
+| Xem quảng cáo (`watchAd`) | **+5**, cooldown 30 phút (không đổi) |
+| Hồi đầy bằng coin (`refillWithCoins`) | **400 coin** (không đổi — vốn đã tính cho thang 25) |
+
+**Cơ chế hoàn năng lượng** nằm trong `LessonAttemptServiceImpl.submitLesson()`, bên trong khối
+`if (passed)`, dùng lại đúng `req.getTotalMistakes()` đã có sẵn (không cần field mới):
+
+```java
+int entryCostCharged = isReplay ? 0 : resolveEntryCost(lesson);
+int energyRefund = perfectLesson ? PERFECT_LESSON_ENERGY_REFUND
+        : (goodLesson ? GOOD_LESSON_ENERGY_REFUND : 0);
+energyRefund = Math.min(energyRefund, entryCostCharged); // chan exploit, xem duoi
+```
+
+**Chặn exploit farm năng lượng**: nếu không cap `energyRefund` ở `entryCostCharged`, user có thể
+replay vô hạn 1 bài đã hoàn thành thật hoàn hảo để nhận +5 năng lượng miễn phí mỗi lần (vì replay
+vốn không tốn gì lúc `/start`). Cap ở đúng số **thực sự đã trừ** giải quyết đồng thời 2 case:
+replay (`entryCostCharged = 0` → không hoàn gì) và lesson có `configJson.entryCostEnergy` rẻ hơn
+mức hoàn mặc định (không hoàn vượt quá số đã trừ).
+
+**Migration**: `V23__increase_max_energy_to_25.sql` nâng `max_energy` của user LEARNER đã tồn tại
+lên 25 (chỉ nâng trần, không cộng thêm `current_energy` — user tự hồi dần qua cơ chế +5/giờ).
+Lưu ý `V22` đã được dùng trước đó cho đợt đổi cơ chế hồi theo giờ + thêm `watchAd`, nên bản vá này
+là `V23`.
+
+### 4.6 API tổng hợp trạng thái (`GET /users/me`)
+
+Giải quyết trực tiếp phản hồi từ FE: trước đây **không có endpoint nào** trả về đủ
+exp/level/coins/energy/streak trong 1 lần gọi — `AuthResponse.user` (lúc login) chỉ có
+`id/email/displayName/username/role`, còn `coins`/`exp` thậm chí chưa từng được trả về ở bất kỳ
+đâu. Hệ quả: FE phải chờ user submit bài / mở rương mới có dữ liệu thật, còn lại hiển thị giá trị
+mặc định hardcode phía client.
+
+- `dto/response/UserStatsResponse.java` *(mới)*: gộp `id/email/displayName/username/role` +
+  `level/exp/currentLeague` + `coins` + `currentEnergy/maxEnergy` + `currentStreak/longestStreak/
+  streakFreezeCount`.
+- `UserService.getMyStats(String email)` *(mới)*, implement trong `UserServiceImpl`: fetch user
+  theo email, gọi `energyService.recoverEnergy(userId)` **trước khi đọc** để `currentEnergy` luôn
+  chính xác (không "đứng hình" tới khi FE gọi riêng `/energy`), rồi map sang DTO.
+- `UserController.getMyStats()` *(mới)*: `GET /api/v1/users/me`.
+
+Cố tình **không** gộp thêm `lastEnergyResetDate`/`lastStreakDate` vào response này — 2 field đó
+chỉ cần thiết cho việc tính cooldown, đã có sẵn ở `GET /energy`/`GET /streak` riêng, giữ endpoint
+này gọn cho đúng mục đích "hydrate số liệu hiển thị".
+
 ---
 
 ## 5. API Reference
@@ -209,6 +274,7 @@ Tất cả endpoint dưới đây yêu cầu JWT (`Authorization: Bearer <token>
 
 | Method | Path | Mô tả |
 |---|---|---|
+| GET | `/api/v1/users/me` | **Trạng thái tổng hợp** (level/exp/league/coins/energy/streak) — gọi ngay sau login |
 | GET | `/api/v1/users/me/quests` | Xem 3 Daily Quest hôm nay (tự tạo nếu chưa có) |
 | GET | `/api/v1/users/me/chest` | Xem trạng thái rương thưởng hôm nay |
 | POST | `/api/v1/users/me/chest/open` | Mở rương, nhận coin ngẫu nhiên 30–100 |
@@ -241,7 +307,7 @@ cần tiền tố `Bearer `).
 ## 7. Testing
 
 Trước thay đổi này, project chỉ có 1 test placeholder (`NihongoAppApplicationTests`, chỉ check
-context load). Giờ có **49 test**, chia 3 nhóm:
+context load). Giờ có **65 test**, chia 3 nhóm:
 
 ### Unit test (Mockito, không cần DB)
 | File | Test |
@@ -249,9 +315,11 @@ context load). Giờ có **49 test**, chia 3 nhóm:
 | `DailyQuestServiceTest` | Gán quest ngẫu nhiên, cộng tiến độ + cap + đánh completed, bỏ qua quest sai loại/đã xong |
 | `ChestServiceTest` | Trạng thái rương, chặn mở khi thiếu điều kiện, mở thành công đúng khoảng thưởng |
 | `StreakServiceTest` | *(chỉ scope `buyStreakFreeze`)* thiếu/đủ coin |
+| `EnergyServiceTest` | Hồi tự nhiên +5/giờ (cap ở max), xem QC (+5, chặn khi đầy/chưa hết cooldown), trừ năng lượng, hồi đầy bằng coin |
+| `UserServiceImplTest` | *(chỉ scope `getMyStats`)* trả đủ field, gọi `recoverEnergy` trước khi đọc, 404 khi không tìm thấy user |
 | `LessonUnlockPolicyTest` | Toàn bộ thuật toán mở khoá, đặc biệt **regression test bug cross-topic** đã fix trước đó |
 | `RoadmapServiceImplTest` | Dùng `LessonUnlockPolicy` thật (không mock) để test nguyên luồng `GET /topics` |
-| `LessonAttemptServiceImplTest` | Coin/quest/streak-milestone trong `submitLesson`, cộng cả `startLesson`/`cancelLesson` (unlock, trừ/hoàn năng lượng, giới hạn số câu hỏi) |
+| `LessonAttemptServiceImplTest` | Coin/quest/streak-milestone + 3 tier hoàn năng lượng (hoàn hảo/khá/tệ) trong `submitLesson`, riêng 1 test cho **exploit-guard** (replay không được hoàn năng lượng), cộng cả `startLesson`/`cancelLesson` (unlock, trừ/hoàn năng lượng, giới hạn số câu hỏi) |
 
 ### Integration test (MockMvc + MySQL docker thật)
 `CoinQuestChestIntegrationTest`: chạy nguyên luồng HTTP thật (đăng ký user → nộp bài hoàn thành
@@ -264,13 +332,18 @@ quest → mở rương → mở lần 2 bị chặn → mua Streak Freeze thiế
 
 ## 8. Vấn đề đã biết & backlog
 
-### ⚠️ Bug đang treo — chặn toàn bộ luồng học bài
-`LessonAttemptServiceImpl.resolveEntryCost()` mặc định tốn **10 năng lượng** để bắt đầu 1 bài học
-(khi lesson không có `configJson.entryCostEnergy`), nhưng nhánh `EnegyStreak` đã hạ `max_energy`
-mặc định xuống **5**. Kết quả: **không learner nào start được bài học nào cả**, kể cả khi đầy năng
-lượng. Đã verify bằng API thật (`POST /lessons/{id}/start` → `400 Khong du nang luong. Can 10,
-hien co 5`). Cần đồng đội quyết định: hạ cost mặc định xuống ≤5, hoặc set
-`configJson.entryCostEnergy` riêng cho từng lesson.
+### ✅ Đã fix: bug "không start được bài học nào" (entry cost 10 > max energy 5)
+Ban đầu `resolveEntryCost()` mặc định 10 nhưng `max_energy` (nhánh `EnegyStreak`) chỉ có 5, khiến
+không learner nào start được bài nào. Đã xử lý bằng cách **thiết kế lại toàn bộ thang đo năng
+lượng** (không chỉ vá số) — xem chi tiết đầy đủ ở [mục 4.5](#45-năng-lượng-energy). Đã verify lại
+bằng API thật: user mới 25/25 → start trừ còn 15 → submit hoàn hảo hoàn lại 20.
+
+### ✅ Đã fix: thiếu API tổng hợp trạng thái (FE bị reset về mặc định khi mở lại app)
+
+FE báo: exp/streak/năng lượng chỉ trả về sau khi làm 1 hành động nào đó, nên mở lại app/login lại
+là không có gì để hiển thị ngoài giá trị mặc định hardcode phía client. Đã fix bằng
+`GET /api/v1/users/me` — xem [mục 4.6](#46-api-tổng-hợp-trạng-thái-get-usersme). Đã verify: user
+vừa đăng ký xong, gọi ngay API này (chưa làm gì cả) vẫn trả về đủ số liệu thật từ DB.
 
 ### Backlog (đã bàn nhưng cố tình để sau, không thuộc scope lần này)
 - Friend Quests, Monthly Quests
@@ -289,7 +362,7 @@ hien co 5`). Cần đồng đội quyết định: hạ cost mặc định xuố
 
 ```bash
 docker compose up -d                     # MySQL local
-SERVER_PORT=8090 ./mvnw spring-boot:run  # Flyway tự áp V20/V21
+SERVER_PORT=8090 ./mvnw spring-boot:run  # Flyway tu ap V20-V23
 
 # Đăng ký + đăng nhập lấy token
 curl -X POST localhost:8090/api/v1/auth/register -H "Content-Type: application/json" \
@@ -297,11 +370,12 @@ curl -X POST localhost:8090/api/v1/auth/register -H "Content-Type: application/j
 TOKEN=$(curl -s -X POST localhost:8090/api/v1/auth/login -H "Content-Type: application/json" \
   -d '{"email":"demo@example.com","password":"Test1234!"}' | grep -o '"accessToken":"[^"]*"' | cut -d'"' -f4)
 
+curl localhost:8090/api/v1/users/me -H "Authorization: Bearer $TOKEN"  # toan bo stats, chua lam gi cung co
+curl localhost:8090/api/v1/users/me/energy -H "Authorization: Bearer $TOKEN"   # 25/25
+curl -X POST localhost:8090/api/v1/lessons/1/start -H "Authorization: Bearer $TOKEN"  # tru con 15
 curl localhost:8090/api/v1/users/me/quests -H "Authorization: Bearer $TOKEN"
 curl -X POST localhost:8090/api/v1/lessons/1/submit -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" -d '{"totalQuestions":10,"totalCorrect":10,"totalMistakes":0}'
+  # hoan hao -> hoan +5, currentEnergy tra ve = 20
 curl localhost:8090/api/v1/users/me/chest -H "Authorization: Bearer $TOKEN"
 ```
-
-> Lưu ý: do bug ở mục 8, `POST /lessons/{id}/start` hiện sẽ báo thiếu năng lượng với user mới —
-> có thể test `/submit` trực tiếp (không cần gọi `/start` trước) để bỏ qua giới hạn này tạm thời.

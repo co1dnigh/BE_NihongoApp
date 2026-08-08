@@ -7,13 +7,14 @@
 
 ## Mục lục
 1. [Xác thực chung](#1-xác-thực-chung)
-2. [Format lỗi chung](#2-format-lỗi-chung)
-3. [API mới: Daily Quest](#3-api-mới-daily-quest)
-4. [API mới: Rương thưởng (Chest)](#4-api-mới-rương-thưởng-chest)
-5. [API mới: Mua Streak Freeze](#5-api-mới-mua-streak-freeze)
-6. [API đổi: Năng lượng (Energy)](#6-api-đổi-năng-lượng-energy)
-7. [API đổi: Nộp bài học (Submit Lesson)](#7-api-đổi-nộp-bài-học-submit-lesson)
-8. [Bảng tổng hợp lỗi nghiệp vụ cần FE xử lý riêng](#8-bảng-tổng-hợp-lỗi-nghiệp-vụ-cần-fe-xử-lý-riêng)
+2. [API mới: Trạng thái tổng hợp (GET /users/me)](#2-api-mới-trạng-thái-tổng-hợp-get-usersme)
+3. [Format lỗi chung](#3-format-lỗi-chung)
+4. [API mới: Daily Quest](#4-api-mới-daily-quest)
+5. [API mới: Rương thưởng (Chest)](#5-api-mới-rương-thưởng-chest)
+6. [API mới: Mua Streak Freeze](#6-api-mới-mua-streak-freeze)
+7. [API đổi: Năng lượng (Energy)](#7-api-đổi-năng-lượng-energy)
+8. [API đổi: Nộp bài học (Submit Lesson)](#8-api-đổi-nộp-bài-học-submit-lesson)
+9. [Bảng tổng hợp lỗi nghiệp vụ cần FE xử lý riêng](#9-bảng-tổng-hợp-lỗi-nghiệp-vụ-cần-fe-xử-lý-riêng)
 
 ---
 
@@ -29,7 +30,49 @@ Authorization: Bearer <accessToken>
 
 ---
 
-## 2. Format lỗi chung
+## 2. API mới: Trạng thái tổng hợp (`GET /users/me`)
+
+> 🎯 Đây là API giải quyết đúng vấn đề FE từng báo: các số liệu (exp/coin/streak/năng lượng)
+> trước đây **chỉ trả về sau khi làm 1 hành động nào đó** (submit bài, mở rương...), nên lúc mới
+> mở lại app / vừa đăng nhập xong thì FE không có gì để hiển thị ngoài giá trị mặc định hardcode.
+
+### `GET /api/v1/users/me`
+
+Không cần tham số. **Gọi API này đúng 1 lần ngay sau khi có `accessToken`** (login xong, hoặc mỗi
+lần app khởi động lại mà token cũ vẫn còn hạn) để hydrate toàn bộ store — không cần đợi user làm
+gì cả.
+
+**Response 200 (user vừa đăng ký, chưa làm gì cả):**
+```json
+{
+  "id": 23,
+  "email": "user@example.com",
+  "displayName": "Stats Test",
+  "username": "statstest",
+  "role": "LEARNER",
+  "level": 1,
+  "exp": 0,
+  "currentLeague": "BRONZE",
+  "coins": 0,
+  "currentEnergy": 25,
+  "maxEnergy": 25,
+  "currentStreak": 0,
+  "longestStreak": 0,
+  "streakFreezeCount": 0
+}
+```
+
+Field nào cũng luôn có giá trị thật lấy từ DB (không phải suy đoán) — kể cả khi user chưa từng
+tương tác gì. `currentEnergy` đã được tự động hồi trước khi trả về (giống `GET /energy`), nên FE
+chỉ cần gọi đúng API này là đủ, không bắt buộc phải gọi thêm `/energy` hay `/streak` nếu chỉ cần
+hiển thị số liệu (2 API kia vẫn cần dùng riêng khi cần thêm `lastRecoveryDate`/`lastStreakDate`
+để tính cooldown).
+
+`currentLeague` là 1 trong 5 giá trị: `BRONZE`, `SILVER`, `GOLD`, `PLATINUM`, `DIAMOND`.
+
+---
+
+## 3. Format lỗi chung
 
 Mọi lỗi (400/401/403/404/409/500) đều trả về cùng 1 shape JSON:
 
@@ -38,7 +81,7 @@ Mọi lỗi (400/401/403/404/409/500) đều trả về cùng 1 shape JSON:
   "timestamp": "2026-08-06T14:10:52.980830300Z",
   "status": 400,
   "error": "Bad Request",
-  "message": "Khong du nang luong. Can 5, hien co 2",
+  "message": "Khong du nang luong. Can 10, hien co 8",
   "errors": { "totalQuestions": "must not be null" }
 }
 ```
@@ -50,7 +93,7 @@ Mọi lỗi (400/401/403/404/409/500) đều trả về cùng 1 shape JSON:
 
 ---
 
-## 3. API mới: Daily Quest
+## 4. API mới: Daily Quest
 
 Mỗi ngày user được gán ngẫu nhiên 3 nhiệm vụ. Không cần gọi API nào để "khởi tạo" — lần gọi đầu
 tiên trong ngày sẽ tự tạo.
@@ -96,7 +139,7 @@ suy đoán, nhưng gọi lại API là chắc chắn nhất).
 
 ---
 
-## 4. API mới: Rương thưởng (Chest)
+## 5. API mới: Rương thưởng (Chest)
 
 Điều kiện mở rương: **hoàn thành đủ 3 Daily Quest ở trên** + **chưa mở rương hôm nay**.
 
@@ -141,7 +184,7 @@ rồi mới nhận lỗi.
 
 ---
 
-## 5. API mới: Mua Streak Freeze
+## 6. API mới: Mua Streak Freeze
 
 Streak Freeze bảo vệ chuỗi ngày học liên tiếp khi user nghỉ 1 ngày.
 
@@ -168,18 +211,39 @@ mua thành công.)
 
 ---
 
-## 6. API đổi: Năng lượng (Energy)
+## 7. API đổi: Năng lượng (Energy)
 
-### 6.1 Giá trị mặc định — **quan trọng, ảnh hưởng UI hiển thị**
+> ⚠️ **Đổi số liệu lần 2** — bản trước (`maxEnergy=5`, cost=5) bị lỗi thiết kế (không đủ chỗ để có
+> mức thưởng trung gian). Bảng dưới đây là số liệu **mới nhất, hiện hành**.
+
+### 7.1 Giá trị mặc định — **quan trọng, ảnh hưởng UI hiển thị**
 
 | Thông số | Giá trị |
 |---|---|
-| Năng lượng tối đa (`maxEnergy`) mặc định user mới | **5** |
-| Chi phí bắt đầu 1 bài học mặc định (`GET/POST /lessons/{id}/start`) | **5** (trước đây lỗi do bằng 10 > max — **đã fix**) |
-| Hồi thụ động | **+1 mỗi giờ** (trước đây là +1/ngày) |
-| Giá hồi đầy bằng coin (`/energy/refill`) | **400 coin** |
+| Năng lượng tối đa (`maxEnergy`) mặc định user mới | **25** |
+| Chi phí bắt đầu 1 bài học mặc định (`POST /lessons/{id}/start`) | **10** |
+| Hồi thụ động | **+5 mỗi giờ** (đầy từ 0 sau 5 tiếng) |
+| Giá hồi đầy bằng coin (`/energy/refill`) | **400 coin** (không đổi) |
+| Thưởng xem quảng cáo (`/energy/ads`) | **+5** (không đổi) |
 
-### 6.2 `POST /api/v1/users/me/energy/ads` — **API mới**
+### 7.2 Hoàn năng lượng khi nộp bài tốt — **cơ chế mới, ảnh hưởng trực tiếp `currentEnergy`**
+
+Khi gọi `POST /lessons/{id}/submit`, ngoài EXP/coin, BE còn **hoàn lại một phần năng lượng** đã
+trừ lúc `/start`, tuỳ kết quả làm bài (dựa trên `totalMistakes` FE gửi lên):
+
+| Kết quả | Điều kiện | Hoàn lại | Chi phí thực tế (net) |
+|---|---|---|---|
+| Hoàn hảo | `totalMistakes == 0` | **+5** | 10 − 5 = **5** |
+| Khá | `totalMistakes` 1–2 | **+2** | 10 − 2 = **8** |
+| Còn lại | `totalMistakes` ≥ 3 | +0 | 10 |
+
+Giá trị hoàn lại này đã được cộng sẵn vào field `currentEnergy` trong response của `/submit` (xem
+mục 8) — **FE không cần tự tính, chỉ cần đọc `currentEnergy` để cập nhật thanh năng lượng**.
+
+Lưu ý quan trọng: **làm lại bài đã hoàn thành (replay) không được hoàn năng lượng**, vì replay vốn
+đã miễn phí lúc `/start` (tránh user farm năng lượng vô hạn bằng cách replay 1 bài dễ liên tục).
+
+### 7.3 `POST /api/v1/users/me/energy/ads`
 
 Xem quảng cáo (rewarded ad) để hồi năng lượng. Cooldown **30 phút/lần**.
 
@@ -187,10 +251,9 @@ Không cần request body.
 
 **Response 200:**
 ```json
-{ "currentEnergy": 5, "maxEnergy": 5, "lastRecoveryDate": "2026-08-06T21:11:17" }
+{ "currentEnergy": 25, "maxEnergy": 25, "lastRecoveryDate": "2026-08-08T19:04:41" }
 ```
-Mỗi lần xem quảng cáo cộng **+5 năng lượng** (cap ở `maxEnergy`) — với `maxEnergy=5` mặc định thì
-1 lần xem quảng cáo gần như luôn hồi đầy từ 0.
+Mỗi lần xem quảng cáo cộng **+5 năng lượng** (cap ở `maxEnergy=25`).
 
 **Response 400 (đã đầy năng lượng):**
 ```json
@@ -204,15 +267,15 @@ Mỗi lần xem quảng cáo cộng **+5 năng lượng** (cap ở `maxEnergy`) 
 → FE nên tự đếm ngược 30 phút từ lần xem gần nhất để **disable nút trước khi gọi API** (tránh
 gọi API chỉ để nhận lỗi); số phút còn lại trong message chỉ mang tính hiển thị dự phòng.
 
-### 6.3 Các endpoint không đổi shape, chỉ đổi số liệu
+### 7.4 Các endpoint không đổi shape, chỉ đổi số liệu
 
 `GET /api/v1/users/me/energy`, `POST /api/v1/users/me/energy/practice`,
 `POST /api/v1/users/me/energy/refill` — request/response giữ nguyên, chỉ nội dung số liệu thay
-đổi theo bảng 6.1 ở trên.
+đổi theo bảng 7.1 ở trên.
 
 ---
 
-## 7. API đổi: Nộp bài học (Submit Lesson)
+## 8. API đổi: Nộp bài học (Submit Lesson)
 
 ### `POST /api/v1/lessons/{id}/submit`
 
@@ -226,12 +289,16 @@ Request giữ nguyên. **Response có thêm field `coinsEarned`:**
   "starsEarned": 0,
   "isTopicCompleted": false,
   "message": "Tuyet voi, ban da hoan thanh bai hoc!",
-  "currentEnergy": 0
+  "currentEnergy": 20
 }
 ```
 
 `coinsEarned` = coin nhận được từ lần nộp bài này (đã cộng vào ví, không cần gọi thêm API khác để
 biết). FE nên hiển thị song song với `expEarned` trên màn hình kết quả ("+15 EXP  +12 coin").
+
+`currentEnergy` ở đây **đã bao gồm phần hoàn lại** nếu làm bài tốt (xem mục 7.2) — ví dụ trên là
+user vừa trừ 10 lúc `/start` (từ 25 xuống 15) rồi làm hoàn hảo nên được hoàn +5, ra 20. FE chỉ cần
+lấy đúng số này để cập nhật thanh năng lượng, không cần tự cộng trừ.
 
 Quy tắc số coin (tham khảo, không bắt buộc FE tự tính lại):
 
@@ -248,7 +315,7 @@ Ngoài ra, khi `currentStreak` **vừa đạt đúng** mốc 7 / 30 / 100 ngày,
 
 ---
 
-## 8. Bảng tổng hợp lỗi nghiệp vụ cần FE xử lý riêng
+## 9. Bảng tổng hợp lỗi nghiệp vụ cần FE xử lý riêng
 
 | HTTP | `message` (dùng để nhận diện, không parse cứng) | Khi nào xảy ra | FE nên làm gì |
 |---|---|---|---|
@@ -262,5 +329,7 @@ Ngoài ra, khi `currentStreak` **vừa đạt đúng** mốc 7 / 30 / 100 ngày,
 
 ---
 
-*Cập nhật lần cuối theo các commit: `10735c8`, `e2fb53d`, `8706c60`, `17e1760`, `054bef1`,
-`0dfb352` trên nhánh `feature/coin-reward-chest`.*
+*Cập nhật lần cuối: thêm `GET /users/me` (trạng thái tổng hợp) + thiết kế lại kinh tế năng lượng
+(max 25, cost 10, hoàn theo kết quả bài học) trên nhánh `feature/coin-reward-chest`. Nếu thấy số
+liệu ở đây khác với response API thực tế, ưu tiên tin vào response API / Swagger UI — tài liệu có
+thể trễ hơn code.*
