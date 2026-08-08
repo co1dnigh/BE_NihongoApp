@@ -222,6 +222,70 @@ class LessonAttemptServiceImplTest {
         assertThat(captor.getValue().getTransactionType()).isEqualTo(TransactionType.EARN_LESSON);
     }
 
+    // ============================ ENERGY REFUND (submit) ============================
+
+    @Test
+    void submitLesson_perfectLesson_refundsEnergyUpToPerfectAmount() {
+        when(lessonRepository.findById(LESSON_ID)).thenReturn(Optional.of(lessonOfType(LessonType.NORMAL)));
+        user.setCurrentEnergy(0);
+        user.setMaxEnergy(25);
+
+        service.submitLesson(LESSON_ID, USER_ID, request(10, 10, 0)); // 0 sai -> hoan hao
+
+        assertThat(user.getCurrentEnergy()).isEqualTo(5); // PERFECT_LESSON_ENERGY_REFUND
+    }
+
+    @Test
+    void submitLesson_goodLesson_refundsSmallerAmount() {
+        when(lessonRepository.findById(LESSON_ID)).thenReturn(Optional.of(lessonOfType(LessonType.NORMAL)));
+        user.setCurrentEnergy(0);
+        user.setMaxEnergy(25);
+
+        service.submitLesson(LESSON_ID, USER_ID, request(10, 8, 2)); // 2 loi -> "kha"
+
+        assertThat(user.getCurrentEnergy()).isEqualTo(2); // GOOD_LESSON_ENERGY_REFUND
+    }
+
+    @Test
+    void submitLesson_badLesson_noEnergyRefund() {
+        when(lessonRepository.findById(LESSON_ID)).thenReturn(Optional.of(lessonOfType(LessonType.NORMAL)));
+        user.setCurrentEnergy(0);
+        user.setMaxEnergy(25);
+
+        service.submitLesson(LESSON_ID, USER_ID, request(10, 5, 5)); // 5 loi -> qua nguong "kha"
+
+        assertThat(user.getCurrentEnergy()).isZero();
+    }
+
+    @Test
+    void submitLesson_replayPerfectLesson_noEnergyRefund_preventsInfiniteFarming() {
+        // Replay khong tru nang luong luc /start (mien phi), nen neu van hoan +5 luc /submit
+        // se thanh farm nang luong vo han bang cach replay 1 bai da hoan thanh nhieu lan.
+        when(lessonRepository.findById(LESSON_ID)).thenReturn(Optional.of(lessonOfType(LessonType.NORMAL)));
+        user.setCurrentEnergy(10);
+        user.setMaxEnergy(25);
+        SubmitLessonRequest req = request(10, 10, 0); // hoan hao
+        req.setIsReplay(true);
+
+        service.submitLesson(LESSON_ID, USER_ID, req);
+
+        assertThat(user.getCurrentEnergy()).isEqualTo(10); // khong doi
+    }
+
+    @Test
+    void submitLesson_cheapLesson_refundCappedAtActualEntryCost() {
+        // Lesson co entryCostEnergy rieng (3) < muc hoan hao mac dinh (5)
+        // -> khong duoc hoan nhieu hon so thuc su da tru luc /start.
+        Lesson lesson = lessonWithConfig(LessonType.NORMAL, "{\"entryCostEnergy\":3}");
+        when(lessonRepository.findById(LESSON_ID)).thenReturn(Optional.of(lesson));
+        user.setCurrentEnergy(0);
+        user.setMaxEnergy(25);
+
+        service.submitLesson(LESSON_ID, USER_ID, request(10, 10, 0)); // hoan hao
+
+        assertThat(user.getCurrentEnergy()).isEqualTo(3); // cap o entryCostEnergy=3, khong phai 5
+    }
+
     // ============================ START ============================
 
     @Test
@@ -236,15 +300,15 @@ class LessonAttemptServiceImplTest {
 
     @Test
     void startLesson_firstAttempt_deductsDefaultEntryCost_andIsNotReplay() {
-        Lesson lesson = lessonOfType(LessonType.NORMAL); // configJson=null -> default cost = 5
+        Lesson lesson = lessonOfType(LessonType.NORMAL); // configJson=null -> default cost = 10
         when(lessonRepository.findById(LESSON_ID)).thenReturn(Optional.of(lesson));
         when(unlockPolicy.evaluate(lesson, USER_ID)).thenReturn(Status.UNLOCKED);
         when(questionRepository.findAllByLessonIdOrderByIdAsc(LESSON_ID)).thenReturn(List.of());
-        user.setCurrentEnergy(5);
+        user.setCurrentEnergy(10);
 
         StartLessonResponse response = service.startLesson(LESSON_ID, USER_ID);
 
-        assertThat(response.getTotalEnergyDeducted()).isEqualTo(5);
+        assertThat(response.getTotalEnergyDeducted()).isEqualTo(10);
         assertThat(response.getIsReplay()).isFalse();
         assertThat(user.getCurrentEnergy()).isZero();
         verify(userRepository).save(user);
@@ -266,15 +330,15 @@ class LessonAttemptServiceImplTest {
 
     @Test
     void startLesson_insufficientEnergy_throwsInsufficientEnergyException() {
-        Lesson lesson = lessonOfType(LessonType.NORMAL); // can 5 nang luong mac dinh
+        Lesson lesson = lessonOfType(LessonType.NORMAL); // can 10 nang luong mac dinh
         when(lessonRepository.findById(LESSON_ID)).thenReturn(Optional.of(lesson));
         when(unlockPolicy.evaluate(lesson, USER_ID)).thenReturn(Status.UNLOCKED);
-        user.setCurrentEnergy(2);
+        user.setCurrentEnergy(8);
 
         assertThatThrownBy(() -> service.startLesson(LESSON_ID, USER_ID))
                 .isInstanceOf(InsufficientEnergyException.class);
 
-        assertThat(user.getCurrentEnergy()).isEqualTo(2); // khong bi tru khi that bai
+        assertThat(user.getCurrentEnergy()).isEqualTo(8); // khong bi tru khi that bai
         verify(userRepository, never()).save(any());
     }
 
@@ -320,18 +384,18 @@ class LessonAttemptServiceImplTest {
     @Test
     void cancelLesson_progressInProgress_refundsEnergyCappedAtMax() {
         when(lessonRepository.findById(LESSON_ID)).thenReturn(Optional.of(lessonOfType(LessonType.NORMAL)));
-        user.setCurrentEnergy(8);
-        user.setMaxEnergy(10);
+        user.setCurrentEnergy(15);
+        user.setMaxEnergy(20);
         when(progressRepository.findByUserIdAndLessonId(USER_ID, LESSON_ID)).thenReturn(Optional.of(
                 UserLessonProgress.builder().userId(USER_ID).lessonId(LESSON_ID)
                         .status(ProgressStatus.IN_PROGRESS).build()));
 
         CancelLessonResponse response = service.cancelLesson(LESSON_ID, USER_ID);
 
-        // Hoan 5 (default entry cost) nhung 8+5=13 vuot max 10 -> cap lai con 10.
-        assertThat(response.getEnergyRefunded()).isEqualTo(5);
-        assertThat(response.getCurrentEnergy()).isEqualTo(10);
-        assertThat(user.getCurrentEnergy()).isEqualTo(10);
+        // Hoan 10 (default entry cost) nhung 15+10=25 vuot max 20 -> cap lai con 20.
+        assertThat(response.getEnergyRefunded()).isEqualTo(10);
+        assertThat(response.getCurrentEnergy()).isEqualTo(20);
+        assertThat(user.getCurrentEnergy()).isEqualTo(20);
     }
 
     @Test

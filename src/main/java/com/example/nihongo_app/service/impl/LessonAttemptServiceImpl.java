@@ -83,8 +83,13 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
     private static final int STREAK_MILESTONE_7_BONUS = 50;
     private static final int STREAK_MILESTONE_30_BONUS = 200;
     private static final int STREAK_MILESTONE_100_BONUS = 1000;
-    /** Khop voi max_energy mac dinh (5) de user day nang luong luon start duoc it nhat 1 bai. */
-    private static final int DEFAULT_ENTRY_COST_ENERGY = 5;
+    /** Chi phi nang luong mac dinh de vao 1 bai hoc (khop voi max_energy mac dinh 25). */
+    private static final int DEFAULT_ENTRY_COST_ENERGY = 10;
+    /** Bai hoan hao (0 sai) hoan lai 5 nang luong -> ton rong 5/25 (co the lam 5 bai/ngay). */
+    private static final int PERFECT_LESSON_ENERGY_REFUND = 5;
+    /** Bai kha (<=2 loi, nhung khong phai hoan hao) hoan lai 2 nang luong -> ton rong 8. */
+    private static final int GOOD_LESSON_ENERGY_REFUND = 2;
+    private static final int GOOD_LESSON_MAX_MISTAKES = 2;
 
     // ============================ START ============================
 
@@ -282,6 +287,23 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
                         .build());
             }
 
+            // Hoan mot phan nang luong da tru luc /start neu lam bai tot (khong ap dung JUMP_TEST
+            // hearts, chi dua tren totalMistakes chung cho ca 3 loai bai).
+            // Cap o entryCostCharged (0 neu la replay vi replay khong tru gi ca luc start) de
+            // chan exploit "replay bai da hoan thanh, lam hoan hao -> farm nang luong mien phi".
+            boolean goodLesson = !perfectLesson
+                    && req.getTotalMistakes() != null && req.getTotalMistakes() <= GOOD_LESSON_MAX_MISTAKES;
+            int entryCostCharged = isReplay ? 0 : resolveEntryCost(lesson);
+            int energyRefund = perfectLesson ? PERFECT_LESSON_ENERGY_REFUND
+                    : (goodLesson ? GOOD_LESSON_ENERGY_REFUND : 0);
+            energyRefund = Math.min(energyRefund, entryCostCharged);
+            if (energyRefund > 0) {
+                int currentEnergy = Objects.requireNonNullElse(user.getCurrentEnergy(), 0);
+                int maxEnergy = user.getMaxEnergy() == null ? currentEnergy + energyRefund : user.getMaxEnergy();
+                user.setCurrentEnergy(Math.min(currentEnergy + energyRefund, maxEnergy));
+                userRepository.save(user);
+            }
+
             // Cap nhat tien do Daily Quest.
             dailyQuestService.recordProgress(userId, QuestType.COMPLETE_LESSONS, 1);
             if (req.getTotalCorrect() != null && req.getTotalCorrect() > 0) {
@@ -399,14 +421,14 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
      * Tinh entry cost tu configJson.
      * <ul>
      *   <li>Neu configJson.co {@code entryCostEnergy} -> dung no (uu tien).</li>
-     *   <li>Neu khong -> dung {@link #DEFAULT_ENTRY_COST_ENERGY}.</li>
+     *   <li>Neu khong -> dung {@link #DEFAULT_ENTRY_COST_ENERGY} (10, khop voi
+     *       {@code max_energy} mac dinh 25 - xem {@code EnergyService.MAX_ENERGY}).</li>
      * </ul>
      *
-     * <p>Truoc day fallback ve {@code questionsPerSession} (mac dinh 10), nhung tu khi
-     * {@code max_energy} mac dinh ha xuong 5 (xem {@code EnergyService.MAX_ENERGY}), gia tri
-     * 10 khien khong learner nao start noi bai nao ca du day nang luong. Tach rieng hang so
-     * nay khoi so cau hoi/session de 2 khai niem doc lap: 1 lesson van co the co 10 cau
-     * nhung chi ton 5 nang luong de vao hoc.
+     * <p>Tach rieng hang so nay khoi {@code questionsPerSession} de 2 khai niem doc lap:
+     * 1 lesson van co the co 10 cau nhung chi phi nang luong de vao hoc la con so rieng.
+     * Bai lam tot se duoc hoan bot luc submit (xem {@link #PERFECT_LESSON_ENERGY_REFUND}),
+     * nen chi phi thuc te thap hon 10 neu lam tot.</p>
      */
     private int resolveEntryCost(Lesson lesson) {
         JsonNode config = lesson.getConfigJson();

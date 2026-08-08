@@ -25,7 +25,7 @@ public class EnergyController {
 private final EnergyService energyService;
 
 @GetMapping
-@Operation(summary = "Xem năng lượng hiện tại (tự động hồi theo số ngày trôi qua trước khi trả về)")
+@Operation(summary = "Xem năng lượng hiện tại (tự động hồi +5/giờ trôi qua trước khi trả về)")
 public ResponseEntity<EnergyResponse> getEnergy(Authentication authentication) {
 Long userId = resolveUserId(authentication);
 energyService.recoverEnergy(userId);

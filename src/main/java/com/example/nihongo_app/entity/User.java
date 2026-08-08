@@ -119,8 +119,8 @@ void onCreate() {
         if (level == null) level = 1;
         if (exp == null) exp = 0;
         if (currentLeague == null) currentLeague = League.BRONZE;
-        if (currentEnergy == null) currentEnergy = 5;
-        if (maxEnergy == null) maxEnergy = 5;
+        if (currentEnergy == null) currentEnergy = 25;
+        if (maxEnergy == null) maxEnergy = 25;
         if (coins == null) coins = 0;
         if (currentStreak == null) currentStreak = 0;
         if (longestStreak == null) longestStreak = 0;

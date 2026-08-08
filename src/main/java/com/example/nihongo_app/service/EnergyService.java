@@ -18,16 +18,18 @@ import org.springframework.transaction.annotation.Propagation;
 public class EnergyService {
 
     private final UserRepository userRepository;
-    private static final int MAX_ENERGY = 5;
+    private static final int MAX_ENERGY = 25;
     private static final int REFILL_COST_COINS = 400;
     private static final int RECOVERY_INTERVAL_SECONDS = 3600;
+    private static final int RECOVERY_AMOUNT_PER_INTERVAL = 5;
     private static final int AD_COOLDOWN_SECONDS = 1800;
     private static final int AD_REWARD_ENERGY = 5;
 
     /**
-     * Hoi nang luong thu dong: +1 nang luong moi {@value #RECOVERY_INTERVAL_SECONDS} giay
-     * troi qua (thay vi +1/ngay nhu truoc), cap o maxEnergy. Phan du (chua du 1 gio) duoc
-     * giu lai bang cach chi tien "last reset" len dung so giay da tinh, khong reset ve "now".
+     * Hoi nang luong thu dong: +{@value #RECOVERY_AMOUNT_PER_INTERVAL} nang luong moi
+     * {@value #RECOVERY_INTERVAL_SECONDS} giay troi qua (day tu 0 sau 5 tieng voi
+     * MAX_ENERGY=25), cap o maxEnergy. Phan du (chua du 1 gio) duoc giu lai bang cach
+     * chi tien "last reset" len dung so giay da tinh, khong reset ve "now".
      */
     @Transactional
     public void recoverEnergy(Long userId) {
@@ -44,14 +46,14 @@ public class EnergyService {
         }
 
         long elapsedSeconds = Duration.between(lastReset, now).getSeconds();
-        int recoveryCount = (int) (elapsedSeconds / RECOVERY_INTERVAL_SECONDS);
+        int recoveryIntervals = (int) (elapsedSeconds / RECOVERY_INTERVAL_SECONDS);
 
-        if (recoveryCount > 0) {
+        if (recoveryIntervals > 0) {
             int currentEnergy = Objects.requireNonNullElse(user.getCurrentEnergy(), 0);
             int maxEnergy = Objects.requireNonNullElse(user.getMaxEnergy(), MAX_ENERGY);
 
             if (currentEnergy < maxEnergy) {
-                int newEnergy = Math.min(currentEnergy + recoveryCount, maxEnergy);
+                int newEnergy = Math.min(currentEnergy + recoveryIntervals * RECOVERY_AMOUNT_PER_INTERVAL, maxEnergy);
                 user.setCurrentEnergy(newEnergy);
             }
 
