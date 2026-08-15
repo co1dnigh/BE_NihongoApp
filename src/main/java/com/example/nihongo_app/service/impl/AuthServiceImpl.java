@@ -3,7 +3,9 @@ package com.example.nihongo_app.service.impl;
 import com.example.nihongo_app.dto.request.LoginRequest;
 import com.example.nihongo_app.dto.request.RegisterRequest;
 import com.example.nihongo_app.dto.response.AuthResponse;
+import com.example.nihongo_app.entity.Rank;
 import com.example.nihongo_app.entity.User;
+import com.example.nihongo_app.repository.RankRepository;
 import com.example.nihongo_app.repository.UserRepository;
 import com.example.nihongo_app.security.JwtTokenProvider;
 import com.example.nihongo_app.service.AuthService;
@@ -21,6 +23,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
+    private final RankRepository rankRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
 
@@ -39,6 +42,8 @@ public class AuthServiceImpl implements AuthService {
         }
 
         String username = generateUsername(request.getEmail());
+        Rank defaultRank = rankRepository.findById(1L)
+                .orElseThrow(() -> new IllegalStateException("Missing default rank row with id=1"));
 
         User user = User.builder()
                 .email(request.getEmail())
@@ -46,6 +51,7 @@ public class AuthServiceImpl implements AuthService {
                 .displayName(displayName)
                 .username(username)
                 .role("LEARNER")
+                .rank(defaultRank)
                 .build();
 
         User savedUser = userRepository.save(user);
