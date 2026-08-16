@@ -24,6 +24,7 @@ import com.example.nihongo_app.entity.Lesson.LessonType;
 import com.example.nihongo_app.entity.LessonQuestion;
 import com.example.nihongo_app.entity.LessonQuestion.QuestionType;
 import com.example.nihongo_app.entity.QuestDefinition.QuestType;
+import com.example.nihongo_app.entity.ShopItem;
 import com.example.nihongo_app.entity.User;
 import com.example.nihongo_app.entity.UserLessonProgress;
 import com.example.nihongo_app.entity.UserLessonProgress.ProgressStatus;
@@ -39,6 +40,7 @@ import com.example.nihongo_app.repository.UserRepository;
 import com.example.nihongo_app.service.DailyQuestService;
 import com.example.nihongo_app.service.EnergyService;
 import com.example.nihongo_app.service.LessonUnlockPolicy;
+import com.example.nihongo_app.service.ShopService;
 import com.example.nihongo_app.service.StreakService;
 import java.util.List;
 import java.util.Optional;
@@ -73,6 +75,7 @@ class LessonAttemptServiceImplTest {
     @Mock private EnergyService energyService;
     @Mock private CoinTransactionRepository coinTransactionRepository;
     @Mock private DailyQuestService dailyQuestService;
+    @Mock private ShopService shopService;
 
     @InjectMocks
     private LessonAttemptServiceImpl service;

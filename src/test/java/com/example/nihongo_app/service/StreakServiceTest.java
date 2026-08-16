@@ -11,6 +11,7 @@ import com.example.nihongo_app.entity.CoinTransaction.TransactionType;
 import com.example.nihongo_app.entity.User;
 import com.example.nihongo_app.exception.InsufficientCoinsException;
 import com.example.nihongo_app.repository.CoinTransactionRepository;
+import com.example.nihongo_app.repository.UserInventoryRepository;
 import com.example.nihongo_app.repository.UserRepository;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,7 +33,13 @@ class StreakServiceTest {
     private UserRepository userRepository;
 
     @Mock
+    private UserInventoryRepository userInventoryRepository;
+
+    @Mock
     private CoinTransactionRepository coinTransactionRepository;
+
+    @Mock
+    private ShopService shopService;
 
     private StreakService streakService;
 
@@ -41,7 +48,7 @@ class StreakServiceTest {
 
     @BeforeEach
     void setUp() {
-        streakService = new StreakService(userRepository, coinTransactionRepository);
+        streakService = new StreakService(userRepository, userInventoryRepository, coinTransactionRepository, shopService);
     }
 
     @Test

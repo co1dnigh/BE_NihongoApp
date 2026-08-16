@@ -1,0 +1,449 @@
+{
+  "info": {
+    "name": "NihongoApp API",
+    "description": "Postman collection for testing BE_NihongoApp APIs",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "nihongo-app"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "accessToken",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{accessToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"demo@example.com\",\n  \"password\": \"Test1234!\",\n  \"displayName\": \"Demo User\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login (save token to variable)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  const json = pm.response.json();",
+                  "  if (json.accessToken) {",
+                  "    pm.collectionVariables.set('accessToken', json.accessToken);",
+                  "    console.log('Token saved:', json.accessToken.substring(0, 20) + '...');",
+                  "  }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"demo@example.com\",\n  \"password\": \"Test1234!\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "User Stats (Gamification)",
+      "item": [
+        {
+          "name": "GET /users/me - Trạng thái tổng hợp",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "users", "me"]
+            }
+          }
+        },
+        {
+          "name": "GET /users/me/energy - Năng lượng",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/me/energy",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "users", "me", "energy"]
+            }
+          }
+        },
+        {
+          "name": "GET /users/me/streak - Chuỗi ngày học",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/me/streak",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "users", "me", "streak"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Daily Quest & Chest",
+      "item": [
+        {
+          "name": "GET /users/me/quests - Xem 3 quest hôm nay",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/me/quests",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "users", "me", "quests"]
+            }
+          }
+        },
+        {
+          "name": "GET /users/me/chest - Xem trạng thái rương",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/me/chest",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "users", "me", "chest"]
+            }
+          }
+        },
+        {
+          "name": "POST /users/me/chest/open - Mở rương",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/me/chest/open",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "users", "me", "chest", "open"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Lesson Flow",
+      "item": [
+        {
+          "name": "GET /topics - Danh sách topic",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/topics",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "topics"]
+            }
+          }
+        },
+        {
+          "name": "GET /topics/{id}/lessons - Bài học trong topic",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/topics/1/lessons",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "topics", "1", "lessons"]
+            }
+          }
+        },
+        {
+          "name": "POST /lessons/{id}/start - Bắt đầu bài học",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/lessons/1/start",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "lessons", "1", "start"]
+            }
+          }
+        },
+        {
+          "name": "POST /lessons/{id}/submit - Nộp bài (Perfect 20/20)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"totalQuestions\": 20,\n  \"totalCorrect\": 20,\n  \"totalMistakes\": 0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/lessons/1/submit",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "lessons", "1", "submit"]
+            }
+          }
+        },
+        {
+          "name": "POST /lessons/{id}/submit - Nộp bài (Good 18/20)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"totalQuestions\": 20,\n  \"totalCorrect\": 18,\n  \"totalMistakes\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/lessons/1/submit",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "lessons", "1", "submit"]
+            }
+          }
+        },
+        {
+          "name": "POST /lessons/{id}/submit - Nộp bài (Fail 10/20)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"totalQuestions\": 20,\n  \"totalCorrect\": 10,\n  \"totalMistakes\": 10\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/lessons/1/submit",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "lessons", "1", "submit"]
+            }
+          }
+        },
+        {
+          "name": "POST /lessons/{id}/cancel - Hủy bài học",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/lessons/1/cancel",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "lessons", "1", "cancel"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Shop & Inventory",
+      "item": [
+        {
+          "name": "GET /shop - Xem shop (nhóm theo loại)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/shop",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "shop"]
+            }
+          }
+        },
+        {
+          "name": "POST /shop/buy/{itemId} - Mua item",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/shop/buy/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "shop", "buy", "1"]
+            }
+          }
+        },
+        {
+          "name": "GET /inventory - Xem kho đồ",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/inventory",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "inventory"]
+            }
+          }
+        },
+        {
+          "name": "POST /inventory/{inventoryId}/consume - Sử dụng item",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/inventory/1/consume",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "inventory", "1", "consume"]
+            }
+          }
+        },
+        {
+          "name": "POST /inventory/{inventoryId}/equip - Trang bị cosmetic",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/inventory/1/equip",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "inventory", "1", "equip"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Streak & Energy Actions",
+      "item": [
+        {
+          "name": "POST /users/me/streak/freeze/buy - Mua Streak Freeze (200 coin)",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/me/streak/freeze/buy",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "users", "me", "streak", "freeze", "buy"]
+            }
+          }
+        },
+        {
+          "name": "POST /users/me/energy/refill - Hồi đầy năng lượng (400 coin)",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/me/energy/refill",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "users", "me", "energy", "refill"]
+            }
+          }
+        },
+        {
+          "name": "POST /users/me/energy/watch-ad - Xem QC +5 energy",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/me/energy/watch-ad",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "users", "me", "energy", "watch-ad"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin (cần role ADMIN)",
+      "item": [
+        {
+          "name": "GET /admin/users - Danh sách user",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/admin/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "admin", "users"]
+            }
+          }
+        },
+        {
+          "name": "POST /admin/users/{id}/coins - Điều chỉnh coin",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 1000,\n  \"reason\": \"Test adjustment\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/admin/users/1/coins",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "admin", "users", "1", "coins"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

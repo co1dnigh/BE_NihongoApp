@@ -30,7 +30,8 @@ import lombok.Setter;
 public class CoinTransaction {
 
     public enum TransactionType {
-        EARN_LESSON, BUY_ITEM, STREAK_BONUS, ADMIN_ADJUST, DAILY_CHEST, BUY_STREAK_FREEZE
+        EARN_LESSON, BUY_ITEM, STREAK_BONUS, ADMIN_ADJUST, DAILY_CHEST, BUY_STREAK_FREEZE,
+        SHOP_PURCHASE, ITEM_CONSUME
     }
 
     @Id
