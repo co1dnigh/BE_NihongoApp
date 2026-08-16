@@ -1,9 +1,11 @@
 package com.example.nihongo_app.controller;
 
 import com.example.nihongo_app.dto.request.SyncContactsRequest;
+import com.example.nihongo_app.dto.request.UpdateAvatarRequest;
 import com.example.nihongo_app.dto.request.UpdatePhoneRequest;
 import com.example.nihongo_app.dto.request.UpdateProfileRequest;
 import com.example.nihongo_app.dto.response.AuthResponse;
+import com.example.nihongo_app.dto.response.AvatarUrlResponse;
 import com.example.nihongo_app.dto.response.UserOverviewResponse;
 import com.example.nihongo_app.dto.response.UserProfileResponse;
 import com.example.nihongo_app.dto.response.UserSearchResponse;
@@ -78,5 +80,21 @@ public class UserController {
     public ResponseEntity<AuthResponse> updateProfile(Principal principal,
                                                       @Valid @RequestBody UpdateProfileRequest request) {
         return ResponseEntity.ok(userService.updateProfile(principal.getName(), request));
+    }
+
+    @GetMapping("/me/avatar")
+    @Operation(summary = "Lấy avatar URL của user hiện tại")
+    public ResponseEntity<AvatarUrlResponse> getAvatarUrl(Principal principal) {
+        return ResponseEntity.ok(AvatarUrlResponse.builder()
+                .avatarUrl(userService.getAvatarUrl(principal.getName()))
+                .build());
+    }
+
+    @PutMapping("/me/avatar")
+    @Operation(summary = "Cập nhật avatar URL của user hiện tại")
+    public ResponseEntity<Void> updateAvatarUrl(Principal principal,
+                                                 @Valid @RequestBody UpdateAvatarRequest request) {
+        userService.updateAvatarUrl(principal.getName(), request.getAvatarUrl());
+        return ResponseEntity.noContent().build();
     }
 }

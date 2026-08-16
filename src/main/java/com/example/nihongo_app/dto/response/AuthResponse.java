@@ -29,6 +29,7 @@ public class AuthResponse {
         private String email;
         private String displayName;
         private String username;
+        private String avatarUrl;
         private String role;
     }
 }

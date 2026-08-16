@@ -142,7 +142,7 @@ public class UserServiceImpl implements UserService {
         return UserOverviewResponse.builder()
                 .id(user.getId())
                 .displayName(user.getDisplayName())
-                .avatarUrl(null)
+                .avatarUrl(user.getAvatarUrl())
                 .level(user.getLevel())
                 .build();
     }
@@ -257,7 +257,7 @@ public class UserServiceImpl implements UserService {
                 .id(targetUser.getId())
                 .displayName(targetUser.getDisplayName())
                 .username(targetUser.getUsername())
-                .avatarUrl(null)
+                .avatarUrl(targetUser.getAvatarUrl())
                 .level(targetUser.getLevel())
                 .isFollowing(currentUserId != null
                         && targetUser.getId() != null
@@ -273,8 +273,26 @@ public class UserServiceImpl implements UserService {
                         .email(user.getEmail())
                         .displayName(user.getDisplayName())
                         .username(user.getUsername())
+                        .avatarUrl(user.getAvatarUrl())
                         .role(user.getRole())
                         .build())
                 .build();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public String getAvatarUrl(String currentUserEmail) {
+        User user = userRepository.findByEmail(currentUserEmail)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        return user.getAvatarUrl();
+    }
+
+    @Override
+    @Transactional
+    public void updateAvatarUrl(String currentUserEmail, String avatarUrl) {
+        User user = userRepository.findByEmail(currentUserEmail)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        user.setAvatarUrl(avatarUrl);
+        userRepository.save(user);
     }
 }

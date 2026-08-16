@@ -49,6 +49,9 @@ private String passwordHash;
 @Column(name = "display_name", nullable = false, length = 100)
 private String displayName;
 
+@Column(name = "avatar_url", length = 255)
+private String avatarUrl;
+
 @Column(nullable = false, length = 50)
 private String role;
 

@@ -31,4 +31,8 @@ public interface UserService {
     UserProfileResponse getProfileByUsername(String currentUserEmail, String targetUsername);
 
     AuthResponse updateProfile(String currentUserEmail, UpdateProfileRequest request);
+
+    String getAvatarUrl(String currentUserEmail);
+
+    void updateAvatarUrl(String currentUserEmail, String avatarUrl);
 }
