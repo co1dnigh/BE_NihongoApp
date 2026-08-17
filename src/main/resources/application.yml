@@ -22,13 +22,13 @@ spring:
 
 app:
   file:
-    # Duong dan tuyet doi den thu muc luu file (khong co dau '/' cuoi cung)
-    # Local: D:/Project/nihongo-app/uploads
-    # VPS:   /var/www/nihongo-app/uploads
-    # Hoac dung bien moi truong: ${UPLOAD_DIR:D:/Project/nihongo-app/uploads}
-    upload-dir: ${UPLOAD_DIR:D:/Project/nihongo-app/uploads}
+    # Duong dan den thu muc luu file (khong co dau '/' cuoi cung)
+    # Default la duong dan tuong doi (./uploads, tinh tu thu muc chay app) de khong phu thuoc OS.
+    # VPS/production: set bien moi truong UPLOAD_DIR tro toi duong dan tuyet doi mong muon,
+    #   vd UPLOAD_DIR=/var/www/nihongo-app/uploads
+    upload-dir: ${UPLOAD_DIR:./uploads}
   jwt:
-    secret: change-me-in-dev-change-me-in-dev-change-me-in-dev
+    secret: ${JWT_SECRET:change-me-in-dev-change-me-in-dev-change-me-in-dev}
     expiration-ms: 86400000
 
 logging:

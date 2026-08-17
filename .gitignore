@@ -42,3 +42,7 @@ replay_pid*.log
 
 ### Stray run/debug logs (accidentally committed before) ###
 *.log
+.claude/
+*.log
+target/
+uploads/
