@@ -1,6 +1,5 @@
 package com.example.nihongo_app.dto.response;
 
-import com.example.nihongo_app.entity.League;
 import lombok.Builder;
 import lombok.Value;
 
@@ -23,7 +22,8 @@ public class UserStatsResponse {
 
     Integer level;
     Integer exp;
-    League currentLeague;
+    Long rankId;
+    String rankName;
 
     Integer coins;
 

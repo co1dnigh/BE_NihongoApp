@@ -14,6 +14,7 @@ import com.example.nihongo_app.entity.Lesson.LessonType;
 import com.example.nihongo_app.entity.LessonQuestion;
 import com.example.nihongo_app.entity.LessonQuestionOption;
 import com.example.nihongo_app.entity.QuestDefinition.QuestType;
+import com.example.nihongo_app.entity.Rank;
 import com.example.nihongo_app.entity.User;
 import com.example.nihongo_app.entity.UserExpLog;
 import com.example.nihongo_app.entity.UserLessonProgress;
@@ -25,6 +26,7 @@ import com.example.nihongo_app.repository.CoinTransactionRepository;
 import com.example.nihongo_app.repository.LessonQuestionOptionRepository;
 import com.example.nihongo_app.repository.LessonQuestionRepository;
 import com.example.nihongo_app.repository.LessonRepository;
+import com.example.nihongo_app.repository.RankRepository;
 import com.example.nihongo_app.repository.UserExpLogRepository;
 import com.example.nihongo_app.repository.UserLessonProgressRepository;
 import com.example.nihongo_app.repository.UserRepository;
@@ -68,6 +70,7 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
     private final LessonQuestionOptionRepository optionRepository;
     private final UserLessonProgressRepository progressRepository;
     private final UserRepository userRepository;
+    private final RankRepository rankRepository;
     private final UserExpLogRepository expLogRepository;
     private final LessonUnlockPolicy unlockPolicy;
     private final StreakService streakService;
@@ -345,6 +348,21 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
             }
         }
 
+        Rank updatedRank = resolveHighestQualifyingRank(user.getExp());
+        boolean promoted = false;
+        String newRankName = null;
+        if (updatedRank != null) {
+            Rank currentRank = user.getRank();
+            if (currentRank == null || !Objects.equals(currentRank.getId(), updatedRank.getId())) {
+                user.setRank(updatedRank);
+                userRepository.save(user);
+                promoted = true;
+                newRankName = updatedRank.getName();
+            } else {
+                newRankName = updatedRank.getName();
+            }
+        }
+
         return SubmitLessonResponse.builder()
                 .status(passed ? "COMPLETED" : "IN_PROGRESS")
                 .expEarned(expGained)
@@ -352,6 +370,8 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
                 .starsEarned(starsEarned)
                 .isTopicCompleted(isTopicCompleted)
                 .message(passed ? "Tuyet voi, ban da hoan thanh bai hoc!" : "Hay tiep tuc co gang!")
+                .isPromoted(promoted)
+                .newRankName(newRankName)
                 .currentEnergy(user.getCurrentEnergy())
                 .build();
     }
@@ -498,6 +518,14 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
      * Neu khong co config -> fallback theo ti le dung:
      *   >= 90% -> 3 sao, >= 70% -> 2 sao, con lai -> 1 sao.
      */
+    private Rank resolveHighestQualifyingRank(Integer userExp) {
+        if (userExp == null) {
+            userExp = 0;
+        }
+        return rankRepository.findFirstByMinExpRequiredLessThanEqualOrderByOrderIndexDesc(userExp)
+                .orElse(null);
+    }
+
     private int resolveStars(Lesson lesson, SubmitLessonRequest req) {
         JsonNode config = lesson.getConfigJson();
         int time = req.getTimeTakenSeconds() == null ? Integer.MAX_VALUE : req.getTimeTakenSeconds();
