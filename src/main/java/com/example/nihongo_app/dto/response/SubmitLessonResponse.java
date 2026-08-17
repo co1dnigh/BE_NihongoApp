@@ -48,6 +48,16 @@ public class SubmitLessonResponse {
     String message;
 
     /**
+     * true nếu user vừa thăng hạng sau khi nhận EXP từ bài này.
+     */
+    Boolean isPromoted;
+
+    /**
+     * Tên hạng mới nếu user thăng hạng; null nếu không thăng.
+     */
+    String newRankName;
+
+    /**
      * Năng lượng hiện tại của user sau khi cộng thưởng / trừ phí.
      * FE dùng để cập nhật thanh năng lượng mà không cần gọi thêm /me.
      */

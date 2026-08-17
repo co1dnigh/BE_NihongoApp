@@ -34,6 +34,7 @@ import com.example.nihongo_app.repository.CoinTransactionRepository;
 import com.example.nihongo_app.repository.LessonQuestionOptionRepository;
 import com.example.nihongo_app.repository.LessonQuestionRepository;
 import com.example.nihongo_app.repository.LessonRepository;
+import com.example.nihongo_app.repository.RankRepository;
 import com.example.nihongo_app.repository.UserExpLogRepository;
 import com.example.nihongo_app.repository.UserLessonProgressRepository;
 import com.example.nihongo_app.repository.UserRepository;
@@ -69,6 +70,7 @@ class LessonAttemptServiceImplTest {
     @Mock private LessonQuestionOptionRepository optionRepository;
     @Mock private UserLessonProgressRepository progressRepository;
     @Mock private UserRepository userRepository;
+    @Mock private RankRepository rankRepository;
     @Mock private UserExpLogRepository expLogRepository;
     @Mock private LessonUnlockPolicy unlockPolicy;
     @Mock private StreakService streakService;
@@ -92,6 +94,8 @@ class LessonAttemptServiceImplTest {
         // lenient(): mot so test (vd lessonLocked/insufficientEnergy) throw truoc khi dung
         // toi cac stub nay, Mockito strict-stubbing se bao "unnecessary" neu khong danh dau.
         lenient().when(userRepository.findById(USER_ID)).thenReturn(Optional.of(user));
+        lenient().when(rankRepository.findFirstByMinExpRequiredLessThanEqualOrderByOrderIndexDesc(anyInt()))
+                .thenReturn(Optional.empty());
         lenient().when(progressRepository.findByUserIdAndLessonId(eq(USER_ID), any())).thenReturn(Optional.empty());
     }
 

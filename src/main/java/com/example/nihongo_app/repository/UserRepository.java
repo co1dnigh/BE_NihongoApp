@@ -3,6 +3,7 @@ package com.example.nihongo_app.repository;
 import com.example.nihongo_app.entity.User;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -27,6 +28,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query(value = "SELECT CASE WHEN EXISTS (SELECT 1 FROM user_follows WHERE follower_id = :followerId AND followed_id = :followedId) THEN 1 ELSE 0 END", nativeQuery = true)
     int existsFollowRelation(@Param("followerId") Long followerId,
                              @Param("followedId") Long followedId);
+
+    @Query("SELECT u FROM User u WHERE u.deletedAt IS NULL AND u.rank.id = :rankId ORDER BY u.exp DESC")
+    List<User> findTop15ByRankIdOrderByExpDesc(@Param("rankId") Long rankId, Pageable pageable);
+
+    @Query("SELECT COUNT(u) FROM User u WHERE u.deletedAt IS NULL AND u.rank.id = :rankId AND u.exp > :exp")
+    Long countUsersWithExpGreaterThanInRank(@Param("rankId") Long rankId,
+                                            @Param("exp") Integer exp);
 
     @Modifying
     @Query(value = "INSERT INTO user_follows (follower_id, followed_id, created_at) VALUES (:followerId, :followedId, CURRENT_TIMESTAMP)", nativeQuery = true)

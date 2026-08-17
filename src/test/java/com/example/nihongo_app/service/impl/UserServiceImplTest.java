@@ -6,7 +6,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.example.nihongo_app.dto.response.UserStatsResponse;
-import com.example.nihongo_app.entity.League;
+import com.example.nihongo_app.entity.Rank;
 import com.example.nihongo_app.entity.User;
 import com.example.nihongo_app.repository.UserRepository;
 import com.example.nihongo_app.security.JwtTokenProvider;
@@ -46,9 +46,11 @@ class UserServiceImplTest {
 
     @Test
     void getMyStats_returnsFullGamificationSnapshot() {
+        Rank rank = Rank.builder().id(2L).name("SILVER").minExpRequired(1000).orderIndex(2).build();
+
         User user = User.builder()
                 .id(1L).email(EMAIL).displayName("Test User").username("testuser").role("LEARNER")
-                .level(3).exp(120).currentLeague(League.SILVER)
+                .level(3).exp(120).rank(rank)
                 .coins(85)
                 .currentEnergy(15).maxEnergy(25)
                 .currentStreak(5).longestStreak(10).streakFreezeCount(1)
@@ -61,7 +63,8 @@ class UserServiceImplTest {
         assertThat(stats.getEmail()).isEqualTo(EMAIL);
         assertThat(stats.getLevel()).isEqualTo(3);
         assertThat(stats.getExp()).isEqualTo(120);
-        assertThat(stats.getCurrentLeague()).isEqualTo(League.SILVER);
+        assertThat(stats.getRankId()).isEqualTo(2L);
+        assertThat(stats.getRankName()).isEqualTo("SILVER");
         assertThat(stats.getCoins()).isEqualTo(85);
         assertThat(stats.getCurrentEnergy()).isEqualTo(15);
         assertThat(stats.getMaxEnergy()).isEqualTo(25);
