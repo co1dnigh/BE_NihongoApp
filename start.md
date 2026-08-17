@@ -2,20 +2,26 @@
 
 ## 1. Yêu cầu hệ thống
 - **Java 17+** (đang dùng JDK 25.0.3)
-- **MySQL 8.0** (port 3306)
+- **MySQL 8.4** qua Docker Compose (port 3307, xem `docker-compose.yml`)
 - **Maven** (có `mvnw` wrapper)
 
 ## 2. Cấu hình Database (application.yml)
 
+```bash
+# Từ thư mục BE_NihongoApp, bật MySQL + phpMyAdmin qua Docker Compose trước
+docker compose up -d
+```
+
 ```yaml
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/nihongo_app?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Ho_Chi_Minh
-    username: root
-    password: Vudeptrai1@
+    url: jdbc:mysql://localhost:3307/nihongo_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Ho_Chi_Minh
+    username: nihongo_user
+    password: 1234
 ```
 
-> Database `nihongo_app` sẽ được Flyway tự tạo schema qua 24 migration (V1→V24) khi app khởi động lần đầu.
+> Đây là giá trị mặc định khớp `docker-compose.yml` (không cần set biến môi trường gì thêm cho dev local).
+> Database `nihongo_db` sẽ được Flyway tự tạo schema qua toàn bộ migration (hiện tại V1→V31) khi app khởi động lần đầu.
 
 ## 3. Chạy ứng dụng
 
@@ -97,12 +103,14 @@ curl -X POST http://localhost:8080/api/v1/lessons/1/submit \
 
 ## 8. Troubleshooting
 
-### Lỗi "Access denied for user 'root'"
-- Kiểm tra password trong `application.yml` khớp với MySQL root password
-- Test: `mysql -u root -p"Vudeptrai1@" -e "SELECT 1;"`
+### Lỗi "Access denied for user 'nihongo_user'"
+- Kiểm tra container DB đang chạy: `docker compose ps`
+- Kiểm tra password trong `application.yml` khớp với `docker-compose.yml` (mặc định `nihongo_user` / `1234`)
+- Test: `docker compose exec db mysql -u nihongo_user -p"1234" -e "SELECT 1;"`
 
 ### Lỗi Flyway migration (Unknown column)
-- Drop database và chạy lại: `mysql -u root -p"Vudeptrai1@" -e "DROP DATABASE nihongo_app; CREATE DATABASE nihongo_app;"`
+- Drop database và chạy lại (dùng root của container, mặc định `rootchangeme`):
+  `docker compose exec db mysql -u root -p"rootchangeme" -e "DROP DATABASE nihongo_db; CREATE DATABASE nihongo_db;"`
 - Flyway sẽ tự chạy lại từ V1
 
 ### Port 8080 bị chiếm
