@@ -30,6 +30,12 @@ app:
   jwt:
     secret: ${JWT_SECRET:change-me-in-dev-change-me-in-dev-change-me-in-dev}
     expiration-ms: 86400000
+  mistake-review:
+    session-size: 10
+    resolve-streak: 2
+    resolve-min-gap-days: 1
+    energy-reward: 5
+    rewarded-sessions-per-day: 2
 
 logging:
   level:
