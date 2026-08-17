@@ -14,6 +14,7 @@ import com.example.nihongo_app.entity.Lesson.LessonType;
 import com.example.nihongo_app.entity.LessonQuestion;
 import com.example.nihongo_app.entity.LessonQuestionOption;
 import com.example.nihongo_app.entity.QuestDefinition.QuestType;
+import com.example.nihongo_app.entity.ShopItem;
 import com.example.nihongo_app.entity.User;
 import com.example.nihongo_app.entity.UserExpLog;
 import com.example.nihongo_app.entity.UserLessonProgress;
@@ -31,6 +32,7 @@ import com.example.nihongo_app.repository.UserRepository;
 import com.example.nihongo_app.service.DailyQuestService;
 import com.example.nihongo_app.service.LessonAttemptService;
 import com.example.nihongo_app.service.LessonUnlockPolicy;
+import com.example.nihongo_app.service.ShopService;
 import com.example.nihongo_app.service.StreakService;
 import com.example.nihongo_app.service.EnergyService;
 import java.time.LocalDateTime;
@@ -74,6 +76,7 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
     private final EnergyService energyService;
     private final CoinTransactionRepository coinTransactionRepository;
     private final DailyQuestService dailyQuestService;
+    private final ShopService shopService;
 
     private static final int NORMAL_COIN_BASE = 8;
     private static final int NORMAL_COIN_PERFECT_BONUS = 4;
@@ -191,6 +194,12 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
         // 2. Fallback: neu FE khong gui, mac dinh false (lan dau).
         boolean isReplay = Boolean.TRUE.equals(req.getIsReplay());
 
+        // Check active powerups BEFORE calculating base rewards
+        boolean hasDoubleXp = shopService.hasActivePowerup(userId, ShopItem.EffectType.DOUBLE_XP);
+        boolean hasDoubleCoin = shopService.hasActivePowerup(userId, ShopItem.EffectType.DOUBLE_COIN);
+        // Timer boost is handled differently (extends time limit for TIMED_REVIEW)
+        boolean hasTimerBoost = shopService.hasActivePowerup(userId, ShopItem.EffectType.TIMER_BOOST);
+
         // Tinh toan theo loai bai.
         int expGained;
         int coinsGained;
@@ -233,6 +242,14 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
             if (coinsGained > 0) {
                 coinsGained = Math.max(1, (int) Math.round(coinsGained * ratio));
             }
+        }
+
+        // Apply powerup multipliers (Double XP, Double Coin)
+        if (hasDoubleXp && expGained > 0) {
+            expGained *= 2;
+        }
+        if (hasDoubleCoin && coinsGained > 0) {
+            coinsGained *= 2;
         }
 
         // Cap nhat progress + (neu JUMP_TEST pass) danh dau tat ca bai NORMAL trong topic.
