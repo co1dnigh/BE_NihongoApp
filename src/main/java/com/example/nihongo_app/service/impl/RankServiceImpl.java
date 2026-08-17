@@ -14,8 +14,6 @@ import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,8 +44,7 @@ public class RankServiceImpl implements RankService {
         User currentUser = userRepository.findById(currentUserId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
-        Pageable pageable = PageRequest.of(0, 15);
-        List<User> topUsers = userRepository.findTop15ByRankIdOrderByExpDesc(rankId, pageable);
+        List<User> topUsers = userRepository.findTop15ByRankIdOrderByExpDesc(rankId);
 
         List<LeaderboardUserResponse> topUserResponses = topUsers.stream()
                 .map(user -> LeaderboardUserResponse.builder()
