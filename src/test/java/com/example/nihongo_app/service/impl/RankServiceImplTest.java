@@ -79,7 +79,7 @@ class RankServiceImplTest {
 
         when(rankRepository.findById(2L)).thenReturn(Optional.of(rankSilver));
         when(userRepository.findById(10L)).thenReturn(Optional.of(currentUser));
-        when(userRepository.findTop15ByRankIdOrderByExpDesc(eq(2L), any(Pageable.class)))
+        when(userRepository.findTop15ByRankIdOrderByExpDesc(eq(2L)))
                 .thenReturn(List.of(topUser1, currentUser));
         when(userRepository.countUsersWithExpGreaterThanInRank(2L, 1500)).thenReturn(3L);
 
@@ -113,7 +113,7 @@ class RankServiceImplTest {
 
         when(rankRepository.findById(3L)).thenReturn(Optional.of(rankGold));
         when(userRepository.findById(10L)).thenReturn(Optional.of(currentUser));
-        when(userRepository.findTop15ByRankIdOrderByExpDesc(eq(3L), any(Pageable.class)))
+        when(userRepository.findTop15ByRankIdOrderByExpDesc(eq(3L)))
                 .thenReturn(List.of(goldUser));
 
         LeaderboardResponse response = rankService.getLeaderboard(3L, 10L);
