@@ -49,12 +49,15 @@ public class SubmitLessonRequest {
      */
     private Boolean isReplay;
 
-    /** Danh sách câu trả lời của user, FE gửi lại toàn bộ answers để BE đếm số câu sai. */
-    private List<AnswerDto> answers;
-
-    @lombok.Data
-    public static class AnswerDto {
-        private Long questionId;
-        private Boolean isCorrect;
-    }
+    /**
+     * OPTIONAL — danh sách câu trả lời chi tiết (câu nào, chọn option nào), để BE tự chấm
+     * và ghi vào {@code lesson_attempt_answers} + Mistake Bank. Field cũ, không có field này
+     * (FE chưa cập nhật) vẫn hoạt động y nguyên như trước — chỉ bỏ qua phần ghi answer/mistake.
+     *
+     * <p>Trước đây field này là {@code List<AnswerDto>} với {@code isCorrect} do FE tự gửi —
+     * đã đổi sang {@link AnswerItem} (chỉ gửi lựa chọn, BE tự tra DB để xác định đúng/sai)
+     * vì field cũ chưa từng được service đọc tới (dead code) và đúng dạng anti-pattern
+     * (tin FE) mà Mistake Bank cần tránh.</p>
+     */
+    private List<AnswerItem> answers;
 }

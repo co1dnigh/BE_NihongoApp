@@ -3,7 +3,6 @@ package com.example.nihongo_app.repository;
 import com.example.nihongo_app.entity.User;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -29,10 +28,15 @@ public interface UserRepository extends JpaRepository<User, Long> {
     int existsFollowRelation(@Param("followerId") Long followerId,
                              @Param("followedId") Long followedId);
 
-    @Query("SELECT u FROM User u WHERE u.deletedAt IS NULL AND u.rank.id = :rankId ORDER BY u.exp DESC")
-    List<User> findTop15ByRankIdOrderByExpDesc(@Param("rankId") Long rankId, Pageable pageable);
+    // "exp" la ten ham dung san (EXP - ham mu) trong grammar HQL cua Hibernate 6/7, nen viet
+    // u.exp trong JPQL se loi "no viable alternative at input 'u.exp'" (kieu escape bang backtick
+    // cung khong duoc chap nhan o day) -> dung native SQL de tranh han HQL parser.
+    @Query(value = "SELECT * FROM users WHERE deleted_at IS NULL AND rank_id = :rankId "
+            + "ORDER BY exp DESC LIMIT 15", nativeQuery = true)
+    List<User> findTop15ByRankIdOrderByExpDesc(@Param("rankId") Long rankId);
 
-    @Query("SELECT COUNT(u) FROM User u WHERE u.deletedAt IS NULL AND u.rank.id = :rankId AND u.exp > :exp")
+    @Query(value = "SELECT COUNT(*) FROM users WHERE deleted_at IS NULL AND rank_id = :rankId "
+            + "AND exp > :exp", nativeQuery = true)
     Long countUsersWithExpGreaterThanInRank(@Param("rankId") Long rankId,
                                             @Param("exp") Integer exp);
 

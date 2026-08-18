@@ -2,12 +2,16 @@ package com.example.nihongo_app.service;
 
 import com.example.nihongo_app.entity.CoinTransaction;
 import com.example.nihongo_app.entity.CoinTransaction.TransactionType;
+import com.example.nihongo_app.entity.ShopItem;
 import com.example.nihongo_app.entity.User;
+import com.example.nihongo_app.entity.UserInventory;
 import com.example.nihongo_app.exception.InsufficientCoinsException;
 import com.example.nihongo_app.exception.ResourceNotFoundException;
 import com.example.nihongo_app.repository.CoinTransactionRepository;
+import com.example.nihongo_app.repository.UserInventoryRepository;
 import com.example.nihongo_app.repository.UserRepository;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,7 +22,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class StreakService {
 
     private final UserRepository userRepository;
+    private final UserInventoryRepository userInventoryRepository;
     private final CoinTransactionRepository coinTransactionRepository;
+    private final ShopService shopService;
     private static final int FREEZE_AWARD_THRESHOLD = 10;
     private static final int FREEZE_COST_COINS = 200;
 
@@ -43,9 +49,43 @@ public class StreakService {
             newStreak = currentStreak + 1;
             updated = true;
         } else {
-            if (freezeCount > 0) {
-                newStreak = currentStreak;
+            // Check for streak freeze: first use inventory item, then use streakFreezeCount
+            boolean usedFreeze = false;
+
+            // 1. Try to consume streak freeze from inventory
+            if (shopService.hasActivePowerup(userId, ShopItem.EffectType.STREAK_FREEZE)) {
+                // Find and consume the streak freeze item from inventory
+                var inventoryItems = userInventoryRepository.findAllByUserId(userId);
+                for (UserInventory inv : inventoryItems) {
+                    if (inv.getQuantity() > 0) {
+                        var shopItem = shopService.getShopItems().values().stream()
+                            .flatMap(List::stream)
+                            .filter(si -> si.getId().equals(inv.getItemId()))
+                            .findFirst()
+                            .orElse(null);
+                        if (shopItem != null && shopItem.getEffectType() == ShopItem.EffectType.STREAK_FREEZE) {
+                            // Consume one from inventory
+                            inv.setQuantity(inv.getQuantity() - 1);
+                            if (inv.getQuantity() == 0) {
+                                userInventoryRepository.delete(inv);
+                            } else {
+                                userInventoryRepository.save(inv);
+                            }
+                            usedFreeze = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // 2. Fallback to streakFreezeCount (legacy/awarded freezes)
+            if (!usedFreeze && freezeCount > 0) {
                 user.setStreakFreezeCount(freezeCount - 1);
+                usedFreeze = true;
+            }
+
+            if (usedFreeze) {
+                newStreak = currentStreak;
             } else {
                 newStreak = 1;
             }

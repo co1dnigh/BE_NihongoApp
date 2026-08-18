@@ -12,6 +12,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.example.nihongo_app.dto.request.AnswerItem;
 import com.example.nihongo_app.dto.request.SubmitLessonRequest;
 import com.example.nihongo_app.dto.response.CancelLessonResponse;
 import com.example.nihongo_app.dto.response.RoadmapLessonResponse.Status;
@@ -21,15 +22,19 @@ import com.example.nihongo_app.entity.CoinTransaction;
 import com.example.nihongo_app.entity.CoinTransaction.TransactionType;
 import com.example.nihongo_app.entity.Lesson;
 import com.example.nihongo_app.entity.Lesson.LessonType;
+import com.example.nihongo_app.entity.LessonAttemptAnswer;
 import com.example.nihongo_app.entity.LessonQuestion;
 import com.example.nihongo_app.entity.LessonQuestion.QuestionType;
+import com.example.nihongo_app.entity.LessonQuestionOption;
 import com.example.nihongo_app.entity.QuestDefinition.QuestType;
+import com.example.nihongo_app.entity.ShopItem;
 import com.example.nihongo_app.entity.User;
 import com.example.nihongo_app.entity.UserLessonProgress;
 import com.example.nihongo_app.entity.UserLessonProgress.ProgressStatus;
 import com.example.nihongo_app.exception.InsufficientEnergyException;
 import com.example.nihongo_app.exception.LessonLockedException;
 import com.example.nihongo_app.repository.CoinTransactionRepository;
+import com.example.nihongo_app.repository.LessonAttemptAnswerRepository;
 import com.example.nihongo_app.repository.LessonQuestionOptionRepository;
 import com.example.nihongo_app.repository.LessonQuestionRepository;
 import com.example.nihongo_app.repository.LessonRepository;
@@ -40,6 +45,8 @@ import com.example.nihongo_app.repository.UserRepository;
 import com.example.nihongo_app.service.DailyQuestService;
 import com.example.nihongo_app.service.EnergyService;
 import com.example.nihongo_app.service.LessonUnlockPolicy;
+import com.example.nihongo_app.service.MistakeService;
+import com.example.nihongo_app.service.ShopService;
 import com.example.nihongo_app.service.StreakService;
 import java.util.List;
 import java.util.Optional;
@@ -75,6 +82,9 @@ class LessonAttemptServiceImplTest {
     @Mock private EnergyService energyService;
     @Mock private CoinTransactionRepository coinTransactionRepository;
     @Mock private DailyQuestService dailyQuestService;
+    @Mock private ShopService shopService;
+    @Mock private LessonAttemptAnswerRepository lessonAttemptAnswerRepository;
+    @Mock private MistakeService mistakeService;
 
     @InjectMocks
     private LessonAttemptServiceImpl service;
@@ -288,6 +298,123 @@ class LessonAttemptServiceImplTest {
         service.submitLesson(LESSON_ID, USER_ID, request(10, 10, 0)); // hoan hao
 
         assertThat(user.getCurrentEnergy()).isEqualTo(3); // cap o entryCostEnergy=3, khong phai 5
+    }
+
+    // ============================ MISTAKE BANK (ghi answer, Phan 1+2) ============================
+
+    private LessonQuestionOption option(Long id, Long questionId, boolean correct) {
+        return LessonQuestionOption.builder().id(id).questionId(questionId).correct(correct).build();
+    }
+
+    @Test
+    void submitLesson_withValidAnswers_gradesFromDb_notFromFe() {
+        when(lessonRepository.findById(LESSON_ID)).thenReturn(Optional.of(lessonOfType(LessonType.NORMAL)));
+        // Cau 1: user chon option SAI (id=201, correct=false). AnswerItem khong co field
+        // isCorrect nao de FE tu khai bao -> is_correct chi co the den tu DB.
+        when(questionRepository.findById(1L)).thenReturn(Optional.of(
+                LessonQuestion.builder().id(1L).lessonId(LESSON_ID).build()));
+        when(optionRepository.findById(201L)).thenReturn(Optional.of(option(201L, 1L, false)));
+
+        SubmitLessonRequest req = request(10, 10, 0);
+        req.setAnswers(List.of(answerItem(1L, 201L)));
+
+        service.submitLesson(LESSON_ID, USER_ID, req);
+
+        ArgumentCaptor<LessonAttemptAnswer> captor = ArgumentCaptor.forClass(LessonAttemptAnswer.class);
+        verify(lessonAttemptAnswerRepository).save(captor.capture());
+        assertThat(captor.getValue().getQuestionId()).isEqualTo(1L);
+        assertThat(captor.getValue().getSelectedOptionId()).isEqualTo(201L);
+        assertThat(captor.getValue().getIsCorrect()).isFalse(); // dung DB, khong phai FE
+
+        verify(mistakeService).recordFromAnswers(eq(USER_ID), anyListOfSize(1));
+    }
+
+    @Test
+    void submitLesson_optionNotBelongingToQuestion_answerIsSkipped() {
+        when(lessonRepository.findById(LESSON_ID)).thenReturn(Optional.of(lessonOfType(LessonType.NORMAL)));
+        // Option 201 thuc te thuoc question 99, khong phai question 1 nhu FE khai bao.
+        when(optionRepository.findById(201L)).thenReturn(Optional.of(option(201L, 99L, true)));
+
+        SubmitLessonRequest req = request(10, 10, 0);
+        req.setAnswers(List.of(answerItem(1L, 201L)));
+
+        service.submitLesson(LESSON_ID, USER_ID, req);
+
+        verify(lessonAttemptAnswerRepository, never()).save(any());
+        verify(mistakeService, never()).recordFromAnswers(any(), any());
+    }
+
+    @Test
+    void submitLesson_questionNotBelongingToLesson_answerIsSkipped() {
+        when(lessonRepository.findById(LESSON_ID)).thenReturn(Optional.of(lessonOfType(LessonType.NORMAL)));
+        when(optionRepository.findById(201L)).thenReturn(Optional.of(option(201L, 1L, true)));
+        // Question 1 thuc te thuoc lesson khac (999), khong phai LESSON_ID dang lam.
+        when(questionRepository.findById(1L)).thenReturn(Optional.of(
+                LessonQuestion.builder().id(1L).lessonId(999L).build()));
+
+        SubmitLessonRequest req = request(10, 10, 0);
+        req.setAnswers(List.of(answerItem(1L, 201L)));
+
+        service.submitLesson(LESSON_ID, USER_ID, req);
+
+        verify(lessonAttemptAnswerRepository, never()).save(any());
+    }
+
+    @Test
+    void submitLesson_noAnswers_doesNotTouchMistakeBank() {
+        when(lessonRepository.findById(LESSON_ID)).thenReturn(Optional.of(lessonOfType(LessonType.NORMAL)));
+
+        service.submitLesson(LESSON_ID, USER_ID, request(10, 10, 0)); // answers = null
+
+        verify(lessonAttemptAnswerRepository, never()).save(any());
+        verify(mistakeService, never()).recordFromAnswers(any(), any());
+    }
+
+    @Test
+    void submitLesson_jumpTest_neverCallsMistakeBank_evenWithAnswers() {
+        when(lessonRepository.findById(LESSON_ID)).thenReturn(Optional.of(lessonOfType(LessonType.JUMP_TEST)));
+        when(questionRepository.findById(1L)).thenReturn(Optional.of(
+                LessonQuestion.builder().id(1L).lessonId(LESSON_ID).build()));
+        when(optionRepository.findById(201L)).thenReturn(Optional.of(option(201L, 1L, true)));
+
+        SubmitLessonRequest req = request(10, 10, 0);
+        req.setHeartsRemaining(2);
+        req.setAnswers(List.of(answerItem(1L, 201L)));
+
+        service.submitLesson(LESSON_ID, USER_ID, req);
+
+        // Van ghi lesson_attempt_answers (Phan 1 khong loai JUMP_TEST)...
+        verify(lessonAttemptAnswerRepository).save(any());
+        // ...nhung Mistake Bank thi bo qua JUMP_TEST (Phan 2 chi NORMAL/TIMED_REVIEW).
+        verify(mistakeService, never()).recordFromAnswers(any(), any());
+    }
+
+    @Test
+    void submitLesson_replay_neverCallsMistakeBank() {
+        when(lessonRepository.findById(LESSON_ID)).thenReturn(Optional.of(lessonOfType(LessonType.NORMAL)));
+        when(questionRepository.findById(1L)).thenReturn(Optional.of(
+                LessonQuestion.builder().id(1L).lessonId(LESSON_ID).build()));
+        when(optionRepository.findById(201L)).thenReturn(Optional.of(option(201L, 1L, false)));
+
+        SubmitLessonRequest req = request(10, 10, 0);
+        req.setIsReplay(true);
+        req.setAnswers(List.of(answerItem(1L, 201L)));
+
+        service.submitLesson(LESSON_ID, USER_ID, req);
+
+        verify(lessonAttemptAnswerRepository).save(any()); // van ghi answer...
+        verify(mistakeService, never()).recordFromAnswers(any(), any()); // ...nhung khong tinh mistake luc replay
+    }
+
+    private AnswerItem answerItem(Long questionId, Long selectedOptionId) {
+        AnswerItem item = new AnswerItem();
+        item.setQuestionId(questionId);
+        item.setSelectedOptionId(selectedOptionId);
+        return item;
+    }
+
+    private List<LessonAttemptAnswer> anyListOfSize(int size) {
+        return org.mockito.ArgumentMatchers.argThat(list -> list != null && list.size() == size);
     }
 
     // ============================ START ============================

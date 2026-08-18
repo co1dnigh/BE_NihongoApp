@@ -2,6 +2,7 @@ package com.example.nihongo_app.service.impl;
 
 import com.example.nihongo_app.dto.response.UploadResponse;
 import com.example.nihongo_app.service.FileService;
+import jakarta.annotation.PostConstruct;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -39,8 +40,17 @@ public class FileServiceImpl implements FileService {
 
     private static final long MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
-    @Value("${app.file.upload-dir:uploads/}")
+    @Value("${app.file.upload-dir}")
     private String uploadDir;
+
+    @PostConstruct
+    void initUploadDirectory() {
+        try {
+            Files.createDirectories(Paths.get(uploadDir));
+        } catch (IOException ex) {
+            throw new IllegalStateException("Could not create upload directory: " + uploadDir, ex);
+        }
+    }
 
     @Override
     public UploadResponse uploadImage(MultipartFile file) {

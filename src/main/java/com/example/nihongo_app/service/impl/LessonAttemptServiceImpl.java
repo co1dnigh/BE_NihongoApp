@@ -1,5 +1,6 @@
 package com.example.nihongo_app.service.impl;
 
+import com.example.nihongo_app.dto.request.AnswerItem;
 import com.example.nihongo_app.dto.request.SubmitLessonRequest;
 import com.example.nihongo_app.dto.response.CancelLessonResponse;
 import com.example.nihongo_app.dto.response.RoadmapLessonResponse.Status;
@@ -15,14 +16,17 @@ import com.example.nihongo_app.entity.LessonQuestion;
 import com.example.nihongo_app.entity.LessonQuestionOption;
 import com.example.nihongo_app.entity.QuestDefinition.QuestType;
 import com.example.nihongo_app.entity.Rank;
+import com.example.nihongo_app.entity.ShopItem;
 import com.example.nihongo_app.entity.User;
 import com.example.nihongo_app.entity.UserExpLog;
+import com.example.nihongo_app.entity.LessonAttemptAnswer;
 import com.example.nihongo_app.entity.UserLessonProgress;
 import com.example.nihongo_app.entity.UserLessonProgress.ProgressStatus;
 import com.example.nihongo_app.exception.InsufficientEnergyException;
 import com.example.nihongo_app.exception.LessonLockedException;
 import com.example.nihongo_app.exception.ResourceNotFoundException;
 import com.example.nihongo_app.repository.CoinTransactionRepository;
+import com.example.nihongo_app.repository.LessonAttemptAnswerRepository;
 import com.example.nihongo_app.repository.LessonQuestionOptionRepository;
 import com.example.nihongo_app.repository.LessonQuestionRepository;
 import com.example.nihongo_app.repository.LessonRepository;
@@ -33,6 +37,8 @@ import com.example.nihongo_app.repository.UserRepository;
 import com.example.nihongo_app.service.DailyQuestService;
 import com.example.nihongo_app.service.LessonAttemptService;
 import com.example.nihongo_app.service.LessonUnlockPolicy;
+import com.example.nihongo_app.service.MistakeService;
+import com.example.nihongo_app.service.ShopService;
 import com.example.nihongo_app.service.StreakService;
 import com.example.nihongo_app.service.EnergyService;
 import java.time.LocalDateTime;
@@ -77,6 +83,9 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
     private final EnergyService energyService;
     private final CoinTransactionRepository coinTransactionRepository;
     private final DailyQuestService dailyQuestService;
+    private final ShopService shopService;
+    private final LessonAttemptAnswerRepository lessonAttemptAnswerRepository;
+    private final MistakeService mistakeService;
 
     private static final int NORMAL_COIN_BASE = 8;
     private static final int NORMAL_COIN_PERFECT_BONUS = 4;
@@ -135,7 +144,7 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
         // 5. Lay bo de thi -> shuffle -> cat lay N cau theo config (questionsPerSession).
         List<LessonQuestion> allQuestions = questionRepository.findAllByLessonIdOrderByIdAsc(lessonId);
         int sliceSize = resolveQuestionsPerSession(lesson);
-        List<LessonQuestion> shuffled = shuffle(allQuestions);
+        List<LessonQuestion> shuffled = ShuffleUtil.shuffle(allQuestions);
         List<LessonQuestion> picked = shuffled.size() <= sliceSize
                 ? shuffled
                 : shuffled.subList(0, sliceSize);
@@ -144,7 +153,7 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
         for (LessonQuestion q : picked) {
             List<LessonQuestionOption> options = optionRepository
                     .findAllByQuestionIdOrderByOrderIndexAscIdAsc(q.getId());
-            List<LessonQuestionOption> shuffledOptions = shuffle(options);
+            List<LessonQuestionOption> shuffledOptions = ShuffleUtil.shuffle(options);
             List<StartLessonOption> optionResponses = shuffledOptions.stream()
                     .map(o -> StartLessonOption.builder()
                             .optionId(o.getId())
@@ -194,6 +203,12 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
         // 2. Fallback: neu FE khong gui, mac dinh false (lan dau).
         boolean isReplay = Boolean.TRUE.equals(req.getIsReplay());
 
+        // Check active powerups BEFORE calculating base rewards
+        boolean hasDoubleXp = shopService.hasActivePowerup(userId, ShopItem.EffectType.DOUBLE_XP);
+        boolean hasDoubleCoin = shopService.hasActivePowerup(userId, ShopItem.EffectType.DOUBLE_COIN);
+        // Timer boost is handled differently (extends time limit for TIMED_REVIEW)
+        boolean hasTimerBoost = shopService.hasActivePowerup(userId, ShopItem.EffectType.TIMER_BOOST);
+
         // Tinh toan theo loai bai.
         int expGained;
         int coinsGained;
@@ -236,6 +251,14 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
             if (coinsGained > 0) {
                 coinsGained = Math.max(1, (int) Math.round(coinsGained * ratio));
             }
+        }
+
+        // Apply powerup multipliers (Double XP, Double Coin)
+        if (hasDoubleXp && expGained > 0) {
+            expGained *= 2;
+        }
+        if (hasDoubleCoin && coinsGained > 0) {
+            coinsGained *= 2;
         }
 
         // Cap nhat progress + (neu JUMP_TEST pass) danh dau tat ca bai NORMAL trong topic.
@@ -348,6 +371,18 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
             }
         }
 
+        // Ghi lai dap an tung cau (Mistake Bank) - khong anh huong toi thuong EXP/Coin/Energy
+        // o tren, van tinh theo totalCorrect/totalMistakes FE gui nhu cu.
+        List<LessonAttemptAnswer> gradedAnswers = recordAnswers(lesson, userId, req.getAnswers());
+
+        // Cap nhat Mistake Bank: chi cho bai hoc thuong (khong tinh JUMP_TEST) va khong tinh
+        // replay (replay lai bai da hoc khong nen tao/lam nang them mistake moi).
+        boolean eligibleForMistakeBank = !isReplay
+                && (lesson.getLessonType() == LessonType.NORMAL || lesson.getLessonType() == LessonType.TIMED_REVIEW);
+        if (eligibleForMistakeBank && !gradedAnswers.isEmpty()) {
+            mistakeService.recordFromAnswers(userId, gradedAnswers);
+        }
+
         Rank updatedRank = resolveHighestQualifyingRank(user.getExp());
         boolean promoted = false;
         String newRankName = null;
@@ -435,6 +470,56 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
             progress.setUnlockedAt(LocalDateTime.now());
         }
         progressRepository.save(progress);
+    }
+
+    /**
+     * Ghi lai tung cau tra loi cua user (neu FE co gui {@code answers}), tu xac dinh is_correct
+     * bang cach doi chieu {@code selectedOptionId} voi DB (khong tin FE). Answer khong hop le
+     * (option khong thuoc question, hoac question khong thuoc lesson) bi bo qua + log warning.
+     *
+     * <p>Optional & backward-compatible: {@code answers == null} (FE cu chua cap nhat) -> tra ve
+     * danh sach rong, khong lam gi them.</p>
+     *
+     * @return danh sach answer da cham + luu thanh cong, dung lam dau vao cho Mistake Bank.
+     */
+    private List<LessonAttemptAnswer> recordAnswers(Lesson lesson, Long userId, List<AnswerItem> answers) {
+        if (answers == null || answers.isEmpty()) {
+            return List.of();
+        }
+
+        List<LessonAttemptAnswer> saved = new ArrayList<>(answers.size());
+        for (AnswerItem item : answers) {
+            if (item.getQuestionId() == null || item.getSelectedOptionId() == null) {
+                log.warn("Bo qua answer thieu questionId/selectedOptionId: user={} lesson={}",
+                        userId, lesson.getId());
+                continue;
+            }
+
+            LessonQuestionOption option = optionRepository.findById(item.getSelectedOptionId()).orElse(null);
+            if (option == null || !Objects.equals(option.getQuestionId(), item.getQuestionId())) {
+                log.warn("Bo qua answer khong hop le (option khong thuoc question): user={} lesson={} "
+                                + "questionId={} selectedOptionId={}",
+                        userId, lesson.getId(), item.getQuestionId(), item.getSelectedOptionId());
+                continue;
+            }
+
+            LessonQuestion question = questionRepository.findById(item.getQuestionId()).orElse(null);
+            if (question == null || !Objects.equals(question.getLessonId(), lesson.getId())) {
+                log.warn("Bo qua answer khong hop le (question khong thuoc lesson): user={} lesson={} questionId={}",
+                        userId, lesson.getId(), item.getQuestionId());
+                continue;
+            }
+
+            saved.add(lessonAttemptAnswerRepository.save(LessonAttemptAnswer.builder()
+                    .userId(userId)
+                    .lessonId(lesson.getId())
+                    .questionId(item.getQuestionId())
+                    .selectedOptionId(item.getSelectedOptionId())
+                    .isCorrect(Boolean.TRUE.equals(option.getCorrect()))
+                    .answeredAt(LocalDateTime.now())
+                    .build()));
+        }
+        return saved;
     }
 
     /**
@@ -579,22 +664,7 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
         return true;
     }
 
-    /**
-     * Fisher-Yates shuffle dung de dao thu tu cau hoi va dap an.
-     * Su dung Math.random() (khong can SecureRandom cho use case game).
-     */
     private int calculateStreakBonus(Integer currentStreak) {
         return (currentStreak != null && currentStreak >= 7) ? 5 : 0;
-    }
-
-    private <T> List<T> shuffle(List<T> source) {
-        List<T> list = new ArrayList<>(source);
-        for (int i = list.size() - 1; i > 0; i--) {
-            int j = (int) (Math.random() * (i + 1));
-            T tmp = list.get(i);
-            list.set(i, list.get(j));
-            list.set(j, tmp);
-        }
-        return list;
     }
 }

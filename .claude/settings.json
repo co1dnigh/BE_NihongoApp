@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(docker exec *)",
+      "Bash(netstat -ano)",
+      "Bash(findstr :8080)",
+      "PowerShell(taskkill /PID 16444 /F)"
+    ]
+  }
+}

@@ -36,6 +36,10 @@ build/
 ### Uploads (user uploaded files) ###
 uploads/
 
+### JVM crash/JIT dump files ###
+hs_err_pid*.log
+replay_pid*.log
+
 ### Logs ###
 *.log
-
+.claude/

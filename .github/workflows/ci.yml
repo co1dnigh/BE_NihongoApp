@@ -1,0 +1,74 @@
+# =====================================================================
+# CI cho BE_NihongoApp — đặt file này tại: .github/workflows/ci.yml
+# Chạy khi: mở/cập nhật Pull Request, và khi push lên main.
+# Làm gì: build + chạy toàn bộ test + boot thử app với MySQL thật
+#         (qua đó Flyway chạy đủ migration hiện có -> bắt lỗi trùng số
+#         migration ngay tại PR).
+# =====================================================================
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    # MySQL 8.4 thật, khớp version trong docker-compose.yml của repo
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: ci_root_pw
+          MYSQL_DATABASE: nihongo_ci
+        ports:
+          - 3306:3306
+        # Chờ MySQL sẵn sàng trước khi chạy test, tránh fail giả
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost -pci_root_pw"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Cài JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: maven   # cache ~/.m2 -> các lần chạy sau nhanh hơn nhiều
+
+      # Bảo đảm mvnw chạy được trên runner Linux
+      # (file commit từ Windows đôi khi mất cờ executable)
+      - name: Cấp quyền chạy cho Maven wrapper
+        run: chmod +x mvnw
+
+      - name: Build + chạy toàn bộ test
+        run: ./mvnw -B verify
+        env:
+          # Trỏ app/test vào MySQL của service phía trên. application.yml build URL từ
+          # DB_PORT + DB_NAME (không có biến DB_URL nào cả — sai chỗ này sẽ khiến app
+          # âm thầm dùng default cục bộ (port 3307/nihongo_db) thay vì service CI).
+          DB_PORT: 3306
+          DB_NAME: nihongo_ci
+          DB_USERNAME: root
+          DB_PASSWORD: ci_root_pw
+          # Secret giả CHỈ dùng trong CI — không phải secret thật.
+          # (Sau khi sửa JWT secret thành ${JWT_SECRET:...} thì dòng này
+          #  là thứ giúp test vẫn chạy được trong CI.)
+          JWT_SECRET: ci-only-jwt-secret-not-for-production-0123456789
+          UPLOAD_DIR: ${{ runner.temp }}/uploads
+
+      # Giữ lại report test khi fail để tải về xem, đỡ phải đọc log dài
+      - name: Upload test reports (chỉ khi fail)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: "**/target/surefire-reports/"
+          retention-days: 7

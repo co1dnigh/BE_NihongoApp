@@ -91,6 +91,13 @@ private LocalDateTime lastAdWatchDate;
 @Column(name = "last_chest_opened_date")
 private LocalDate lastChestOpenedDate;
 
+// --- Mistake Review (dem so phien on da duoc thuong nang luong trong ngay) ---
+@Column(name = "last_mistake_review_reward_date")
+private LocalDate lastMistakeReviewRewardDate;
+
+@Column(name = "mistake_review_reward_count_today")
+private Integer mistakeReviewRewardCountToday;
+
 @Column(name = "coins")
 private Integer coins;
 
@@ -132,6 +139,7 @@ void onCreate() {
         if (longestStreak == null) longestStreak = 0;
         if (streakFreezeCount == null) streakFreezeCount = 0;
         if (streakFreezeAwarded == null) streakFreezeAwarded = false;
+        if (mistakeReviewRewardCountToday == null) mistakeReviewRewardCountToday = 0;
     }
 }
 
