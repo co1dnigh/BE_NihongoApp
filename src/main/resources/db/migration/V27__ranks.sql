@@ -20,7 +20,7 @@ ALTER TABLE users ADD COLUMN rank_id BIGINT AFTER exp;
 
 -- 4. BƯỚC QUAN TRỌNG: Đồng bộ dữ liệu cũ sang hệ thống mới
 -- Map chữ 'BRONZE' của người dùng cũ thành ID của hạng BRONZE trong bảng ranks
-UPDATE users 
+UPDATE users
 SET rank_id = (SELECT id FROM ranks WHERE name = users.current_league);
 
 -- Phòng hờ trường hợp có user bị trễ/lỗi trước đó, gán mặc định về Đồng (ID = 1)
@@ -29,6 +29,7 @@ SET rank_id = 1 WHERE rank_id IS NULL;
 
 -- 5. Khóa chặt lại (Thêm FK và Ràng buộc NOT NULL)
 ALTER TABLE users MODIFY COLUMN rank_id BIGINT NOT NULL DEFAULT 1;
+
 ALTER TABLE users ADD CONSTRAINT fk_users_rank FOREIGN KEY (rank_id) REFERENCES ranks(id);
 
 -- 6. Tạm thời không xóa current_league để giữ tương thích với JPA model hiện tại.
