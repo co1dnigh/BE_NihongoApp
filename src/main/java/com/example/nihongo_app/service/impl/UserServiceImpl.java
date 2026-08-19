@@ -9,11 +9,14 @@ import com.example.nihongo_app.dto.response.UserOverviewResponse;
 import com.example.nihongo_app.dto.response.UserSearchResponse;
 import com.example.nihongo_app.dto.response.UserProfileResponse;
 import com.example.nihongo_app.dto.response.UserStatsResponse;
+import com.example.nihongo_app.dto.response.ActiveEffectResponse;
 import com.example.nihongo_app.entity.User;
+import com.example.nihongo_app.repository.UserActiveEffectRepository;
 import com.example.nihongo_app.repository.UserRepository;
 import com.example.nihongo_app.security.JwtTokenProvider;
 import com.example.nihongo_app.service.EnergyService;
 import com.example.nihongo_app.service.UserService;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -31,6 +34,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final EnergyService energyService;
+    private final UserActiveEffectRepository userActiveEffectRepository;
 
     @Override
     @Transactional
@@ -43,6 +47,14 @@ public class UserServiceImpl implements UserService {
         if (user.getId() != null) {
             energyService.recoverEnergy(user.getId());
         }
+
+        List<ActiveEffectResponse> activeEffects = userActiveEffectRepository.findByUserIdAndExpiresAtAfter(user.getId(), LocalDateTime.now())
+                .stream()
+                .map(effect -> ActiveEffectResponse.builder()
+                        .effectType(effect.getEffectType().name())
+                        .expiresAt(effect.getExpiresAt())
+                        .build())
+                .collect(Collectors.toList());
 
         return UserStatsResponse.builder()
                 .id(user.getId())
@@ -60,6 +72,7 @@ public class UserServiceImpl implements UserService {
                 .currentStreak(user.getCurrentStreak())
                 .longestStreak(user.getLongestStreak())
                 .streakFreezeCount(user.getStreakFreezeCount())
+                .activeEffects(activeEffects)
                 .build();
     }
 

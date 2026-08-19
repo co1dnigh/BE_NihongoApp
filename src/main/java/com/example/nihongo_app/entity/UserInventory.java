@@ -50,9 +50,6 @@ public class UserInventory {
     @Column(nullable = false)
     private Integer quantity;
 
-    @Column(name = "expires_at")
-    private LocalDateTime expiresAt;
-
     @Column(nullable = false)
     private Boolean equipped;
 
@@ -69,13 +66,4 @@ public class UserInventory {
     @Column(name = "updated_at", insertable = false, updatable = false)
     private LocalDateTime updatedAt;
 
-    /**
-     * Kiểm tra item còn hiệu lực (chỉ áp dụng cho POWERUP có expires_at).
-     */
-    public boolean isActive() {
-        if (expiresAt == null) {
-            return true; // CONSUMABLE và COSMETIC không hết hạn
-        }
-        return LocalDateTime.now().isBefore(expiresAt);
-    }
 }

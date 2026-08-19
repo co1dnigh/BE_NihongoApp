@@ -33,4 +33,6 @@ public class UserStatsResponse {
     Integer currentStreak;
     Integer longestStreak;
     Integer streakFreezeCount;
+
+    java.util.List<ActiveEffectResponse> activeEffects;
 }

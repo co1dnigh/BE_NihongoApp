@@ -18,8 +18,6 @@ List<UserInventory> findByUserIdAndEquippedTrue(Long userId);
 @Query("SELECT ui FROM UserInventory ui WHERE ui.userId = :userId AND ui.itemId = :itemId")
 Optional<UserInventory> findByUserIdAndItemId(@Param("userId") Long userId, @Param("itemId") Long itemId);
 
-@Query("SELECT ui FROM UserInventory ui WHERE ui.userId = :userId AND ui.expiresAt IS NOT NULL AND ui.expiresAt > :cutoff")
-List<UserInventory> findActivePowerupsByUserId(@Param("userId") Long userId, @Param("cutoff") LocalDateTime cutoff);
 
 @Query("SELECT ui FROM UserInventory ui WHERE ui.userId = :userId AND ui.equipped = true AND ui.itemId IN (SELECT si.id FROM ShopItem si WHERE si.effectType = :effectType)")
 List<UserInventory> findEquippedCosmeticByUserIdAndEffectType(@Param("userId") Long userId, @Param("effectType") ShopItem.EffectType effectType);

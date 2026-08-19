@@ -16,12 +16,14 @@ import com.example.nihongo_app.entity.CoinTransaction;
 import com.example.nihongo_app.entity.ShopItem;
 import com.example.nihongo_app.entity.User;
 import com.example.nihongo_app.entity.UserInventory;
+import com.example.nihongo_app.entity.UserActiveEffect;
 import com.example.nihongo_app.exception.InsufficientCoinsException;
 import com.example.nihongo_app.exception.InventoryItemNotFoundException;
 import com.example.nihongo_app.exception.ItemNotAvailableException;
 import com.example.nihongo_app.exception.ResourceNotFoundException;
 import com.example.nihongo_app.repository.CoinTransactionRepository;
 import com.example.nihongo_app.repository.ShopItemRepository;
+import com.example.nihongo_app.repository.UserActiveEffectRepository;
 import com.example.nihongo_app.repository.UserInventoryRepository;
 import com.example.nihongo_app.repository.UserRepository;
 import java.time.LocalDateTime;
@@ -48,8 +50,11 @@ private UserInventoryRepository userInventoryRepository;
 @Mock
 private UserRepository userRepository;
 
-@Mock
-private CoinTransactionRepository coinTransactionRepository;
+    @Mock
+    private CoinTransactionRepository coinTransactionRepository;
+
+    @Mock
+    private UserActiveEffectRepository userActiveEffectRepository;
 
 @InjectMocks
 private ShopService shopService;
@@ -235,28 +240,28 @@ assertThat(response.getCurrentEnergy()).isEqualTo(25);
 verify(userRepository).save(user);
 }
 
-@Test
-void consumeItem_doubleXp_setsExpiresAt() {
-UserInventory inventoryItem = UserInventory.builder()
-.id(INVENTORY_ID)
-.userId(USER_ID)
-.itemId(2L)
-.quantity(1)
-.equipped(false)
-.acquiredFrom(UserInventory.AcquiredFrom.SHOP_BUY)
-.build();
+    @Test
+    void consumeItem_doubleXp_setsActiveEffect() {
+        UserInventory inventoryItem = UserInventory.builder()
+                .id(INVENTORY_ID)
+                .userId(USER_ID)
+                .itemId(2L)
+                .quantity(1)
+                .equipped(false)
+                .acquiredFrom(UserInventory.AcquiredFrom.SHOP_BUY)
+                .build();
 
-when(userInventoryRepository.findById(INVENTORY_ID)).thenReturn(Optional.of(inventoryItem));
-when(shopItemRepository.findById(2L)).thenReturn(Optional.of(doubleXpItem));
-when(userRepository.findById(USER_ID)).thenReturn(Optional.of(user));
-when(userRepository.save(any())).thenReturn(user);
+        when(userInventoryRepository.findById(INVENTORY_ID)).thenReturn(Optional.of(inventoryItem));
+        when(shopItemRepository.findById(2L)).thenReturn(Optional.of(doubleXpItem));
+        when(userRepository.findById(USER_ID)).thenReturn(Optional.of(user));
+        when(userRepository.save(any())).thenReturn(user);
 
-ConsumeItemResponse response = shopService.consumeItem(USER_ID, INVENTORY_ID);
+        ConsumeItemResponse response = shopService.consumeItem(USER_ID, INVENTORY_ID);
 
-assertThat(response.getEffectType()).isEqualTo(ShopItem.EffectType.DOUBLE_XP);
-assertThat(response.getEffectDescription()).contains("30 phút");
-assertThat(inventoryItem.getExpiresAt()).isNotNull();
-assertThat(inventoryItem.getExpiresAt()).isAfter(LocalDateTime.now());
+        assertThat(response.getEffectType()).isEqualTo(ShopItem.EffectType.DOUBLE_XP);
+        assertThat(response.getEffectDescription()).contains("30 phút");
+
+        verify(userActiveEffectRepository).save(any(UserActiveEffect.class));
 
 // For powerup, quantity is decremented and deleted if reaches 0
 // Since quantity was 1, it gets deleted
@@ -382,34 +387,23 @@ assertThatThrownBy(() -> shopService.equipCosmetic(USER_ID, INVENTORY_ID))
 .hasMessageContaining("Chỉ có thể trang bị vật phẩm trang trí");
 }
 
-@Test
-void hasActivePowerup_returnsTrue_whenPowerupActive() {
-UserInventory powerup = UserInventory.builder()
-.id(100L)
-.userId(USER_ID)
-.itemId(2L)
-.quantity(1)
-.equipped(false)
-.expiresAt(LocalDateTime.now().plusMinutes(10))
-.acquiredFrom(UserInventory.AcquiredFrom.SHOP_BUY)
-.build();
+    @Test
+    void hasActivePowerup_returnsTrue_whenPowerupActive() {
+        when(userActiveEffectRepository.existsByUserIdAndEffectTypeAndExpiresAtAfter(eq(USER_ID), eq(ShopItem.EffectType.DOUBLE_XP), any()))
+                .thenReturn(true);
 
-when(userInventoryRepository.findActivePowerupsByUserId(eq(USER_ID), any()))
-.thenReturn(List.of(powerup));
-when(shopItemRepository.findByIdIn(List.of(2L))).thenReturn(List.of(doubleXpItem));
+        boolean result = shopService.hasActivePowerup(USER_ID, ShopItem.EffectType.DOUBLE_XP);
 
-boolean result = shopService.hasActivePowerup(USER_ID, ShopItem.EffectType.DOUBLE_XP);
+        assertThat(result).isTrue();
+    }
 
-assertThat(result).isTrue();
-}
+    @Test
+    void hasActivePowerup_returnsFalse_whenNoActivePowerup() {
+        when(userActiveEffectRepository.existsByUserIdAndEffectTypeAndExpiresAtAfter(eq(USER_ID), eq(ShopItem.EffectType.DOUBLE_XP), any()))
+                .thenReturn(false);
 
-@Test
-void hasActivePowerup_returnsFalse_whenNoActivePowerup() {
-when(userInventoryRepository.findActivePowerupsByUserId(eq(USER_ID), any()))
-.thenReturn(Collections.emptyList());
+        boolean result = shopService.hasActivePowerup(USER_ID, ShopItem.EffectType.DOUBLE_XP);
 
-boolean result = shopService.hasActivePowerup(USER_ID, ShopItem.EffectType.DOUBLE_XP);
-
-assertThat(result).isFalse();
-}
+        assertThat(result).isFalse();
+    }
 }
