@@ -40,9 +40,6 @@ uploads/
 hs_err_pid*.log
 replay_pid*.log
 
-### Stray run/debug logs (accidentally committed before) ###
+### Logs ###
 *.log
 .claude/
-*.log
-target/
-uploads/
