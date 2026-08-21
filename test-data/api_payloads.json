@@ -1,0 +1,160 @@
+{
+  "_note": "Payload này dùng cho các endpoint có REST API (POST /api/v1/admin/...). Bảng 'questions' (exam JLPT) KHÔNG có API tạo -> phải dùng file .sql. Gọi lần lượt theo đúng thứ tự step, thay {{...}} bằng id trả về ở response của step trước.",
+
+  "step_0_login": {
+    "method": "POST",
+    "url": "/api/v1/auth/login (kiểm tra đúng path trong AuthController nếu khác)",
+    "note": "Đăng nhập bằng tài khoản admin seed sẵn (email: admin@nihongo.app) để lấy JWT, gắn header Authorization: Bearer <token> cho mọi request bên dưới."
+  },
+
+  "step_1_create_topic": {
+    "method": "POST",
+    "url": "/api/v1/admin/topics",
+    "body": {
+      "title": "Test Data - N5 Cơ bản",
+      "description": "Topic dùng để chứa dữ liệu test câu hỏi",
+      "orderIndex": 99
+    },
+    "note": "Response trả về id -> dùng làm topicId ở step 2"
+  },
+
+  "step_2_create_lesson": {
+    "method": "POST",
+    "url": "/api/v1/admin/lessons",
+    "body": {
+      "topicId": "{{topicId từ step 1}}",
+      "title": "Bài test - Tất cả loại câu hỏi",
+      "lessonType": "NORMAL",
+      "orderIndex": 1,
+      "configJson": null
+    },
+    "note": "Response trả về id -> dùng làm lessonId cho toàn bộ step 3"
+  },
+
+  "step_3_create_questions": [
+    {
+      "type": "SELECT_IMAGE",
+      "method": "POST",
+      "url": "/api/v1/admin/questions",
+      "body": {
+        "lessonId": "{{lessonId}}",
+        "questionType": "SELECT_IMAGE",
+        "questionText": "Từ nào tương ứng với hình ảnh: 猫 (con mèo)?",
+        "audioUrl": null,
+        "imageUrl": null,
+        "metadataJson": { "romaji": "neko" },
+        "options": [
+          { "optionText": "猫 (con mèo)", "imageUrl": "https://example.com/images/cat.png", "isCorrect": true, "orderIndex": 0 },
+          { "optionText": "犬 (con chó)", "imageUrl": "https://example.com/images/dog.png", "isCorrect": false, "orderIndex": 1 },
+          { "optionText": "鳥 (con chim)", "imageUrl": "https://example.com/images/bird.png", "isCorrect": false, "orderIndex": 2 },
+          { "optionText": "魚 (con cá)", "imageUrl": "https://example.com/images/fish.png", "isCorrect": false, "orderIndex": 3 }
+        ]
+      }
+    },
+    {
+      "type": "TRANSLATE_TO_JP",
+      "method": "POST",
+      "url": "/api/v1/admin/questions",
+      "body": {
+        "lessonId": "{{lessonId}}",
+        "questionType": "TRANSLATE_TO_JP",
+        "questionText": "Dịch câu sau sang tiếng Nhật: \"Tôi là học sinh.\"",
+        "options": [
+          { "optionText": "私は学生です。", "isCorrect": true, "orderIndex": 0 },
+          { "optionText": "私は先生です。", "isCorrect": false, "orderIndex": 1 },
+          { "optionText": "彼は学生です。", "isCorrect": false, "orderIndex": 2 },
+          { "optionText": "私は学生ですか。", "isCorrect": false, "orderIndex": 3 }
+        ]
+      }
+    },
+    {
+      "type": "TRANSLATE_TO_VN",
+      "method": "POST",
+      "url": "/api/v1/admin/questions",
+      "body": {
+        "lessonId": "{{lessonId}}",
+        "questionType": "TRANSLATE_TO_VN",
+        "questionText": "Dịch câu sau sang tiếng Việt: \"これは本です。\"",
+        "options": [
+          { "optionText": "Đây là quyển sách.", "isCorrect": true, "orderIndex": 0 },
+          { "optionText": "Đây là cây bút.", "isCorrect": false, "orderIndex": 1 },
+          { "optionText": "Kia là quyển sách.", "isCorrect": false, "orderIndex": 2 },
+          { "optionText": "Đây không phải là quyển sách.", "isCorrect": false, "orderIndex": 3 }
+        ]
+      }
+    },
+    {
+      "type": "LISTEN_AND_ARRANGE",
+      "method": "POST",
+      "url": "/api/v1/admin/questions",
+      "body": {
+        "lessonId": "{{lessonId}}",
+        "questionType": "LISTEN_AND_ARRANGE",
+        "questionText": "Nghe audio và sắp xếp các từ thành câu đúng.",
+        "audioUrl": "https://example.com/audio/watashi_wa_gakusei_desu.mp3",
+        "metadataJson": { "correctOrder": [1, 2, 3] },
+        "options": [
+          { "optionText": "私は", "isCorrect": true, "orderIndex": 1 },
+          { "optionText": "学生です", "isCorrect": true, "orderIndex": 2 },
+          { "optionText": "。", "isCorrect": true, "orderIndex": 3 }
+        ]
+      },
+      "note": "isCorrect=true đánh dấu block thuộc câu đúng; orderIndex là vị trí đúng trong câu."
+    },
+    {
+      "type": "LISTEN_AND_SELECT",
+      "method": "POST",
+      "url": "/api/v1/admin/questions",
+      "body": {
+        "lessonId": "{{lessonId}}",
+        "questionType": "LISTEN_AND_SELECT",
+        "questionText": "Nghe audio và chọn từ đúng.",
+        "audioUrl": "https://example.com/audio/ohayou.mp3",
+        "options": [
+          { "optionText": "おはよう (chào buổi sáng)", "isCorrect": true, "orderIndex": 0 },
+          { "optionText": "こんにちは (chào buổi chiều)", "isCorrect": false, "orderIndex": 1 },
+          { "optionText": "こんばんは (chào buổi tối)", "isCorrect": false, "orderIndex": 2 },
+          { "optionText": "さようなら (tạm biệt)", "isCorrect": false, "orderIndex": 3 }
+        ]
+      }
+    },
+    {
+      "type": "SPEAKING",
+      "method": "POST",
+      "url": "/api/v1/admin/questions",
+      "body": {
+        "lessonId": "{{lessonId}}",
+        "questionType": "SPEAKING",
+        "questionText": "Phát âm câu sau: おはようございます",
+        "audioUrl": "https://example.com/audio/ohayou_gozaimasu_sample.mp3",
+        "metadataJson": { "romaji": "ohayou gozaimasu" },
+        "options": [
+          { "optionText": "おはようございます", "isCorrect": true, "orderIndex": 0 }
+        ]
+      },
+      "note": "Service validate BẮT BUỘC options non-empty + có >=1 isCorrect=true, kể cả loại SPEAKING."
+    }
+  ],
+
+  "step_4_create_alphabet_bulk": {
+    "method": "POST",
+    "url": "/api/v1/admin/alphabets/bulk",
+    "body": [
+      { "symbol": "あ", "romaji": "a",  "type": "HIRAGANA", "groupName": "a-row",  "audioUrl": "https://example.com/audio/hira_a.mp3",  "orderIndex": 1 },
+      { "symbol": "い", "romaji": "i",  "type": "HIRAGANA", "groupName": "a-row",  "audioUrl": "https://example.com/audio/hira_i.mp3",  "orderIndex": 2 },
+      { "symbol": "う", "romaji": "u",  "type": "HIRAGANA", "groupName": "a-row",  "audioUrl": "https://example.com/audio/hira_u.mp3",  "orderIndex": 3 },
+      { "symbol": "え", "romaji": "e",  "type": "HIRAGANA", "groupName": "a-row",  "audioUrl": "https://example.com/audio/hira_e.mp3",  "orderIndex": 4 },
+      { "symbol": "お", "romaji": "o",  "type": "HIRAGANA", "groupName": "a-row",  "audioUrl": "https://example.com/audio/hira_o.mp3",  "orderIndex": 5 },
+      { "symbol": "か", "romaji": "ka", "type": "HIRAGANA", "groupName": "ka-row", "audioUrl": "https://example.com/audio/hira_ka.mp3", "orderIndex": 6 },
+      { "symbol": "き", "romaji": "ki", "type": "HIRAGANA", "groupName": "ka-row", "audioUrl": "https://example.com/audio/hira_ki.mp3", "orderIndex": 7 },
+      { "symbol": "ア", "romaji": "a",  "type": "KATAKANA", "groupName": "a-row",  "audioUrl": "https://example.com/audio/kata_a.mp3",  "orderIndex": 1 },
+      { "symbol": "イ", "romaji": "i",  "type": "KATAKANA", "groupName": "a-row",  "audioUrl": "https://example.com/audio/kata_i.mp3",  "orderIndex": 2 },
+      { "symbol": "ウ", "romaji": "u",  "type": "KATAKANA", "groupName": "a-row",  "audioUrl": "https://example.com/audio/kata_u.mp3",  "orderIndex": 3 }
+    ]
+  },
+
+  "not_covered_by_api": {
+    "table": "questions (exam JLPT)",
+    "reason": "Không tìm thấy REST endpoint tạo exam question trong codebase hiện tại. Dùng file lesson_questions_and_exam_seed.sql, phần mục 7."
+  }
+}

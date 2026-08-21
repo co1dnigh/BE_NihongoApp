@@ -23,7 +23,7 @@ public interface CharacterRepository extends JpaRepository<Character, Long> {
                         LEFT JOIN user_character_progress ucp
                             ON ucp.character_id = c.id AND ucp.user_id = :userId
                         WHERE c.type = :type
-                        ORDER BY c.group_name, c.order_index, c.id
+                        ORDER BY MIN(c.order_index) OVER (PARTITION BY c.group_name), c.order_index, c.id
                         """, nativeQuery = true)
         List<AlphabetMatrixProjection> findMatrixByTypeAndUserId(@Param("type") String type,
                                                                                                                             @Param("userId") Long userId);
