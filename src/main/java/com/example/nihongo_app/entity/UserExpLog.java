@@ -46,7 +46,7 @@ public class UserExpLog {
      * </ul>
      */
     public enum SourceType {
-        NEW_LESSON, REVIEW_LESSON, JUMP_TEST
+        NEW_LESSON, REVIEW_LESSON, JUMP_TEST, ALPHABET_PRACTICE
     }
 
     @Id
