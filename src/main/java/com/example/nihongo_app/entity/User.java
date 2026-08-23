@@ -82,6 +82,10 @@ private Integer streakFreezeCount;
 @Column(name = "streak_freeze_awarded")
 private Boolean streakFreezeAwarded;
 
+/** Cài đặt: có hiển thị streak calendar (heat map) trên FE không. */
+@Column(name = "streak_calendar_enabled")
+private Boolean streakCalendarEnabled;
+
 @Column(name = "last_energy_reset_date")
 private LocalDateTime lastEnergyResetDate;
 
@@ -139,6 +143,7 @@ void onCreate() {
         if (longestStreak == null) longestStreak = 0;
         if (streakFreezeCount == null) streakFreezeCount = 0;
         if (streakFreezeAwarded == null) streakFreezeAwarded = false;
+        if (streakCalendarEnabled == null) streakCalendarEnabled = true;
         if (mistakeReviewRewardCountToday == null) mistakeReviewRewardCountToday = 0;
     }
 }

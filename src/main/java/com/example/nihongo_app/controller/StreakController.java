@@ -7,6 +7,7 @@ import com.example.nihongo_app.service.StreakService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,41 +22,53 @@ import org.springframework.http.HttpStatus;
 @RestController
 @RequestMapping("/api/v1/users/me/streak")
 @RequiredArgsConstructor
-@Tag(name = "Streak", description = "Chuỗi ngày học liên tiếp + Streak Freeze")
+@Tag(name = "Streak", description = "Chuỗi ngày học liên tiếp + Streak Freeze + Calendar")
 public class StreakController {
 
-private final StreakService streakService;
-private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ISO_DATE;
+	private final StreakService streakService;
+	private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ISO_DATE;
 
-@GetMapping
-@Operation(summary = "Xem streak hiện tại (số ngày liên tiếp, streak dài nhất, số lượt Freeze còn lại)")
-public ResponseEntity<StreakResponse> getStreak(Authentication authentication) {
-Long userId = resolveUserId(authentication);
-User user = streakService.getUserForStreak(userId);
-return ResponseEntity.ok(toResponse(user));
-}
+	@GetMapping
+	@Operation(summary = "Xem streak hiện tại (số ngày liên tiếp, streak dài nhất, số lượt Freeze còn lại)")
+	public ResponseEntity<StreakResponse> getStreak(Authentication authentication) {
+		Long userId = resolveUserId(authentication);
+		User user = streakService.getUserForStreak(userId);
+		return ResponseEntity.ok(toResponse(user));
+	}
 
-@PostMapping("/freeze/buy")
-@Operation(summary = "Mua thêm 1 lượt Streak Freeze bằng coin (200 coin/lượt)")
-public ResponseEntity<StreakResponse> buyStreakFreeze(Authentication authentication) {
-Long userId = resolveUserId(authentication);
-User user = streakService.buyStreakFreeze(userId);
-return ResponseEntity.ok(toResponse(user));
-}
+	@PostMapping("/freeze/buy")
+	@Operation(summary = "Mua thêm 1 lượt Streak Freeze bằng coin (200 coin/lượt)")
+	public ResponseEntity<StreakResponse> buyStreakFreeze(Authentication authentication) {
+		Long userId = resolveUserId(authentication);
+		User user = streakService.buyStreakFreeze(userId);
+		return ResponseEntity.ok(toResponse(user));
+	}
 
-private StreakResponse toResponse(User user) {
-return StreakResponse.builder()
-.currentStreak(Objects.requireNonNullElse(user.getCurrentStreak(), 0))
-.longestStreak(Objects.requireNonNullElse(user.getLongestStreak(), 0))
-.lastStreakDate(user.getLastStreakDate() != null ? user.getLastStreakDate().format(DATE_FORMATTER) : null)
-.streakFreezeCount(Objects.requireNonNullElse(user.getStreakFreezeCount(), 0))
-.build();
-}
+	@GetMapping("/calendar")
+	@Operation(summary = "Lịch học N ngày gần nhất (heat map). Trả về danh sách ngày user đã học.")
+	public ResponseEntity<List<String>> getStreakCalendar(
+			Authentication authentication,
+			@org.springframework.web.bind.annotation.RequestParam(defaultValue = "30") int days) {
+		Long userId = resolveUserId(authentication);
+		List<String> studyDates = streakService.getStreakCalendar(userId, days).stream()
+				.map(DATE_FORMATTER::format)
+				.toList();
+		return ResponseEntity.ok(studyDates);
+	}
 
-private Long resolveUserId(Authentication authentication) {
-if (authentication == null || !(authentication.getPrincipal() instanceof AppUserPrincipal principal)) {
-throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Missing authenticated principal");
-}
-return principal.getUserId();
-}
+	private StreakResponse toResponse(User user) {
+		return StreakResponse.builder()
+				.currentStreak(Objects.requireNonNullElse(user.getCurrentStreak(), 0))
+				.longestStreak(Objects.requireNonNullElse(user.getLongestStreak(), 0))
+				.lastStreakDate(user.getLastStreakDate() != null ? user.getLastStreakDate().format(DATE_FORMATTER) : null)
+				.streakFreezeCount(Objects.requireNonNullElse(user.getStreakFreezeCount(), 0))
+				.build();
+	}
+
+	private Long resolveUserId(Authentication authentication) {
+		if (authentication == null || !(authentication.getPrincipal() instanceof AppUserPrincipal principal)) {
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Missing authenticated principal");
+		}
+		return principal.getUserId();
+	}
 }
