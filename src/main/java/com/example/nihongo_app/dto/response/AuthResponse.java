@@ -14,6 +14,8 @@ public class AuthResponse {
 
     private String accessToken;
 
+    private String refreshToken;
+
     @Default
     private String tokenType = "Bearer";
 

@@ -3,6 +3,17 @@ spring:
     url: jdbc:mysql://localhost:${DB_PORT:3307}/${DB_NAME:nihongo_db}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Ho_Chi_Minh
     username: ${DB_USERNAME:nihongo_user}
     password: ${DB_PASSWORD:1234}
+  mail:
+    host: ${MAIL_HOST:}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: ${MAIL_SMTP_AUTH:true}
+          starttls:
+            enable: ${MAIL_SMTP_STARTTLS:true}
   flyway:
     clean-disabled: true
     locations: classpath:db/migration
@@ -30,6 +41,22 @@ app:
   jwt:
     secret: ${JWT_SECRET:change-me-in-dev-change-me-in-dev-change-me-in-dev}
     expiration-ms: 86400000
+    refresh-expiration-ms: ${JWT_REFRESH_EXPIRATION_MS:2592000000}
+  social:
+    google:
+      client-id: ${GOOGLE_CLIENT_ID:80954200956-kj500d8gmbdg1j78l7ggoto85t7vv60t.apps.googleusercontent.com}
+    facebook:
+      app-id: ${FACEBOOK_APP_ID:1776382180172619}
+      app-secret: ${FACEBOOK_APP_SECRET:841b5dfa38420b588650586b09b7634e}
+  rank:
+    inactivity-days: ${RANK_INACTIVITY_DAYS:7}
+    decay-exp: ${RANK_DECAY_EXP:100}
+    decay-cron: ${RANK_DECAY_CRON:0 0 0 * * *}
+    reminder-cron: ${RANK_REMINDER_CRON:0 0 18 * * *}
+    reminder-enabled: ${RANK_REMINDER_ENABLED:false}
+    mail-from: ${RANK_MAIL_FROM:}
+  mail:
+    enabled: ${MAIL_ENABLED:false}
   mistake-review:
     session-size: 10
     resolve-streak: 2

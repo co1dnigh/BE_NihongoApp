@@ -336,6 +336,9 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
         // Cong EXP + luu log. Replay cung ghi log (vi user van duoc thuong, it hon).
         if (expGained > 0) {
             user.setExp((user.getExp() == null ? 0 : user.getExp()) + expGained);
+            user.setLastLearningAt(java.time.LocalDateTime.now(java.time.ZoneId.of("Asia/Ho_Chi_Minh")));
+            user.setLastRankDecayAt(null);
+            user.setLastRankReminderAt(null);
             userRepository.save(user);
 
             expLogRepository.save(UserExpLog.builder()

@@ -14,6 +14,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> findAllByDeletedAtIsNull();
 
+    List<User> findAllByDeletedAtIsNullAndLastLearningAtIsNotNull();
+
     Optional<User> findByIdAndDeletedAtIsNull(Long id);
 
     Optional<User> findByEmail(String email);

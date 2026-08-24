@@ -1,6 +1,8 @@
 package com.example.nihongo_app.controller;
 
 import com.example.nihongo_app.dto.request.LoginRequest;
+import com.example.nihongo_app.dto.request.FacebookLoginRequest;
+import com.example.nihongo_app.dto.request.GoogleLoginRequest;
 import com.example.nihongo_app.dto.request.RegisterRequest;
 import com.example.nihongo_app.dto.response.AuthResponse;
 import com.example.nihongo_app.service.AuthService;
@@ -35,5 +37,23 @@ public class AuthController {
     @Operation(summary = "Đăng nhập bằng email/password, trả về JWT access token")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));
+    }
+
+    @PostMapping("/social/google")
+    @Operation(summary = "Đăng nhập bằng Google ID token")
+    public ResponseEntity<AuthResponse> loginWithGoogle(@Valid @RequestBody GoogleLoginRequest request) {
+        return ResponseEntity.ok(authService.loginWithGoogle(request));
+    }
+
+    @PostMapping("/social/facebook")
+    @Operation(summary = "Đăng nhập bằng Facebook access token")
+    public ResponseEntity<AuthResponse> loginWithFacebook(@Valid @RequestBody FacebookLoginRequest request) {
+        return ResponseEntity.ok(authService.loginWithFacebook(request));
+    }
+
+    @PostMapping("/logout")
+    @Operation(summary = "Đăng xuất khỏi ứng dụng")
+    public ResponseEntity<Void> logout() {
+        return ResponseEntity.noContent().build();
     }
 }

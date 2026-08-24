@@ -2,6 +2,8 @@ package com.example.nihongo_app.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -30,6 +32,12 @@ import lombok.Setter;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class User {
 
+public enum AuthProvider {
+    LOCAL,
+    GOOGLE,
+    FACEBOOK
+}
+
 @Id
 @GeneratedValue(strategy = GenerationType.IDENTITY)
 @EqualsAndHashCode.Include
@@ -46,6 +54,13 @@ private String phoneNumber;
 
 @Column(name = "password_hash", length = 255)
 private String passwordHash;
+
+@Enumerated(EnumType.STRING)
+@Column(name = "auth_provider", nullable = false, length = 20)
+private AuthProvider authProvider;
+
+@Column(name = "provider_id", length = 255)
+private String providerId;
 
 @Column(name = "display_name", nullable = false, length = 100)
 private String displayName;
@@ -89,6 +104,15 @@ private Boolean streakCalendarEnabled;
 @Column(name = "last_energy_reset_date")
 private LocalDateTime lastEnergyResetDate;
 
+@Column(name = "last_learning_at")
+private LocalDateTime lastLearningAt;
+
+@Column(name = "last_rank_decay_at")
+private LocalDateTime lastRankDecayAt;
+
+@Column(name = "last_rank_reminder_at")
+private LocalDateTime lastRankReminderAt;
+
 @Column(name = "last_ad_watch_date")
 private LocalDateTime lastAdWatchDate;
 
@@ -131,6 +155,7 @@ void onCreate() {
     }
 
     if ("LEARNER".equals(role)) {
+        if (authProvider == null) authProvider = AuthProvider.LOCAL;
         if (level == null) level = 1;
         if (exp == null) exp = 0;
         if (rank == null) {
