@@ -34,6 +34,8 @@ import com.example.nihongo_app.repository.RankRepository;
 import com.example.nihongo_app.repository.UserExpLogRepository;
 import com.example.nihongo_app.repository.UserLessonProgressRepository;
 import com.example.nihongo_app.repository.UserRepository;
+import com.example.nihongo_app.service.AchievementProgress;
+import com.example.nihongo_app.service.AchievementService;
 import com.example.nihongo_app.service.DailyQuestService;
 import com.example.nihongo_app.service.LessonAttemptService;
 import com.example.nihongo_app.service.LessonUnlockPolicy;
@@ -86,6 +88,7 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
     private final ShopService shopService;
     private final LessonAttemptAnswerRepository lessonAttemptAnswerRepository;
     private final MistakeService mistakeService;
+    private final AchievementService achievementService;
 
     private static final int NORMAL_COIN_BASE = 8;
     private static final int NORMAL_COIN_PERFECT_BONUS = 4;
@@ -417,6 +420,26 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
                         .transactionType(TransactionType.STREAK_BONUS)
                         .build());
             }
+
+            // Emit achievement events (không ảnh hưởng tới phần thưởng hiện tại).
+            achievementService.onEvent(userId,
+                    AchievementProgress.of(AchievementProgress.EventType.LESSONS_COMPLETED.name(), 1, null));
+            if (perfectLesson) {
+                achievementService.onEvent(userId,
+                        AchievementProgress.of(AchievementProgress.EventType.PERFECT_LESSON.name(), 1, null));
+            }
+            if (isTopicCompleted) {
+                achievementService.onEvent(userId,
+                        AchievementProgress.of(AchievementProgress.EventType.TOPIC_COMPLETED.name(), 1, null));
+            }
+            achievementService.onEvent(userId,
+                    AchievementProgress.of(AchievementProgress.EventType.COIN_EARNED.name(),
+                            Objects.requireNonNullElse(user.getCoins(), 0), null));
+            // DAILY_STUDY: học vào giờ hiện tại (Asia/Ho_Chi_Minh) — check EARLY_BIRD/NIGHT_OWL.
+            int studyHour = java.time.ZonedDateTime.now(java.time.ZoneId.of("Asia/Ho_Chi_Minh")).getHour();
+            achievementService.onEvent(userId,
+                    AchievementProgress.of(AchievementProgress.EventType.DAILY_STUDY.name(), 1,
+                            String.valueOf(studyHour)));
         }
 
         // Cap nhat Mistake Bank: chi cho bai hoc thuong (khong tinh JUMP_TEST) va khong tinh

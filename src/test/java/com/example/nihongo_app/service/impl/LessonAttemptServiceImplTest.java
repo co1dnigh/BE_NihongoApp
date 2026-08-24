@@ -42,6 +42,8 @@ import com.example.nihongo_app.repository.RankRepository;
 import com.example.nihongo_app.repository.UserExpLogRepository;
 import com.example.nihongo_app.repository.UserLessonProgressRepository;
 import com.example.nihongo_app.repository.UserRepository;
+import com.example.nihongo_app.service.AchievementProgress;
+import com.example.nihongo_app.service.AchievementService;
 import com.example.nihongo_app.service.DailyQuestService;
 import com.example.nihongo_app.service.EnergyService;
 import com.example.nihongo_app.service.LessonUnlockPolicy;
@@ -85,6 +87,7 @@ class LessonAttemptServiceImplTest {
     @Mock private ShopService shopService;
     @Mock private LessonAttemptAnswerRepository lessonAttemptAnswerRepository;
     @Mock private MistakeService mistakeService;
+    @Mock private AchievementService achievementService;
 
     @InjectMocks
     private LessonAttemptServiceImpl service;

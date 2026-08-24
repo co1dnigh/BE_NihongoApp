@@ -5,7 +5,10 @@ import com.example.nihongo_app.dto.request.UpdatePhoneRequest;
 import com.example.nihongo_app.dto.request.UpdateProfileRequest;
 import com.example.nihongo_app.dto.response.AuthResponse;
 import com.example.nihongo_app.dto.response.AdminSummaryResponse;
+import com.example.nihongo_app.dto.response.CursorPageResponse;
+import com.example.nihongo_app.dto.response.FollowSummaryResponse;
 import com.example.nihongo_app.dto.response.UserOverviewResponse;
+import com.example.nihongo_app.dto.response.UserPublicProfileResponse;
 import com.example.nihongo_app.dto.response.UserSearchResponse;
 import com.example.nihongo_app.dto.response.UserProfileResponse;
 import com.example.nihongo_app.dto.response.UserStatsResponse;
@@ -17,11 +20,15 @@ import com.example.nihongo_app.security.JwtTokenProvider;
 import com.example.nihongo_app.service.EnergyService;
 import com.example.nihongo_app.service.UserService;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -308,5 +315,140 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
         user.setAvatarUrl(avatarUrl);
         userRepository.save(user);
+    }
+
+    // ============================ Follow (module Social Feed) ============================
+
+    @Override
+    @Transactional
+    public void followUser(Long currentUserId, Long targetUserId) {
+        if (Objects.equals(currentUserId, targetUserId)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You cannot follow yourself");
+        }
+        if (userRepository.existsFollowRelation(currentUserId, targetUserId) > 0) {
+            return; // da follow roi -> idempotent, khong lam gi them
+        }
+        try {
+            userRepository.insertFollow(currentUserId, targetUserId);
+        } catch (DataIntegrityViolationException ex) {
+            // Race condition: 2 request follow gan nhu dong thoi, 1 request da insert truoc ->
+            // coi nhu thanh cong (dung y muon idempotent), khong nem loi cho client.
+        }
+    }
+
+    @Override
+    @Transactional
+    public void unfollowUser(Long currentUserId, Long targetUserId) {
+        // Xoa dong khong ton tai la no-op tu nhien trong SQL -> tu idempotent, khong can check truoc.
+        userRepository.deleteFollow(currentUserId, targetUserId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public UserPublicProfileResponse getPublicProfile(Long currentUserId, Long targetUserId) {
+        List<Object[]> rows = userRepository.findUserProfileDetail(targetUserId, currentUserId);
+        if (rows.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        }
+        Object[] row = rows.get(0);
+        return UserPublicProfileResponse.builder()
+                .id(((Number) row[0]).longValue())
+                .displayName((String) row[1])
+                .avatarUrl((String) row[2])
+                .rankName((String) row[3])
+                .currentStreak(row[4] == null ? null : ((Number) row[4]).intValue())
+                .followerCount(((Number) row[5]).longValue())
+                .followingCount(((Number) row[6]).longValue())
+                .isFollowing(toBoolean(row[7]))
+                .build();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public CursorPageResponse<FollowSummaryResponse> getFollowers(Long targetUserId, Long currentUserId,
+                                                                   String cursor, int size) {
+        String[] parts = CursorCodec.decode(cursor);
+        LocalDateTime cursorTime = parts == null ? null : LocalDateTime.parse(parts[0]);
+        Long cursorId = parts == null ? null : Long.valueOf(parts[1]);
+
+        Pageable pageable = PageRequest.of(0, size + 1);
+        List<Object[]> rows = userRepository.findFollowersCursor(targetUserId, currentUserId,
+                cursorTime, cursorId, pageable);
+        return toFollowSummaryPage(rows, size);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public CursorPageResponse<FollowSummaryResponse> getFollowing(Long targetUserId, Long currentUserId,
+                                                                   String cursor, int size) {
+        String[] parts = CursorCodec.decode(cursor);
+        LocalDateTime cursorTime = parts == null ? null : LocalDateTime.parse(parts[0]);
+        Long cursorId = parts == null ? null : Long.valueOf(parts[1]);
+
+        Pageable pageable = PageRequest.of(0, size + 1);
+        List<Object[]> rows = userRepository.findFollowingCursor(targetUserId, currentUserId,
+                cursorTime, cursorId, pageable);
+        return toFollowSummaryPage(rows, size);
+    }
+
+    /** Moi hang: [id, display_name, avatar_url, followed_since, is_following]. */
+    private CursorPageResponse<FollowSummaryResponse> toFollowSummaryPage(List<Object[]> rows, int size) {
+        boolean hasMore = rows.size() > size;
+        List<Object[]> pageRows = hasMore ? rows.subList(0, size) : rows;
+
+        List<FollowSummaryResponse> items = new ArrayList<>(pageRows.size());
+        for (Object[] row : pageRows) {
+            items.add(FollowSummaryResponse.builder()
+                    .id(((Number) row[0]).longValue())
+                    .displayName((String) row[1])
+                    .avatarUrl((String) row[2])
+                    .isFollowing(toBoolean(row[4]))
+                    .build());
+        }
+
+        String nextCursor = null;
+        if (hasMore) {
+            Object[] lastRow = pageRows.get(pageRows.size() - 1);
+            LocalDateTime lastTime = toLocalDateTime(lastRow[3]);
+            Long lastId = ((Number) lastRow[0]).longValue();
+            nextCursor = CursorCodec.encode(lastTime.toString(), lastId.toString());
+        }
+        return CursorPageResponse.<FollowSummaryResponse>builder().items(items).nextCursor(nextCursor).build();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public CursorPageResponse<UserSearchResponse> searchUsersCursor(Long currentUserId, String keyword,
+                                                                     String cursor, int size) {
+        String searchKeyword = keyword == null ? "" : keyword.trim();
+        String[] parts = CursorCodec.decode(cursor);
+        String cursorName = parts == null ? null : parts[0];
+        Long cursorId = parts == null ? null : Long.valueOf(parts[1]);
+
+        Pageable pageable = PageRequest.of(0, size + 1);
+        List<Object[]> rows = userRepository.searchUsersCursor(currentUserId, searchKeyword,
+                cursorName, cursorId, pageable);
+
+        boolean hasMore = rows.size() > size;
+        List<Object[]> pageRows = hasMore ? rows.subList(0, size) : rows;
+
+        List<UserSearchResponse> items = pageRows.stream().map(this::toSearchResponse).toList();
+
+        String nextCursor = null;
+        if (hasMore) {
+            Object[] lastRow = pageRows.get(pageRows.size() - 1);
+            nextCursor = CursorCodec.encode((String) lastRow[1], String.valueOf(((Number) lastRow[0]).longValue()));
+        }
+        return CursorPageResponse.<UserSearchResponse>builder().items(items).nextCursor(nextCursor).build();
+    }
+
+    private LocalDateTime toLocalDateTime(Object value) {
+        if (value instanceof LocalDateTime dt) {
+            return dt;
+        }
+        if (value instanceof java.sql.Timestamp ts) {
+            return ts.toLocalDateTime();
+        }
+        throw new IllegalStateException("Khong the doc created_at tu ket qua query: " + value);
     }
 }
