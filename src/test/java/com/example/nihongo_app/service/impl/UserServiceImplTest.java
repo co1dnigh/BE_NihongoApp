@@ -1,7 +1,11 @@
 package com.example.nihongo_app.service.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -22,6 +26,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.server.ResponseStatusException;
 
 /**
@@ -120,5 +125,52 @@ class UserServiceImplTest {
         assertThat(stats.getActiveEffects()).hasSize(1);
         assertThat(stats.getActiveEffects().get(0).getEffectType()).isEqualTo("DOUBLE_XP");
         assertThat(stats.getActiveEffects().get(0).getExpiresAt()).isEqualTo(expiresAt);
+    }
+
+    // ============================ Follow (module Social Feed) ============================
+
+    @Test
+    void followUser_self_throws400() {
+        assertThatThrownBy(() -> userService.followUser(1L, 1L))
+                .isInstanceOf(ResponseStatusException.class)
+                .hasMessageContaining("cannot follow yourself");
+
+        verify(userRepository, never()).existsFollowRelation(anyLong(), anyLong());
+        verify(userRepository, never()).insertFollow(anyLong(), anyLong());
+    }
+
+    @Test
+    void followUser_notFollowingYet_insertsFollow() {
+        when(userRepository.existsFollowRelation(1L, 2L)).thenReturn(0);
+
+        userService.followUser(1L, 2L);
+
+        verify(userRepository).insertFollow(1L, 2L);
+    }
+
+    @Test
+    void followUser_alreadyFollowing_isIdempotentNoDuplicateInsert() {
+        when(userRepository.existsFollowRelation(1L, 2L)).thenReturn(1);
+
+        userService.followUser(1L, 2L);
+        userService.followUser(1L, 2L);
+
+        verify(userRepository, never()).insertFollow(anyLong(), anyLong());
+    }
+
+    @Test
+    void followUser_raceConditionDuplicateInsert_swallowsErrorForIdempotency() {
+        when(userRepository.existsFollowRelation(1L, 2L)).thenReturn(0);
+        doThrow(new DataIntegrityViolationException("duplicate key"))
+                .when(userRepository).insertFollow(1L, 2L);
+
+        assertThatCode(() -> userService.followUser(1L, 2L)).doesNotThrowAnyException();
+    }
+
+    @Test
+    void unfollowUser_notFollowing_isNoopNoError() {
+        assertThatCode(() -> userService.unfollowUser(1L, 2L)).doesNotThrowAnyException();
+
+        verify(userRepository).deleteFollow(1L, 2L);
     }
 }

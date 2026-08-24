@@ -125,5 +125,11 @@ class AchievementUnlockIntegrationTest {
                 // Secret achievement chưa unlock vẫn bị ẩn (không có event nào hit threshold).
                 .andExpect(jsonPath("$[?(@.code == 'STREAK_365')]").isEmpty())
                 .andExpect(jsonPath("$[?(@.code == 'COMEBACK')]").isEmpty());
+
+        // Module Social Feed phai tu dong thay bai SYSTEM_ACHIEVEMENT trong feed cua chinh
+        // nguoi vua unlock — day la diem tich hop duy nhat giua Achievement va Social Feed.
+        mockMvc.perform(get("/api/v1/feed").header("Authorization", bearerToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.items[0].postType").value("SYSTEM_ACHIEVEMENT"));
     }
 }

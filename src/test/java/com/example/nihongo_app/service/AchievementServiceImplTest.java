@@ -13,6 +13,7 @@ import com.example.nihongo_app.entity.UserAchievement;
 import com.example.nihongo_app.repository.AchievementRepository;
 import com.example.nihongo_app.repository.UserAchievementRepository;
 import com.example.nihongo_app.service.impl.AchievementServiceImpl;
+import com.example.nihongo_app.service.PostService;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -36,11 +37,14 @@ class AchievementServiceImplTest {
     @Mock
     private UserAchievementRepository userAchievementRepository;
 
+    @Mock
+    private PostService postService;
+
     private AchievementServiceImpl achievementService;
 
     @BeforeEach
     void setUp() {
-        achievementService = new AchievementServiceImpl(achievementRepository, userAchievementRepository);
+        achievementService = new AchievementServiceImpl(achievementRepository, userAchievementRepository, postService);
     }
 
     @Test
