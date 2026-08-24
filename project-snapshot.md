@@ -1,8 +1,10 @@
 # Project Snapshot — BE_NihongoApp
 
-> Snapshot dựa trên phân tích code thực tế tại thời điểm viết (nhánh `feature/mistake-bank`, sau
-> khi merge `feature/shop` + `kiet1` vào `feature/coin-reward-chest` rồi triển khai thêm hệ
-> Mistake Bank — 36 commit, 138 file Java main + 12 file test, 31 migration Flyway). Không có
+> Snapshot dựa trên phân tích code thực tế tại thời điểm viết (nhánh `feature/social-feed`, tạo từ
+> `feature/mistake-bank` sau khi nhánh đó đã merge `feature/achivements` (hệ Thành tích + Streak
+> calendar + bảng chữ cái) và `fix/shop_quantity` (UserActiveEffect thay cho
+> `UserInventory.expiresAt`, thêm `quantity`), rồi triển khai thêm module Bản tin cộng đồng
+> (Social Feed) — 54 commit, 189 file Java main + 18 file test, 37 migration Flyway. Không có
 > API key/token/mật khẩu thật nào bị lộ trong tài liệu này — mọi chỗ có giá trị nhạy cảm đều bị
 > che theo yêu cầu.
 
@@ -22,14 +24,19 @@ thật. Phần dưới đây phân tích dựa trên bản chất thật của r
 `com.example.nihongo_app` ("nihongo" = tiếng Nhật). Cung cấp REST API cho:
 - Lộ trình học theo Topic → Lesson (3 loại bài: `NORMAL`, `TIMED_REVIEW`, `JUMP_TEST`), có cơ chế
   mở khoá tuần tự.
-- Hệ gamification đầy đủ: EXP/Level/**Rank** (hạng đấu kèm Leaderboard — vừa thay thế hệ `League`
+- Hệ gamification đầy đủ: EXP/Level/**Rank** (hạng đấu kèm Leaderboard — đã thay thế hệ `League`
   cũ), Streak (chuỗi ngày học), Energy (năng lượng giới hạn số bài học/ngày), Coin, Daily Quest,
-  Rương thưởng (Chest), **Shop** (mua vật phẩm/powerup bằng coin, có túi đồ riêng), **Mistake Bank**
-  (ngân hàng lỗi sai + phiên ôn tập riêng — mới thêm, xem mục 5a).
-- Quản trị nội dung (Admin CRUD Topic/Lesson/Question), xác thực JWT, upload file, tìm
+  Rương thưởng (Chest), **Shop** (mua vật phẩm/powerup bằng coin, có túi đồ riêng — vừa fix bug
+  `quantity`, tách timed-effect ra `UserActiveEffect` riêng), **Mistake Bank** (ngân hàng lỗi sai +
+  phiên ôn tập riêng), **Achievements** (thành tích unlock theo ngưỡng/sự kiện + streak calendar),
+  **Bảng chữ cái** (Hiragana/Katakana, luyện tập có chấm điểm) — xem mục 5a.
+- **Bản tin cộng đồng (Social Feed, mới thêm)**: follow 1 chiều, feed tổng hợp (bài của mình +
+  người đang follow, cursor pagination), đăng trạng thái, like, comment; tự động đăng bài khi
+  unlock thành tích (`SYSTEM_ACHIEVEMENT`) — xem mục 5a.
+- Quản trị nội dung (Admin CRUD Topic/Lesson/Question/Alphabet), xác thực JWT, upload file, tìm
   bạn/follow.
-- Có sẵn schema DB (nhưng **chưa có code**) cho thi thử JLPT và mạng xã hội nội bộ; ngoài ra có
-  1 entity mới (`ThematicSection`) cũng chưa nối vào controller/service nào (xem mục 5c).
+- Có sẵn schema DB (nhưng **chưa có code**) cho thi thử JLPT; ngoài ra có 1 entity
+  (`ThematicSection`) cũng chưa nối vào controller/service nào (xem mục 5c).
 
 **Nền tảng**: Backend độc lập (headless), phục vụ bất kỳ client nào gọi REST API (web/mobile/
 app riêng) — không có ràng buộc iOS/Android cụ thể trong repo này.
@@ -84,12 +91,12 @@ trúc thật (package Java) nằm sâu hơn 3 cấp nên cây này khá "trống
 
 ```
 com/example/nihongo_app/
-├── controller/    (13 file)  REST endpoints
-├── service/       (14 file: 8 interface + 6 ngoại lệ là class cụ thể, xem mục 7) +
-│                  service/impl/ (9 file, gồm cả ShuffleUtil.java dùng chung)  business logic
-├── entity/        (16 file)  JPA entity
-├── repository/    (15 file)  Spring Data JPA
-├── dto/request/   + dto/response/   (51 file)  DTO vào/ra API
+├── controller/    (19 file)  REST endpoints (78 endpoint, đủ Swagger @Operation)
+├── service/       (interface + class cụ thể, xem mục 7) +
+│                  service/impl/ (business logic, gồm cả ShuffleUtil.java/CursorCodec.java dùng chung)
+├── entity/        (25 file)  JPA entity
+├── repository/    (Spring Data JPA)
+├── dto/request/   + dto/response/   DTO vào/ra API
 ├── security/      (4 file)  JWT filter, provider, UserDetails
 ├── config/        (5 file)  Security, OpenAPI, WebMvc (static /uploads), Cache (leaderboard),
 │                  MistakeReviewProperties (@ConfigurationProperties)
@@ -214,17 +221,24 @@ private Integer orderIndex;
 `User.rank` trỏ thẳng tới đây (`@ManyToOne`). Thăng hạng được tính lại mỗi lần `submitLesson()`
 qua `resolveHighestQualifyingRank(user.getExp())` — tìm hạng cao nhất mà `minExpRequired <= exp`.
 
-### `ShopItem` / `UserInventory` — Shop (mới)
+### `ShopItem` / `UserInventory` / `UserActiveEffect` — Shop (đã qua 1 lần refactor ở `fix/shop_quantity`)
 ```java
 // ShopItem: name, itemType (CONSUMABLE|COSMETIC|POWERUP),
 //   effectType (STREAK_FREEZE|ENERGY_REFILL|DOUBLE_XP|DOUBLE_COIN|TIMER_BOOST|AVATAR_FRAME|BADGE|THEME),
 //   effectValue, priceCoins, priceGems, active, limitedTime, availableFrom/Until
 
-// UserInventory: userId, shopItemId, expiresAt (cho powerup có thời hạn),
-//   equipped (cho cosmetic), acquiredFrom (SHOP_BUY|CHEST_REWARD|QUEST_REWARD|...), acquiredAt
+// UserInventory: userId, itemId, quantity (MỚI — cho phép mua/sở hữu nhiều hơn 1, trước đây thiếu
+//   nên mua trùng item bị lỗi), equipped (cho cosmetic), acquiredFrom (SHOP_BUY|CHEST_REWARD|...),
+//   acquiredAt — KHÔNG còn expiresAt (đã tách ra UserActiveEffect riêng bên dưới)
+
+// UserActiveEffect (MỚI, tách khỏi UserInventory): userId, effectType, expiresAt, createdAt —
+//   1 row = 1 hiệu lực powerup đang chạy (DOUBLE_XP/DOUBLE_COIN/TIMER_BOOST...), độc lập với việc
+//   sở hữu bao nhiêu item trong túi đồ.
 ```
 Powerup (`DOUBLE_XP`/`DOUBLE_COIN`/`TIMER_BOOST`) được `LessonAttemptServiceImpl.submitLesson()`
-đọc qua `ShopService.hasActivePowerup(userId, effectType)` để nhân đôi EXP/Coin khi đang có hiệu lực.
+đọc qua `ShopService.hasActivePowerup(userId, effectType)` (tra `UserActiveEffect`) để nhân đôi
+EXP/Coin khi đang có hiệu lực. `UserStatsResponse` (API `GET /users/me`) cũng trả kèm danh sách
+`activeEffects` hiện có từ bảng này.
 
 > **Lưu ý**: entity `ThematicSection` (mới thêm cùng đợt) có schema nhưng **không entity/DTO nào
 > khác tham chiếu tới nó ngoài chính các DTO đi kèm** (`SubmitSectionRequest`, `AnswerRequest`,
@@ -246,6 +260,49 @@ qua `MistakeService.recordFromAnswers()`. "Xoá nợ" (chuyển `RESOLVED`) cầ
 đúng cách nhau tối thiểu 1 ngày** — 2 lần đúng liên tiếp trong cùng 1 phiên/ngày không đủ điều
 kiện (chống học vẹt đáp án). Sai lại bất kỳ lúc nào (kể cả khi đã `RESOLVED`) sẽ mở lại `ACTIVE`.
 
+### `Achievement` / `UserAchievement` / `UserStreakDay` — Thành tích (mới, từ `feature/achivements`)
+```java
+// Achievement (định nghĩa, seed sẵn ~16 dòng): code, name, description, icon,
+//   type (STREAK_MILESTONE|DAILY_STUDY|STREAK_RESET|COIN_EARNED|...), threshold, secret, active
+
+// UserAchievement (tiến độ/unlock của 1 user với 1 achievement): userId,
+//   @ManyToOne achievement, unlockedAt (null = chưa unlock), progress
+
+// UserStreakDay: userId, studyDate, createdAt — 1 row/ngày user có học, dùng vẽ streak calendar
+```
+Logic nằm ở `AchievementServiceImpl.onEvent()`/`upsertProgress()`: mỗi sự kiện (học bài, streak
+reset...) được đối chiếu ngưỡng (`threshold`) của từng achievement đang active; đạt ngưỡng lần đầu
+mới set `unlockedAt` + (từ khi tích hợp Social Feed) tự đăng 1 bài `SYSTEM_ACHIEVEMENT` vào feed
+của user đó — xem `Post` bên dưới. Achievement `secret = true` bị ẩn khỏi danh sách cho tới khi
+unlock (chống spoil, vd `STREAK_365`, `COMEBACK`, `EARLY_BIRD`, `NIGHT_OWL`).
+
+### `Character` / `UserCharacterProgress` — Bảng chữ cái (mới, từ `feature/achivements`)
+```java
+// Character: symbol (vd "あ"), romaji, type (HIRAGANA|KATAKANA), groupName, audioUrl,
+//   strokeOrderData, orderIndex
+
+// UserCharacterProgress: @ManyToOne user, @ManyToOne character, masteryLevel, lastPracticedAt
+```
+`AlphabetController` (`GET /api/v1/alphabets`, `POST .../practice/start`, `POST .../practice/submit`)
++ `AdminAlphabetController` (`POST /api/v1/admin/alphabets`, `.../bulk`) — luyện tập và chấm điểm
+theo `masteryLevel`, tương tự tinh thần Duolingo cho bảng chữ cái.
+
+### `Post` / `PostLike` / `PostComment` — Bản tin cộng đồng (Social Feed, mới)
+```java
+// Post: userId, content, postType (SYSTEM_ACHIEVEMENT|USER_STATUS), createdAt (DB default,
+//   KHÔNG đọc lại được trong cùng transaction lúc vừa insert — xem mục 7 #15), updatedAt, deletedAt
+
+// PostLike: userId + postId (composite PK qua @IdClass, chống like trùng ở tầng DB), createdAt
+
+// PostComment: postId, userId, content, createdAt, updatedAt, deletedAt (soft delete)
+```
+Bảng `posts`/`post_likes`/`post_comments` đã có sẵn từ `V5` (schema cũ, không ai dùng) — module
+Social Feed là code Java ĐẦU TIÊN ánh xạ vào các bảng này. Feed (`GET /api/v1/feed`) = bài của
+chính mình + đang follow (bảng `user_follows` từ `V8`, cũng tái sử dụng nguyên vẹn), cursor-based
+theo `(created_at, id)`, chống N+1 bằng 3 query gộp (like count/comment count/likedByMe) thay vì
+query riêng từng post. `AchievementServiceImpl` gọi `PostService.createSystemAchievementPost()`
+đúng 1 lần tại thời điểm unlock để tự động tạo bài `SYSTEM_ACHIEVEMENT`.
+
 ---
 
 ## 5. TÍNH NĂNG
@@ -265,11 +322,14 @@ kiện (chống học vẹt đáp án). Sai lại bất kỳ lúc nào (kể c�
 | Rương thưởng hàng ngày | `ChestController` → `ChestService` |
 | Trạng thái tổng hợp 1 lần gọi | `UserController.getMyStats()` → `UserStatsResponse` |
 | Cập nhật avatar (mới) | `UserController` → `UserServiceImpl.updateAvatarUrl()`/`getAvatarUrl()` |
-| Follow / tìm kiếm user (qua native query, không có entity riêng) | `UserController` → `UserRepository` (`@Query nativeQuery`) |
+| Follow / tìm kiếm user (qua native query, không có entity riêng — API cũ theo toggle/username vẫn giữ nguyên, đã mở rộng thêm idempotent follow/unfollow + hồ sơ công khai theo id + cursor pagination cho module Social Feed, xem hàng dưới) | `UserController` → `UserRepository` (`@Query nativeQuery`) |
 | **Rank + Leaderboard (mới)** — thay thế hoàn toàn `League`, top 15/hạng, vị trí user hiện tại, có cache | `RankController` → `RankServiceImpl` (`@Cacheable`) |
 | **Shop (mới)** — mua vật phẩm bằng coin, túi đồ, kích hoạt powerup (Double XP/Coin, Timer Boost), trang bị cosmetic | `ShopController` → `ShopService` |
-| **Mistake Bank (mới)** — ghi lại từng câu trả lời khi submit bài (server tự chấm từ DB), tự động đưa câu sai vào "ngân hàng lỗi sai", phiên ôn tập riêng (không trừ năng lượng, không lộ đáp án, thưởng năng lượng giới hạn/ngày, không cộng EXP/Coin) | `MistakeReviewController` → `MistakeService`, tích hợp trong `LessonAttemptServiceImpl.submitLesson()` |
-| Swagger/OpenAPI cho toàn bộ 58 endpoint | `OpenApiConfig` + `@Tag`/`@Operation` trên mọi controller |
+| **Mistake Bank** — ghi lại từng câu trả lời khi submit bài (server tự chấm từ DB), tự động đưa câu sai vào "ngân hàng lỗi sai", phiên ôn tập riêng (không trừ năng lượng, không lộ đáp án, thưởng năng lượng giới hạn/ngày, không cộng EXP/Coin) | `MistakeReviewController` → `MistakeService`, tích hợp trong `LessonAttemptServiceImpl.submitLesson()` |
+| **Achievements (mới)** — unlock thành tích theo ngưỡng/sự kiện (streak, học bài, giờ học sớm/muộn, comeback sau nghỉ...), ẩn achievement `secret` cho tới khi unlock, streak calendar | `AchievementController` → `AchievementServiceImpl` |
+| **Bảng chữ cái (mới)** — luyện Hiragana/Katakana, chấm điểm theo `masteryLevel` | `AlphabetController`/`AdminAlphabetController` → `AlphabetServiceImpl` |
+| **Bản tin cộng đồng / Social Feed (mới)** — follow 1 chiều (idempotent), feed tổng hợp cursor-pagination (chống N+1), đăng trạng thái, like, comment, tự đăng bài khi unlock thành tích | `FeedController`/`PostController`/`CommentController` → `FeedServiceImpl`/`PostServiceImpl`; mở rộng `UserController`/`UserServiceImpl` cho follow/hồ sơ công khai |
+| Swagger/OpenAPI cho toàn bộ 78 endpoint | `OpenApiConfig` + `@Tag`/`@Operation` trên mọi controller |
 
 ### (b) Đang làm dở / nửa vời (có field, có infra, nhưng thiếu logic nghiệp vụ)
 - **`User.level` không bao giờ tăng**: grep toàn repo, `setLevel(...)` **không được gọi ở bất kỳ
@@ -286,9 +346,11 @@ kiện (chống học vẹt đáp án). Sai lại bất kỳ lúc nào (kể c�
 - **Thi thử JLPT** — bảng `exams`, `exam_sections`, `questions`, `exam_results`,
   `user_exam_answers` (từ `V6__create_exam_tables.sql`, đã hỗ trợ sẵn N5-N1, chấm điểm theo
   section, lưu đáp án từng câu) — không có entity/repository/service/controller nào.
-- **Mạng xã hội nội bộ** — bảng `posts`, `post_likes`, `post_comments` (từ
-  `V5__create_social_tables.sql`, hỗ trợ `SYSTEM_ACHIEVEMENT`/`USER_STATUS`) — tương tự, 0 dòng
-  code Java.
+- ~~Mạng xã hội nội bộ (bảng `posts`/`post_likes`/`post_comments` từ V5, 0 dòng code Java)~~ —
+  **đã có code thật**: module Bản tin cộng đồng (Social Feed) vừa map đầy đủ vào các bảng này, xem
+  mục 4/5a. Migration `V35__remove_conversation_feature.sql` cũng đã dọn 1 tính năng "Conversation"
+  từng bị áp thẳng lên DB dev chung mà không có trong git ở bất kỳ nhánh nào (phát hiện lúc merge
+  `fix/shop_quantity`) — không liên quan Social Feed hiện tại, chỉ là dọn rác lịch sử.
 - **Gacha/vật phẩm kiểu cũ** — bảng gốc `gacha_items`, `inventory_transactions` (từ `V4`, thời
   hearts/REFILL_HEARTS trước khi đổi sang energy). Bảng `user_inventories` cùng đợt đã được
   **tái sử dụng thật** bởi hệ Shop mới (entity `UserInventory`), nhưng riêng `gacha_items` thì vẫn
@@ -415,15 +477,16 @@ sau, phát hiện qua đọc code:
     "app modernization" tự sinh trong lúc làm việc (không phải code viết tay từ đầu), đã review
     và sửa 1 bug (`DB_URL` không khớp property thật) trước khi commit.
 
-11. **Gần 1 nửa các "service" không theo pattern interface + impl** — quy ước codebase đang dùng là
-    tách `XxxService` (interface, trong `service/`) + `XxxServiceImpl` (class, trong
-    `service/impl/`) — 8 service theo đúng: `AdminContentService`, `AuthService`, `FileService`,
-    `LessonAttemptService`, `MistakeService` (mới, viết đúng chuẩn), `RankService`,
-    `RoadmapService`, `UserService`. Nhưng **6 service lại là 1 class cụ thể nằm thẳng trong
-    `service/`, không có interface**: `ChestService`, `DailyQuestService`, `EnergyService`,
-    `LessonUnlockPolicy`, `ShopService`, `StreakService` — không phải bug (build/test vẫn chạy
-    tốt), nhưng là sự thiếu nhất quán khá lớn (gần 6/14), khó mock/thay thế khi cần, nên cân nhắc
-    thống nhất về 1 kiểu nếu có dịp refactor lớn.
+11. **1/3 các "service" không theo pattern interface + impl** (đỡ hơn trước — tỉ lệ đang cải thiện
+    dần) — quy ước codebase đang dùng là tách `XxxService` (interface, trong `service/`) +
+    `XxxServiceImpl` (class, trong `service/impl/`) — 12 service theo đúng: `AdminContentService`,
+    `AuthService`, `FileService`, `LessonAttemptService`, `MistakeService`, `RankService`,
+    `RoadmapService`, `UserService`, và 4 service mới thêm gần đây đều theo đúng chuẩn ngay từ đầu
+    (`AchievementService`, `AlphabetService`, `FeedService`, `PostService`). Nhưng **6 service vẫn
+    là 1 class cụ thể nằm thẳng trong `service/`, không có interface** (không đổi so với trước):
+    `ChestService`, `DailyQuestService`, `EnergyService`, `LessonUnlockPolicy`, `ShopService`,
+    `StreakService` — không phải bug (build/test vẫn chạy tốt), nhưng khó mock/thay thế khi cần,
+    nên cân nhắc thống nhất về 1 kiểu nếu có dịp refactor lớn 6 file còn lại này.
 
 12. **File "rác" lọt vào commit khi merge nhánh đồng đội (đã dọn ở lần merge này)** — nhánh `kiet1`
     commit nhầm 6 file log build (`app.log`, `mvn-*.log`), đã xoá khỏi git và thêm `*.log` vào
@@ -454,41 +517,67 @@ sau, phát hiện qua đọc code:
     tự: kiểm tra `git status` trước khi hoảng, và cân nhắc tạm dừng đồng bộ OneDrive lúc code nếu
     lặp lại nhiều.
 
+15. **`createdAt`/`updatedAt` (insertable=false) có thể đọc ra `null` nếu tạo entity rồi đọc lại
+    NGAY trong cùng 1 transaction/persistence context** — phát hiện lúc viết test cho `Post`
+    (module Social Feed). Nguyên nhân: cột này để DB tự set qua `DEFAULT CURRENT_TIMESTAMP`,
+    Hibernate không tự SELECT lại giá trị đó vào object Java sau INSERT (không có
+    `@Generated`/`@CreationTimestamp`); nếu ngay sau đó có 1 query khác (kể cả native query) trả về
+    đúng row vừa tạo, Hibernate ưu tiên trả **object đang quản lý trong session** (vẫn `createdAt =
+    null`) thay vì dựng lại object mới từ ResultSet. **Không phải bug thực tế** vì mỗi HTTP request
+    thật có persistence context riêng (OSIV bật sẵn) nên tạo + đọc luôn là 2 request khác nhau — chỉ
+    lộ ra trong test dùng `@Transactional` để gom nhiều lệnh `MockMvc` vào chung 1 transaction.
+    Đây là hành vi **giống hệt mọi entity khác trong codebase** (không riêng `Post`) vì không entity
+    nào dùng `@CreationTimestamp`/`@Generated` — chỉ cần lưu ý nếu sau này có API "trả lại entity
+    vừa tạo trong cùng response" thì phải set thủ công field này (không dựa vào DB default).
+
+16. **Đã xác nhận (không phải giả định) `ResponseStatusException` đi đúng qua
+    `GlobalExceptionHandler`** — `GlobalExceptionHandler extends ResponseEntityExceptionHandler` có
+    1 handler catch-all `@ExceptionHandler(Exception.class)` trông như có thể "nuốt" nhầm mọi lỗi
+    nghiệp vụ thành 500. Đã soi hierarchy thật trong `spring-web-7.0.8.jar`:
+    `ResponseStatusException extends ErrorResponseException` (1 bước), còn `Exception.class` (handler
+    catch-all) cách xa hơn (4 bước) — nên `ResponseEntityExceptionHandler.handleException(...)` (đã
+    khai `ErrorResponseException.class`) luôn thắng, trả đúng status (400/403/404/409) mã hoá trong
+    exception. Đã verify thêm bằng test MockMvc thật (`SocialFeedIntegrationTest`) chứ không chỉ suy
+    luận lý thuyết — an toàn để tiếp tục dùng pattern `throw new ResponseStatusException(...)` cho
+    lỗi nghiệp vụ đơn giản mà không cần viết custom exception class riêng.
+
 ---
 
 ## 8. SỐ LIỆU
 
 | Thành phần | Số lượng |
 |---|---|
-| File `.java` (main) | **138** |
-| File `.java` (test) | **12** |
-| File migration Flyway (`.sql`) | **31** |
-| Tổng số dòng code Java (main) | **7.912 dòng** |
-| Tổng số dòng code Java (test) | **2.391 dòng** |
-| Tổng số dòng SQL migration | **718 dòng** |
-| Số commit trên nhánh hiện tại | **36** |
+| File `.java` (main) | **189** |
+| File `.java` (test) | **18** |
+| File migration Flyway (`.sql`) | **37** |
+| Tổng số dòng code Java (main) | **10.721 dòng** |
+| Tổng số dòng code Java (test) | **3.336 dòng** |
+| Tổng số dòng SQL migration | **894 dòng** |
+| Số commit trên nhánh hiện tại | **54** |
 
 **Số dòng theo thư mục (main, ước tính bằng `wc -l`):**
 
 | Thư mục | Dòng |
 |---|---|
-| `service/impl/` | 2.149 |
-| `dto/` (request + response) | 1.267 |
-| `controller/` | 1.123 |
-| `service/` (14 file: 8 interface + 6 class cụ thể, xem mục 7) | 1.164 |
-| `entity/` | 1.097 |
+| `service/impl/` | 3.117 |
+| `dto/` (request + response) | 1.606 |
+| `entity/` | 1.572 |
+| `controller/` | 1.564 |
+| `service/` (19 file: 12 interface + 6 class cụ thể + 1 DTO `AchievementProgress`, xem mục 7) | 1.412 |
+| `repository/` | 680 |
 | `security/` | 269 |
 | `exception/` | 272 |
-| `repository/` | 342 |
 | `config/` | 182 |
 | `converter/` | 34 |
 
-**Số entity**: 16 (11 gốc + `Rank`, `ShopItem`, `ThematicSection`, `UserInventory`,
-`LessonAttemptAnswer`, `Mistake` − `League` đã xoá) · **Số controller**: 13 (58 endpoint, xem
-Swagger) · **Số Flyway migration**: 31 (V1 → V31, `V27__ranks.sql`/`V28__drop_current_league.sql`
-từng được đổi số từ V24/V25 lúc merge để tránh trùng với `V24-V26` của nhánh shop; `V29-V31` mới
-thêm cho Mistake Bank) · **Bảng DB có migration nhưng chưa có entity
-Java dùng thật**: 10 — `gacha_items`, `inventory_transactions` (từ `V4`; bảng `user_inventories`
-cùng đợt thì đã được hệ Shop mới tái sử dụng qua entity `UserInventory`), `posts`, `post_likes`,
-`post_comments` (`V5`), `exams`, `exam_sections`, `questions`, `exam_results`, `user_exam_answers`
+**Số entity**: 25 (16 trước đó, đã gồm sẵn `Rank`/`ShopItem`/`ThematicSection`/`UserInventory`/
+`LessonAttemptAnswer`/`Mistake`, + 9 entity mới: `Achievement`, `UserAchievement`,
+`UserStreakDay`, `Character`, `UserCharacterProgress`, `UserActiveEffect`, `Post`, `PostLike`,
+`PostComment`) · **Số controller**: 19 (78 endpoint, đủ Swagger
+`@Operation`) · **Số Flyway migration**: 37 (V1 → V37; `V32`/`V33` từng đổi số 2 lần lúc merge
+song song `feature/achivements` + `fix/shop_quantity`; `V35` dọn 1 tính năng "Conversation" từng bị
+áp thẳng lên DB dev mà không có trong git; `V37` thêm index cho Social Feed) · **Bảng DB có
+migration nhưng chưa có entity Java dùng thật**: 7 — `gacha_items`, `inventory_transactions` (từ
+`V4`; bảng `user_inventories` cùng đợt thì đã được hệ Shop tái sử dụng qua entity `UserInventory`),
+`exams`, `exam_sections`, `questions`, `exam_results`, `user_exam_answers`
 (`V6`) — xem mục 5c.
