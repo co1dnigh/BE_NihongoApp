@@ -153,7 +153,7 @@ public class AlphabetServiceImpl implements AlphabetService {
         }
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
-        LocalDateTime practicedAt = LocalDateTime.now();
+        LocalDateTime practicedAt = LocalDateTime.now(java.time.ZoneId.of("Asia/Ho_Chi_Minh"));
         for (SubmitAlphabetPracticeRequest.Result result : results) {
             if (result.getCharacterId() == null || result.getIsCorrect() == null) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "characterId and isCorrect are required");
@@ -176,6 +176,9 @@ public class AlphabetServiceImpl implements AlphabetService {
 
         int currentExp = Objects.requireNonNullElse(user.getExp(), 0) + EXP_REWARD;
         user.setExp(currentExp);
+        user.setLastLearningAt(practicedAt);
+        user.setLastRankDecayAt(null);
+        user.setLastRankReminderAt(null);
         Rank qualifyingRank = rankRepository
                 .findFirstByMinExpRequiredLessThanEqualOrderByOrderIndexDesc(currentExp)
                 .orElse(null);

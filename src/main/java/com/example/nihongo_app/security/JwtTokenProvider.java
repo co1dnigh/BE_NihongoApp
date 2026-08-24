@@ -23,9 +23,20 @@ public class JwtTokenProvider {
     @Value("${app.jwt.expiration-ms:86400000}")
     private long expirationMs;
 
+    @Value("${app.jwt.refresh-expiration-ms:2592000000}")
+    private long refreshExpirationMs;
+
     public String generateToken(User user) {
+        return generateToken(user, expirationMs);
+    }
+
+    public String generateRefreshToken(User user) {
+        return generateToken(user, refreshExpirationMs);
+    }
+
+    private String generateToken(User user, long tokenExpirationMs) {
         long issuedAt = Instant.now().getEpochSecond();
-        long expiration = issuedAt + (expirationMs / 1000L);
+        long expiration = issuedAt + (tokenExpirationMs / 1000L);
 
         String headerJson = "{\"alg\":\"HS256\",\"typ\":\"JWT\"}";
         String payloadJson = String.format(
