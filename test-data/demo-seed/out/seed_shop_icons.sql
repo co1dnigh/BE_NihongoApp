@@ -1,0 +1,13 @@
+SET NAMES utf8mb4;
+UPDATE shop_items SET icon_url='/uploads/images/shop/streak_freeze.png' WHERE id=1;
+UPDATE shop_items SET icon_url='/uploads/images/shop/energy_refill.png' WHERE id=2;
+UPDATE shop_items SET icon_url='/uploads/images/shop/double_xp.png' WHERE id=3;
+UPDATE shop_items SET icon_url='/uploads/images/shop/double_coin.png' WHERE id=4;
+UPDATE shop_items SET icon_url='/uploads/images/shop/timer_boost.png' WHERE id=5;
+UPDATE shop_items SET icon_url='/uploads/images/shop/frame_sakura.png' WHERE id=6;
+UPDATE shop_items SET icon_url='/uploads/images/shop/frame_fuji.png' WHERE id=7;
+UPDATE shop_items SET icon_url='/uploads/images/shop/frame_neon.png' WHERE id=8;
+UPDATE shop_items SET icon_url='/uploads/images/shop/badge_samurai.png' WHERE id=9;
+UPDATE shop_items SET icon_url='/uploads/images/shop/badge_ninja.png' WHERE id=10;
+UPDATE shop_items SET icon_url='/uploads/images/shop/theme_dark.png' WHERE id=11;
+UPDATE shop_items SET icon_url='/uploads/images/shop/theme_sakura.png' WHERE id=12;

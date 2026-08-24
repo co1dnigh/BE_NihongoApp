@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import tools.jackson.databind.JsonNode;
 
 /**
  * Helper dùng chung để tính trạng thái hiển thị (LOCKED / UNLOCKED / COMPLETED) của một
@@ -49,6 +50,9 @@ public class LessonUnlockPolicy {
 
     private final TopicRepository topicRepository;
     private final UserLessonProgressRepository progressRepository;
+
+    /** Chi phi nang luong mac dinh de vao 1 bai hoc (khop voi max_energy mac dinh 25). */
+    public static final int DEFAULT_ENTRY_COST_ENERGY = 10;
 
     /**
      * Xét trạng thái của 1 bài học bất kỳ cho 1 user.
@@ -135,6 +139,25 @@ public class LessonUnlockPolicy {
             return 0;
         }
         return Objects.requireNonNullElse(progress.getStarsEarned(), 0);
+    }
+
+    /**
+     * Chi phi nang luong de vao 1 bai hoc: {@code configJson.entryCostEnergy} neu co,
+     * khong thi {@value #DEFAULT_ENTRY_COST_ENERGY}.
+     *
+     * <p>Dat o day (thay vi rieng trong LessonAttemptService) vi ca man ban do cung
+     * can con so nay de bao truoc cho nguoi hoc "bai nay ton bao nhieu nang luong".
+     * Hai noi tinh ra hai ket qua khac nhau la kieu loi UI noi doi kho lan ra nhat.</p>
+     *
+     * <p>{@code static} co chu dich: ham thuan, khong dung repository nao, va de o dang
+     * static thi khong bi mock che mat trong unit test cua cac service goi no.</p>
+     */
+    public static int computeEntryCost(Lesson lesson) {
+        JsonNode config = lesson.getConfigJson();
+        if (config != null && config.has("entryCostEnergy")) {
+            return config.get("entryCostEnergy").asInt();
+        }
+        return DEFAULT_ENTRY_COST_ENERGY;
     }
 
     private boolean isCompleted(UserLessonProgress progress) {

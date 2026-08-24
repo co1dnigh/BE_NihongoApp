@@ -1,3 +1,7 @@
+> **Đã có bộ dữ liệu mới đầy đủ hơn**: xem `demo-seed/` — 14 chủ đề tình huống đời thường,
+> 100 bài học, 1.592 câu hỏi kèm ảnh và âm thanh thật, cùng 28 tài khoản học viên demo.
+> Bộ dưới đây là bản nhỏ ban đầu, giữ lại để tham khảo cấu trúc payload API.
+
 # Test data cho BE_NihongoApp
 
 Bộ dữ liệu này bao phủ **3 hệ thống câu hỏi độc lập** trong codebase (không dùng chung bảng/enum):

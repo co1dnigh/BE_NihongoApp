@@ -95,8 +95,6 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
     private static final int STREAK_MILESTONE_7_BONUS = 50;
     private static final int STREAK_MILESTONE_30_BONUS = 200;
     private static final int STREAK_MILESTONE_100_BONUS = 1000;
-    /** Chi phi nang luong mac dinh de vao 1 bai hoc (khop voi max_energy mac dinh 25). */
-    private static final int DEFAULT_ENTRY_COST_ENERGY = 10;
     /** Bai hoan hao (0 sai) hoan lai 5 nang luong -> ton rong 5/25 (co the lam 5 bai/ngay). */
     private static final int PERFECT_LESSON_ENERGY_REFUND = 5;
     /** Bai kha (<=2 loi, nhung khong phai hoan hao) hoan lai 2 nang luong -> ton rong 8. */
@@ -122,13 +120,25 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
         // 2. Phan nhanh replay: bai da COMPLETED -> cho phep lam lai, mien phi energy,
         //    EXP se bi giam khi submit (xem resolveExpXxx). Van giu starsEarned cu (neu co).
         boolean isReplay = (status == Status.COMPLETED);
-        int totalEnergy = isReplay ? 0 : resolveEntryCost(lesson);
+
+        // Luot dang do dang: user da tra tien vao bai nay va chua /submit hay /cancel.
+        // Goi /start lan nua (FE remount, user back roi vao lai, StrictMode chay effect
+        // hai lan) khong duoc tru them lan nua -- ho van dang o trong luot da mua.
+        boolean alreadyInProgress = progressRepository
+                .findByUserIdAndLessonId(userId, lessonId)
+                .map(p -> p.getStatus() == ProgressStatus.IN_PROGRESS)
+                .orElse(false);
+
+        int totalEnergy = (isReplay || alreadyInProgress) ? 0 : resolveEntryCost(lesson);
 
         // 3. Tru nang luong user (chi khi lan dau, replay khong mat energy).
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Khong tim thay user voi id=" + userId));
-        if (!isReplay) {
+        // Dieu kien la "co phai tra tien khong", khong phai "co phai replay khong":
+        // luot dang do dang cung mien phi, va tru 0 roi save() la mot lenh UPDATE thua
+        // moi lan vao bai.
+        if (totalEnergy > 0) {
             if (user.getCurrentEnergy() == null || user.getCurrentEnergy() < totalEnergy) {
                 throw new InsufficientEnergyException(
                         "Khong du nang luong. Can " + totalEnergy
@@ -138,8 +148,18 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
             userRepository.save(user);
         }
 
-        // 4. Upsert progress thanh IN_PROGRESS (replay cung reset de bai duoc tinh la dang hoc).
-        upsertProgress(userId, lesson, ProgressStatus.IN_PROGRESS, null);
+        // 4. Upsert progress thanh IN_PROGRESS -- CHI khi day khong phai replay.
+        //
+        //    Truoc day replay cung bi ha xuong IN_PROGRESS. Hai hau qua:
+        //    (a) User lam lai bai cu roi thoat giua chung -> LessonUnlockPolicy thay bai
+        //        do khong con COMPLETED -> co "previousNormalCompleted" thanh false ->
+        //        TOAN BO lo trinh phia sau bi khoa lai.
+        //    (b) Mat luon dau hieu de server tu biet day la replay o buoc /submit, nen
+        //        phai tin co isReplay do client gui len (xem submitLesson).
+        //    Giu nguyen COMPLETED giai quyet ca hai.
+        if (!isReplay) {
+            upsertProgress(userId, lesson, ProgressStatus.IN_PROGRESS, null);
+        }
 
         // 5. Lay bo de thi -> shuffle -> cat lay N cau theo config (questionsPerSession).
         List<LessonQuestion> allQuestions = questionRepository.findAllByLessonIdOrderByIdAsc(lessonId);
@@ -198,10 +218,16 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Khong tim thay user voi id=" + userId));
 
-        // Xac dinh day co phai replay khong.
-        // 1. Uu tien FE gui len qua request (vi start da set IN_PROGRESS lam DB khong con COMPLETED).
-        // 2. Fallback: neu FE khong gui, mac dinh false (lan dau).
-        boolean isReplay = Boolean.TRUE.equals(req.getIsReplay());
+        // Xac dinh day co phai replay khong -- suy ra tu DB, KHONG tin co isReplay
+        // cua client: replay bi giam EXP/coin, nen client chi can gui false la farm
+        // duoc full thuong moi lan lam lai. Tu khi /start khong con ha COMPLETED
+        // xuong IN_PROGRESS, trang thai COMPLETED con luu trong DB chinh la dau hieu
+        // dang tin cay cho biet user dang lam lai bai da xong.
+        // (req.getIsReplay() van duoc nhan de tuong thich nguoc, nhung bi bo qua.)
+        var priorProgressOpt = progressRepository.findByUserIdAndLessonId(userId, lessonId);
+        boolean isReplay = priorProgressOpt
+                .map(p -> p.getStatus() == ProgressStatus.COMPLETED)
+                .orElse(false);
 
         // Check active powerups BEFORE calculating base rewards
         boolean hasDoubleXp = shopService.hasActivePowerup(userId, ShopItem.EffectType.DOUBLE_XP);
@@ -215,7 +241,25 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
         int starsEarned = 0;
         boolean passed;
         UserExpLog.SourceType sourceType;
-        boolean perfectLesson = req.getTotalMistakes() != null && req.getTotalMistakes() == 0;
+        // Cham lai tung dap an tu DB TRUOC khi tinh thuong. "Khong sai cau nao" mo khoa
+        // ca coin bonus lan hoan nang luong, ma truoc day no chi dua tren con so
+        // totalMistakes do CLIENT tu khai -- gui 0 la an tron phan thuong.
+        List<LessonAttemptAnswer> gradedAnswers = recordAnswers(lesson, userId, req.getAnswers());
+
+        // Co bang chung tu DB thi dung bang chung. Khong co (FE cu chua gui answers,
+        // hoac bai toan cau sap xep / cau noi -- nhung loai khong co lua chon nao de
+        // ghi nhan) thi danh quay ve con so client khai.
+        //
+        // LUU Y: day moi la va cham mot nua. Server van chua biet bo de cua luot lam
+        // bai gom nhung cau nao, nen chua the khang dinh "da tra loi du". Muon chan
+        // triet de phai luu bo de luc /start roi doi chieu luc /submit.
+        Integer clientMistakes = req.getTotalMistakes();
+        int gradedMistakes = (int) gradedAnswers.stream()
+                .filter(a -> !Boolean.TRUE.equals(a.getIsCorrect()))
+                .count();
+        boolean perfectLesson = gradedAnswers.isEmpty()
+                ? (clientMistakes != null && clientMistakes == 0)
+                : gradedMistakes == 0;
 
         switch (lesson.getLessonType()) {
             case NORMAL -> {
@@ -263,7 +307,6 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
 
         // Cap nhat progress + (neu JUMP_TEST pass) danh dau tat ca bai NORMAL trong topic.
         boolean isTopicCompleted = false;
-        var priorProgressOpt = progressRepository.findByUserIdAndLessonId(userId, lessonId);
         if (passed) {
             // Upsert progress cua bai nay thanh COMPLETED.
             // Replay giu starsEarned cu (chi tinh sao moi neu tot hon).
@@ -317,8 +360,13 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
             // hearts, chi dua tren totalMistakes chung cho ca 3 loai bai).
             // Cap o entryCostCharged (0 neu la replay vi replay khong tru gi ca luc start) de
             // chan exploit "replay bai da hoan thanh, lam hoan hao -> farm nang luong mien phi".
+            // Cung mot nguon so lieu voi perfectLesson: neu da cham lai duoc tu DB thi
+            // ca hai muc hoan nang luong deu phai dua tren ket qua cham, khong the mot
+            // muc tin DB con muc kia tin con so client khai.
             boolean goodLesson = !perfectLesson
-                    && req.getTotalMistakes() != null && req.getTotalMistakes() <= GOOD_LESSON_MAX_MISTAKES;
+                    && (gradedAnswers.isEmpty()
+                            ? (clientMistakes != null && clientMistakes <= GOOD_LESSON_MAX_MISTAKES)
+                            : gradedMistakes <= GOOD_LESSON_MAX_MISTAKES);
             int entryCostCharged = isReplay ? 0 : resolveEntryCost(lesson);
             int energyRefund = perfectLesson ? PERFECT_LESSON_ENERGY_REFUND
                     : (goodLesson ? GOOD_LESSON_ENERGY_REFUND : 0);
@@ -370,10 +418,6 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
                         .build());
             }
         }
-
-        // Ghi lai dap an tung cau (Mistake Bank) - khong anh huong toi thuong EXP/Coin/Energy
-        // o tren, van tinh theo totalCorrect/totalMistakes FE gui nhu cu.
-        List<LessonAttemptAnswer> gradedAnswers = recordAnswers(lesson, userId, req.getAnswers());
 
         // Cap nhat Mistake Bank: chi cho bai hoc thuong (khong tinh JUMP_TEST) va khong tinh
         // replay (replay lai bai da hoc khong nen tao/lam nang them mistake moi).
@@ -439,6 +483,14 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
             int newEnergy = Math.min(currentEnergy + refund, maxEnergy);
             user.setCurrentEnergy(newEnergy);
             userRepository.save(user);
+
+            // Dong luot choi lai. Truoc day cancelLesson khong ghi gi vao progress, nen
+            // row van o IN_PROGRESS va goi /cancel lien tuc la cong nang luong vo han.
+            // LOCKED dung voi status ma chinh API nay tra ve, va LessonUnlockPolicy
+            // luon tinh lai trang thai hien thi nen khong bi ket khoa oan.
+            UserLessonProgress progress = progressOpt.get();
+            progress.setStatus(ProgressStatus.LOCKED);
+            progressRepository.save(progress);
         }
 
         return CancelLessonResponse.builder()
@@ -510,14 +562,19 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
                 continue;
             }
 
-            saved.add(lessonAttemptAnswerRepository.save(LessonAttemptAnswer.builder()
+            // Giu chinh entity vua dung, khong giu gia tri tra ve cua save(): JPA save()
+            // tra ve cung instance khi entity da managed, nhung phu thuoc vao dieu do la
+            // thua -- va lam ket qua cua ham nay phu thuoc vao chi tiet cua tang luu tru.
+            LessonAttemptAnswer graded = LessonAttemptAnswer.builder()
                     .userId(userId)
                     .lessonId(lesson.getId())
                     .questionId(item.getQuestionId())
                     .selectedOptionId(item.getSelectedOptionId())
                     .isCorrect(Boolean.TRUE.equals(option.getCorrect()))
                     .answeredAt(LocalDateTime.now())
-                    .build()));
+                    .build();
+            lessonAttemptAnswerRepository.save(graded);
+            saved.add(graded);
         }
         return saved;
     }
@@ -535,12 +592,9 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
      * Bai lam tot se duoc hoan bot luc submit (xem {@link #PERFECT_LESSON_ENERGY_REFUND}),
      * nen chi phi thuc te thap hon 10 neu lam tot.</p>
      */
+    /** Uy thac cho {@link LessonUnlockPolicy} de man ban do va man lam bai luon khop nhau. */
     private int resolveEntryCost(Lesson lesson) {
-        JsonNode config = lesson.getConfigJson();
-        if (config != null && config.has("entryCostEnergy")) {
-            return config.get("entryCostEnergy").asInt();
-        }
-        return DEFAULT_ENTRY_COST_ENERGY;
+        return LessonUnlockPolicy.computeEntryCost(lesson);
     }
 
     private int resolveNormalExp(Lesson lesson) {

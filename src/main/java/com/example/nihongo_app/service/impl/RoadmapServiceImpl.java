@@ -81,6 +81,7 @@ public class RoadmapServiceImpl implements RoadmapService {
                             .orderIndex(lesson.getOrderIndex())
                             .status(status)
                             .starsEarned(starsEarned)
+                            .entryCostEnergy(LessonUnlockPolicy.computeEntryCost(lesson))
                             .build();
                 })
                 .toList();

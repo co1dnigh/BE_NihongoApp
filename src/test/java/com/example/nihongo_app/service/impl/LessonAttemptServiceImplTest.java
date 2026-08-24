@@ -119,6 +119,31 @@ class LessonAttemptServiceImplTest {
         return req;
     }
 
+    /**
+     * Dat san mot luot da COMPLETED trong DB.
+     *
+     * Day la cach DUY NHAT de danh dau "luot lam lai" ke tu khi server thoi tin co
+     * {@code isReplay} do client gui len (client chi can gui false la farm duoc full
+     * EXP/coin moi lan replay).
+     */
+    private UserLessonProgress givenCompletedProgress() {
+        UserLessonProgress progress = UserLessonProgress.builder()
+                .userId(USER_ID).lessonId(LESSON_ID)
+                .status(ProgressStatus.COMPLETED).starsEarned(0).build();
+        when(progressRepository.findByUserIdAndLessonId(USER_ID, LESSON_ID))
+                .thenReturn(Optional.of(progress));
+        return progress;
+    }
+
+    private UserLessonProgress givenInProgress() {
+        UserLessonProgress progress = UserLessonProgress.builder()
+                .userId(USER_ID).lessonId(LESSON_ID)
+                .status(ProgressStatus.IN_PROGRESS).starsEarned(0).build();
+        when(progressRepository.findByUserIdAndLessonId(USER_ID, LESSON_ID))
+                .thenReturn(Optional.of(progress));
+        return progress;
+    }
+
     private JsonNode configJson(String json) {
         return new ObjectMapper().readTree(json);
     }
@@ -196,8 +221,8 @@ class LessonAttemptServiceImplTest {
     @Test
     void submitLesson_replay_reducesCoinsByDefaultRatio() {
         when(lessonRepository.findById(LESSON_ID)).thenReturn(Optional.of(lessonOfType(LessonType.NORMAL)));
+        givenCompletedProgress();
         SubmitLessonRequest req = request(10, 10, 0);
-        req.setIsReplay(true);
 
         SubmitLessonResponse response = service.submitLesson(LESSON_ID, USER_ID, req);
 
@@ -278,8 +303,8 @@ class LessonAttemptServiceImplTest {
         when(lessonRepository.findById(LESSON_ID)).thenReturn(Optional.of(lessonOfType(LessonType.NORMAL)));
         user.setCurrentEnergy(10);
         user.setMaxEnergy(25);
+        givenCompletedProgress();
         SubmitLessonRequest req = request(10, 10, 0); // hoan hao
-        req.setIsReplay(true);
 
         service.submitLesson(LESSON_ID, USER_ID, req);
 
@@ -396,8 +421,8 @@ class LessonAttemptServiceImplTest {
                 LessonQuestion.builder().id(1L).lessonId(LESSON_ID).build()));
         when(optionRepository.findById(201L)).thenReturn(Optional.of(option(201L, 1L, false)));
 
+        givenCompletedProgress();
         SubmitLessonRequest req = request(10, 10, 0);
-        req.setIsReplay(true);
         req.setAnswers(List.of(answerItem(1L, 201L)));
 
         service.submitLesson(LESSON_ID, USER_ID, req);
@@ -510,6 +535,91 @@ class LessonAttemptServiceImplTest {
         assertThat(response.getQuestions()).hasSize(2); // gioi han theo questionsPerSession, khong phai ca 5 cau
     }
 
+    @Test
+    void submitLesson_clientClaimsZeroMistakes_butGradedAnswerIsWrong_noPerfectBonus() {
+        // "Khong sai cau nao" mo khoa ca coin bonus lan hoan nang luong, nhung truoc day
+        // no chi dua vao con so totalMistakes do CLIENT tu khai. Khi da co dap an cham
+        // lai tu DB thi bang chung do phai thang.
+        when(lessonRepository.findById(LESSON_ID)).thenReturn(Optional.of(lessonOfType(LessonType.NORMAL)));
+        when(questionRepository.findById(1L)).thenReturn(Optional.of(
+                LessonQuestion.builder().id(1L).lessonId(LESSON_ID).build()));
+        when(optionRepository.findById(201L)).thenReturn(Optional.of(option(201L, 1L, false)));
+        user.setCurrentEnergy(5);
+        user.setMaxEnergy(25);
+
+        SubmitLessonRequest req = request(10, 10, 0); // client khai: hoan hao
+        req.setAnswers(List.of(answerItem(1L, 201L))); // thuc te: mot cau sai
+
+        SubmitLessonResponse response = service.submitLesson(LESSON_ID, USER_ID, req);
+
+        assertThat(response.getCoinsEarned()).isEqualTo(8); // base, khong co perfect bonus
+        // 1 cau sai van la "bai kha" (<=2 loi) nen duoc hoan 2, chu khong phai 5 cua
+        // bai hoan hao. Diem mau chot: ca hai muc deu tinh tu dap an cham lai.
+        assertThat(user.getCurrentEnergy()).isEqualTo(7);
+    }
+
+    @Test
+    void submitLesson_noAnswersSent_stillFallsBackToClientCounters() {
+        // Bai chi gom cau sap xep / cau noi khong co lua chon nao de ghi nhan, va FE cu
+        // cung chua gui answers. Khong duoc vi the ma mat phan thuong bai hoan hao.
+        when(lessonRepository.findById(LESSON_ID)).thenReturn(Optional.of(lessonOfType(LessonType.NORMAL)));
+
+        SubmitLessonResponse response = service.submitLesson(LESSON_ID, USER_ID, request(10, 10, 0));
+
+        assertThat(response.getCoinsEarned()).isEqualTo(12); // base 8 + perfect 4
+    }
+
+    // ============ Chong gian lan: replay / tru tien hai lan / hoan tien lap ============
+
+    @Test
+    void submitLesson_clientClaimsFirstTime_serverStillDetectsReplayFromDb() {
+        // Lo hong cu: server tin thang co isReplay cua client. Gui false la an full
+        // 12 coin thay vi 4 -> farm vo han bang cach lam lai mot bai da xong.
+        when(lessonRepository.findById(LESSON_ID)).thenReturn(Optional.of(lessonOfType(LessonType.NORMAL)));
+        givenCompletedProgress();
+        SubmitLessonRequest req = request(10, 10, 0);
+        req.setIsReplay(false); // client noi doi
+
+        SubmitLessonResponse response = service.submitLesson(LESSON_ID, USER_ID, req);
+
+        assertThat(response.getCoinsEarned()).isEqualTo(4);
+    }
+
+    @Test
+    void startLesson_replay_keepsProgressCompleted_soRoadmapDoesNotRelock() {
+        // Lo hong cu: /start ha COMPLETED xuong IN_PROGRESS. User lam lai bai cu roi
+        // thoat giua chung -> LessonUnlockPolicy tuong bai chua xong -> khoa lai toan
+        // bo lo trinh phia sau.
+        Lesson lesson = lessonOfType(LessonType.NORMAL);
+        when(lessonRepository.findById(LESSON_ID)).thenReturn(Optional.of(lesson));
+        when(unlockPolicy.evaluate(lesson, USER_ID)).thenReturn(Status.COMPLETED);
+        when(questionRepository.findAllByLessonIdOrderByIdAsc(LESSON_ID)).thenReturn(List.of());
+        UserLessonProgress progress = givenCompletedProgress();
+
+        service.startLesson(LESSON_ID, USER_ID);
+
+        assertThat(progress.getStatus()).isEqualTo(ProgressStatus.COMPLETED);
+        verify(progressRepository, never()).save(any());
+    }
+
+    @Test
+    void startLesson_calledAgainWhileInProgress_doesNotDeductEnergyTwice() {
+        // User da tra tien vao luot nay va chua submit/cancel. Goi /start lan nua
+        // (FE remount, back roi vao lai) khong duoc tru them.
+        Lesson lesson = lessonOfType(LessonType.NORMAL);
+        when(lessonRepository.findById(LESSON_ID)).thenReturn(Optional.of(lesson));
+        when(unlockPolicy.evaluate(lesson, USER_ID)).thenReturn(Status.UNLOCKED);
+        when(questionRepository.findAllByLessonIdOrderByIdAsc(LESSON_ID)).thenReturn(List.of());
+        givenInProgress();
+        user.setCurrentEnergy(20);
+
+        StartLessonResponse response = service.startLesson(LESSON_ID, USER_ID);
+
+        assertThat(response.getTotalEnergyDeducted()).isZero();
+        assertThat(user.getCurrentEnergy()).isEqualTo(20);
+        verify(userRepository, never()).save(any());
+    }
+
     // ============================ CANCEL ============================
 
     @Test
@@ -542,6 +652,23 @@ class LessonAttemptServiceImplTest {
         assertThat(response.getEnergyRefunded()).isZero();
         assertThat(user.getCurrentEnergy()).isEqualTo(5);
         verify(userRepository, never()).save(any());
+    }
+
+    @Test
+    void cancelLesson_calledTwice_refundsOnlyOnce() {
+        // Lo hong cu: cancelLesson khong ghi gi vao progress, row van o IN_PROGRESS
+        // -> goi lien tuc la cong nang luong vo han.
+        when(lessonRepository.findById(LESSON_ID)).thenReturn(Optional.of(lessonOfType(LessonType.NORMAL)));
+        user.setCurrentEnergy(0);
+        user.setMaxEnergy(25);
+        givenInProgress();
+
+        CancelLessonResponse first = service.cancelLesson(LESSON_ID, USER_ID);
+        CancelLessonResponse second = service.cancelLesson(LESSON_ID, USER_ID);
+
+        assertThat(first.getEnergyRefunded()).isEqualTo(10);
+        assertThat(second.getEnergyRefunded()).isZero();
+        assertThat(user.getCurrentEnergy()).isEqualTo(10);
     }
 
     @Test

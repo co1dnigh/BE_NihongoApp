@@ -25,4 +25,6 @@ public class RoadmapLessonResponse {
     Integer orderIndex;
     Status status;
     Integer starsEarned;
+    /** So nang luong bi tru khi bat dau bai nay -- de ban do bao truoc cho nguoi hoc. */
+    Integer entryCostEnergy;
 }

@@ -1,0 +1,5261 @@
+{
+ "audio": [
+  {
+   "rel": "words/ohayou-gozaimasu.mp3",
+   "text": "おはようございます",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/ohayou.mp3",
+   "text": "おはよう",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/konnichiwa.mp3",
+   "text": "こんにちは",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/konbanwa.mp3",
+   "text": "こんばんは",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/oyasuminasai.mp3",
+   "text": "おやすみなさい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/sensei-ohayou-gozaimasu.mp3",
+   "text": "せんせい、おはようございます。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/minasan-konnichiwa.mp3",
+   "text": "みなさん、こんにちは。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/arigatou-gozaimasu.mp3",
+   "text": "ありがとうございます",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/arigatou.mp3",
+   "text": "ありがとう",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/dou-itashimashite.mp3",
+   "text": "どういたしまして",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/sumimasen.mp3",
+   "text": "すみません",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/gomen-nasai.mp3",
+   "text": "ごめんなさい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/daijoubu-desu.mp3",
+   "text": "だいじょうぶです",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/doumo-arigatou-gozaimasu.mp3",
+   "text": "どうもありがとうございます。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/sumimasen-daijoubu-desu.mp3",
+   "text": "すみません、だいじょうぶです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/hajimemashite.mp3",
+   "text": "はじめまして",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/yoroshiku-onegaishimasu.mp3",
+   "text": "よろしくおねがいします",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/ogenki-desu-ka.mp3",
+   "text": "おげんきですか",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/genki-desu.mp3",
+   "text": "げんきです",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/onamae-wa.mp3",
+   "text": "おなまえは",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/hajimemashite-yoroshiku-onegaishimasu.mp3",
+   "text": "はじめまして、よろしくおねがいします。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/ogenki-desu-ka-genki-desu.mp3",
+   "text": "おげんきですか。げんきです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/sayounara.mp3",
+   "text": "さようなら",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/mata-ashita.mp3",
+   "text": "またあした",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/mata-ne.mp3",
+   "text": "またね",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/shitsurei-shimasu.mp3",
+   "text": "しつれいします",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/ki-wo-tsukete.mp3",
+   "text": "きをつけて",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/sayounara-mata-ashita.mp3",
+   "text": "さようなら、またあした。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/shitsurei-shimasu-ki-wo-tsukete.mp3",
+   "text": "しつれいします。きをつけて。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/ittekimasu.mp3",
+   "text": "いってきます",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/itterasshai.mp3",
+   "text": "いってらっしゃい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/tadaima.mp3",
+   "text": "ただいま",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/okaerinasai.mp3",
+   "text": "おかえりなさい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/ittekimasu-itterasshai.mp3",
+   "text": "いってきます。いってらっしゃい。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/tadaima-okaerinasai.mp3",
+   "text": "ただいま。おかえりなさい。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/itadakimasu.mp3",
+   "text": "いただきます",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/gochisousama-deshita.mp3",
+   "text": "ごちそうさまでした",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/otsukaresama-desu.mp3",
+   "text": "おつかれさまです",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/ganbatte.mp3",
+   "text": "がんばって",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/omedetou-gozaimasu.mp3",
+   "text": "おめでとうございます",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/itadakimasu-2.mp3",
+   "text": "いただきます。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/otsukaresama-desu-ganbatte.mp3",
+   "text": "おつかれさまです。がんばって。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/watashi.mp3",
+   "text": "わたし",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/anata.mp3",
+   "text": "あなた",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/ano-hito.mp3",
+   "text": "あのひと",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/namae.mp3",
+   "text": "なまえ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/san.mp3",
+   "text": "〜さん",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/watashi-wa-rin-desu.mp3",
+   "text": "わたしはリンです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/ano-hito-wa-tanaka-san-desu.mp3",
+   "text": "あのひとはたなかさんです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/nihon.mp3",
+   "text": "にほん",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/betonamu.mp3",
+   "text": "ベトナム",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/amerika.mp3",
+   "text": "アメリカ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kankoku.mp3",
+   "text": "かんこく",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/chuugoku.mp3",
+   "text": "ちゅうごく",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/nihonjin.mp3",
+   "text": "にほんじん",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/betonamujin.mp3",
+   "text": "ベトナムじん",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/nihongo.mp3",
+   "text": "にほんご",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/eigo.mp3",
+   "text": "えいご",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/watashi-wa-betonamujin-desu.mp3",
+   "text": "わたしはベトナムじんです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/tanaka-san-wa-nihonjin-desu.mp3",
+   "text": "たなかさんはにほんじんです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/gakusei.mp3",
+   "text": "がくせい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/sensei.mp3",
+   "text": "せんせい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kaishain.mp3",
+   "text": "かいしゃいん",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/isha.mp3",
+   "text": "いしゃ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/enjinia.mp3",
+   "text": "エンジニア",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kokku.mp3",
+   "text": "コック",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kaisha.mp3",
+   "text": "かいしゃ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/watashi-wa-gakusei-desu.mp3",
+   "text": "わたしはがくせいです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/yamada-san-wa-isha-desu.mp3",
+   "text": "やまださんはいしゃです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/hai.mp3",
+   "text": "はい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/iie.mp3",
+   "text": "いいえ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/sou-desu.mp3",
+   "text": "そうです",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/dare.mp3",
+   "text": "だれ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/nan.mp3",
+   "text": "なん",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/anata-wa-gakusei-desu-ka.mp3",
+   "text": "あなたはがくせいですか。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/hai-sou-desu.mp3",
+   "text": "はい、そうです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/ano-hito-wa-dare-desu-ka.mp3",
+   "text": "あのひとはだれですか。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/ja-arimasen.mp3",
+   "text": "じゃありません",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/dewa-arimasen.mp3",
+   "text": "ではありません",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/chigaimasu.mp3",
+   "text": "ちがいます",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/mada.mp3",
+   "text": "まだ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/demo.mp3",
+   "text": "でも",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/ginkouin.mp3",
+   "text": "ぎんこういん",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/watashi-wa-nihonjin-ja-arimasen.mp3",
+   "text": "わたしはにほんじんじゃありません。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/iie-chigaimasu.mp3",
+   "text": "いいえ、ちがいます。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/tanaka-san-wa-isha-ja-arimasen.mp3",
+   "text": "たなかさんはいしゃじゃありません。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/watashi-wa-gakusei-ja-arimasen-kaishain-desu.mp3",
+   "text": "わたしはがくせいじゃありません。かいしゃいんです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/no.mp3",
+   "text": "の",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/tomodachi.mp3",
+   "text": "ともだち",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/daigaku.mp3",
+   "text": "だいがく",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/watashi-no-namae-wa-rin-desu.mp3",
+   "text": "わたしのなまえはリンです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/tanaka-san-wa-nihongo-no-sensei-desu.mp3",
+   "text": "たなかさんはにほんごのせんせいです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/ichi.mp3",
+   "text": "いち",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/ni.mp3",
+   "text": "に",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/san-2.mp3",
+   "text": "さん",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/yon.mp3",
+   "text": "よん",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/go.mp3",
+   "text": "ご",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/roku.mp3",
+   "text": "ろく",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/nana.mp3",
+   "text": "なな",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/hachi.mp3",
+   "text": "はち",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kyuu.mp3",
+   "text": "きゅう",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/juu.mp3",
+   "text": "じゅう",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/ichi-ni-san-yon-go.mp3",
+   "text": "いち、に、さん、よん、ご。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/juuichi.mp3",
+   "text": "じゅういち",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/juugo.mp3",
+   "text": "じゅうご",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/nijuu.mp3",
+   "text": "にじゅう",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/sanjuu.mp3",
+   "text": "さんじゅう",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/gojuu.mp3",
+   "text": "ごじゅう",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kyuujuu.mp3",
+   "text": "きゅうじゅう",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/hyaku.mp3",
+   "text": "ひゃく",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/juugo-to-nijuugo.mp3",
+   "text": "じゅうごとにじゅうご。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/nihyaku.mp3",
+   "text": "にひゃく",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/gohyaku.mp3",
+   "text": "ごひゃく",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/sen.mp3",
+   "text": "せん",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/sanzen.mp3",
+   "text": "さんぜん",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/ichiman.mp3",
+   "text": "いちまん",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/gohyaku-en-desu.mp3",
+   "text": "ごひゃくえんです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/ichiman-en-desu.mp3",
+   "text": "いちまんえんです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/sai.mp3",
+   "text": "〜さい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/hatachi.mp3",
+   "text": "はたち",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/nansai.mp3",
+   "text": "なんさい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/denwa-bangou.mp3",
+   "text": "でんわばんごう",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/nanban.mp3",
+   "text": "なんばん",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/watashi-wa-hatachi-desu.mp3",
+   "text": "わたしははたちです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/denwa-bangou-wa-nanban-desu-ka.mp3",
+   "text": "でんわばんごうはなんばんですか。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/ikura.mp3",
+   "text": "いくら",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/en.mp3",
+   "text": "えん",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/takai.mp3",
+   "text": "たかい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/yasui.mp3",
+   "text": "やすい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kudasai.mp3",
+   "text": "ください",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/mise.mp3",
+   "text": "みせ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/kore-wa-ikura-desu-ka.mp3",
+   "text": "これはいくらですか。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/kore-wo-kudasai.mp3",
+   "text": "これをください。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/hitotsu.mp3",
+   "text": "ひとつ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/futatsu.mp3",
+   "text": "ふたつ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/mittsu.mp3",
+   "text": "みっつ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/ichimai.mp3",
+   "text": "いちまい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/ippon.mp3",
+   "text": "いっぽん",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/hitori.mp3",
+   "text": "ひとり",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/futari.mp3",
+   "text": "ふたり",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/koohii-wo-futatsu-kudasai.mp3",
+   "text": "コーヒーをふたつください。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/kippu-wo-ichimai-kudasai.mp3",
+   "text": "きっぷをいちまいください。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kore.mp3",
+   "text": "これ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/sore.mp3",
+   "text": "それ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/are.mp3",
+   "text": "あれ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/dore.mp3",
+   "text": "どれ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/kore-wa-hon-desu.mp3",
+   "text": "これはほんです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/sore-wa-nan-desu-ka.mp3",
+   "text": "それはなんですか。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/hon.mp3",
+   "text": "ほん",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/nooto.mp3",
+   "text": "ノート",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/enpitsu.mp3",
+   "text": "えんぴつ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/pen.mp3",
+   "text": "ペン",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/keshigomu.mp3",
+   "text": "けしゴム",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kaban.mp3",
+   "text": "かばん",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/jisho.mp3",
+   "text": "じしょ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/tsukue.mp3",
+   "text": "つくえ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/kore-wa-watashi-no-jisho-desu.mp3",
+   "text": "これはわたしのじしょです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/tokei.mp3",
+   "text": "とけい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kagi.mp3",
+   "text": "かぎ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kasa.mp3",
+   "text": "かさ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/saifu.mp3",
+   "text": "さいふ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/megane.mp3",
+   "text": "めがね",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/sumaho.mp3",
+   "text": "スマホ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kagu.mp3",
+   "text": "かぐ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/are-wa-tanaka-san-no-kasa-desu.mp3",
+   "text": "あれはたなかさんのかさです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kono.mp3",
+   "text": "この",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/sono.mp3",
+   "text": "その",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/ano.mp3",
+   "text": "あの",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/dono.mp3",
+   "text": "どの",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/kono-hon-wa-takai-desu.mp3",
+   "text": "このほんはたかいです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/ano-kaban-wa-yasui-desu.mp3",
+   "text": "あのかばんはやすいです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/dare-no.mp3",
+   "text": "だれの",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/watashi-no.mp3",
+   "text": "わたしの",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kaisha-no.mp3",
+   "text": "かいしゃの",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/wasuremono.mp3",
+   "text": "わすれもの",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/otoshimono.mp3",
+   "text": "おとしもの",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/mitsukemashita.mp3",
+   "text": "みつけました",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/kore-wa-dare-no-kasa-desu-ka.mp3",
+   "text": "これはだれのかさですか。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/watashi-no-desu.mp3",
+   "text": "わたしのです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/sono-kagi-wa-tanaka-san-no-desu.mp3",
+   "text": "そのかぎはたなかさんのです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/kono-sumaho-wa-watashi-no-ja-arimasen.mp3",
+   "text": "このスマホはわたしのじゃありません。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/nan-desu-ka.mp3",
+   "text": "なんですか",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/betonamugo.mp3",
+   "text": "ベトナムご",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/kore-wa-nihongo-de-nan-desu-ka.mp3",
+   "text": "これはにほんごでなんですか。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/sore-wa-keshigomu-desu.mp3",
+   "text": "それはけしゴムです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/koko.mp3",
+   "text": "ここ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/soko.mp3",
+   "text": "そこ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/asoko.mp3",
+   "text": "あそこ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/doko.mp3",
+   "text": "どこ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/toire-wa-doko-desu-ka.mp3",
+   "text": "トイレはどこですか。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/asoko-desu.mp3",
+   "text": "あそこです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/eki.mp3",
+   "text": "えき",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/byouin.mp3",
+   "text": "びょういん",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/gakkou.mp3",
+   "text": "がっこう",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/ginkou.mp3",
+   "text": "ぎんこう",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/konbini.mp3",
+   "text": "コンビニ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/resutoran.mp3",
+   "text": "レストラン",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/yuubinkyoku.mp3",
+   "text": "ゆうびんきょく",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kouen.mp3",
+   "text": "こうえん",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/eki-wa-doko-desu-ka.mp3",
+   "text": "えきはどこですか。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/konbini-wa-soko-desu.mp3",
+   "text": "コンビニはそこです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/heya.mp3",
+   "text": "へや",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/daidokoro.mp3",
+   "text": "だいどころ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/toire.mp3",
+   "text": "トイレ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/ofuro.mp3",
+   "text": "おふろ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/niwa.mp3",
+   "text": "にわ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/genkan.mp3",
+   "text": "げんかん",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/mado.mp3",
+   "text": "まど",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/daidokoro-wa-koko-desu.mp3",
+   "text": "だいどころはここです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/arimasu.mp3",
+   "text": "あります",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/imasu.mp3",
+   "text": "います",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/ga.mp3",
+   "text": "が",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/heya-ni-neko-ga-imasu.mp3",
+   "text": "へやにねこがいます。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/tsukue-ni-hon-ga-arimasu.mp3",
+   "text": "つくえにほんがあります。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/ue.mp3",
+   "text": "うえ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/shita.mp3",
+   "text": "した",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/naka.mp3",
+   "text": "なか",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/mae.mp3",
+   "text": "まえ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/ushiro.mp3",
+   "text": "うしろ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/tonari.mp3",
+   "text": "となり",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/migi.mp3",
+   "text": "みぎ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/hidari.mp3",
+   "text": "ひだり",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/kaban-no-naka-ni-saifu-ga-arimasu.mp3",
+   "text": "かばんのなかにさいふがあります。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/ginkou-wa-eki-no-tonari-desu.mp3",
+   "text": "ぎんこうはえきのとなりです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/michi.mp3",
+   "text": "みち",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/chikaku.mp3",
+   "text": "ちかく",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/massugu.mp3",
+   "text": "まっすぐ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/migi-ni-magatte.mp3",
+   "text": "みぎにまがって",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/sumimasen-eki-wa-doko-desu-ka.mp3",
+   "text": "すみません、えきはどこですか。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/massugu-itte-kudasai.mp3",
+   "text": "まっすぐいってください。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/ichiji.mp3",
+   "text": "いちじ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/sanji.mp3",
+   "text": "さんじ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/yoji.mp3",
+   "text": "よじ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/shichiji.mp3",
+   "text": "しちじ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kuji.mp3",
+   "text": "くじ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/juuniji.mp3",
+   "text": "じゅうにじ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/nanji.mp3",
+   "text": "なんじ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/ima-nanji-desu-ka.mp3",
+   "text": "いまなんじですか。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/kuji-desu.mp3",
+   "text": "くじです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/gofun.mp3",
+   "text": "ごふん",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/juppun.mp3",
+   "text": "じゅっぷん",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/sanjuppun.mp3",
+   "text": "さんじゅっぷん",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/han.mp3",
+   "text": "はん",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/nanpun.mp3",
+   "text": "なんぷん",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/ima.mp3",
+   "text": "いま",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/shichiji-han-desu.mp3",
+   "text": "しちじはんです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/sanji-juppun-desu.mp3",
+   "text": "さんじじゅっぷんです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/asa.mp3",
+   "text": "あさ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/hiru.mp3",
+   "text": "ひる",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/yoru.mp3",
+   "text": "よる",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kyou.mp3",
+   "text": "きょう",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/ashita.mp3",
+   "text": "あした",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kinou.mp3",
+   "text": "きのう",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/mainichi.mp3",
+   "text": "まいにち",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/mainichi-asa-rokuji-ni-okimasu.mp3",
+   "text": "まいにちあさろくじにおきます。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/getsuyoubi.mp3",
+   "text": "げつようび",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kayoubi.mp3",
+   "text": "かようび",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/suiyoubi.mp3",
+   "text": "すいようび",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/mokuyoubi.mp3",
+   "text": "もくようび",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kinyoubi.mp3",
+   "text": "きんようび",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/doyoubi.mp3",
+   "text": "どようび",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/nichiyoubi.mp3",
+   "text": "にちようび",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/nanyoubi.mp3",
+   "text": "なんようび",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/kyou-wa-nanyoubi-desu-ka.mp3",
+   "text": "きょうはなんようびですか。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/kyou-wa-kinyoubi-desu.mp3",
+   "text": "きょうはきんようびです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/ichigatsu.mp3",
+   "text": "いちがつ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/shigatsu.mp3",
+   "text": "しがつ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/shichigatsu.mp3",
+   "text": "しちがつ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kugatsu.mp3",
+   "text": "くがつ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/tsuitachi.mp3",
+   "text": "ついたち",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/futsuka.mp3",
+   "text": "ふつか",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/hatsuka.mp3",
+   "text": "はつか",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/tanjoubi.mp3",
+   "text": "たんじょうび",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/tanjoubi-wa-shigatsu-tsuitachi-desu.mp3",
+   "text": "たんじょうびはしがつついたちです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kara.mp3",
+   "text": "から",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/made.mp3",
+   "text": "まで",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/yasumi.mp3",
+   "text": "やすみ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/shigoto.mp3",
+   "text": "しごと",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/shigoto-wa-kuji-kara-goji-made-desu.mp3",
+   "text": "しごとはくじからごじまでです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/nichiyoubi-wa-yasumi-desu.mp3",
+   "text": "にちようびはやすみです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/okimasu.mp3",
+   "text": "おきます",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/nemasu.mp3",
+   "text": "ねます",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/tabemasu.mp3",
+   "text": "たべます",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/nomimasu.mp3",
+   "text": "のみます",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/mimasu.mp3",
+   "text": "みます",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kikimasu.mp3",
+   "text": "ききます",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/watashi-wa-nemasu.mp3",
+   "text": "わたしはねます。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/ikimasu.mp3",
+   "text": "いきます",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kimasu.mp3",
+   "text": "きます",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kaerimasu.mp3",
+   "text": "かえります",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/e.mp3",
+   "text": "へ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/densha.mp3",
+   "text": "でんしゃ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/gakkou-e-ikimasu.mp3",
+   "text": "がっこうへいきます。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/uchi-e-kaerimasu.mp3",
+   "text": "うちへかえります。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/wo.mp3",
+   "text": "を",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/gohan.mp3",
+   "text": "ごはん",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/mizu.mp3",
+   "text": "みず",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/terebi.mp3",
+   "text": "テレビ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/ongaku.mp3",
+   "text": "おんがく",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/gohan-wo-tabemasu.mp3",
+   "text": "ごはんをたべます。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/ongaku-wo-kikimasu.mp3",
+   "text": "おんがくをききます。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/de.mp3",
+   "text": "で",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/benkyou-shimasu.mp3",
+   "text": "べんきょうします",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/hatarakimasu.mp3",
+   "text": "はたらきます",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kaimasu.mp3",
+   "text": "かいます",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/yomimasu.mp3",
+   "text": "よみます",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/toshokan-de-benkyou-shimasu.mp3",
+   "text": "としょかんでべんきょうします。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/konbini-de-pan-wo-kaimasu.mp3",
+   "text": "コンビニでパンをかいます。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/masen.mp3",
+   "text": "ません",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/mashita.mp3",
+   "text": "ました",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/masen-deshita.mp3",
+   "text": "ませんでした",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/kinou-gakkou-e-ikimashita.mp3",
+   "text": "きのうがっこうへいきました。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/koohii-wo-nomimasen.mp3",
+   "text": "コーヒーをのみません。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/asagohan.mp3",
+   "text": "あさごはん",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/hirugohan.mp3",
+   "text": "ひるごはん",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/bangohan.mp3",
+   "text": "ばんごはん",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/shichiji-ni-asagohan-wo-tabemasu.mp3",
+   "text": "しちじにあさごはんをたべます。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/juuji-ni-nemasu.mp3",
+   "text": "じゅうじにねます。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/sorekara.mp3",
+   "text": "それから",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/maiasa.mp3",
+   "text": "まいあさ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/uchi.mp3",
+   "text": "うち",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/toshokan.mp3",
+   "text": "としょかん",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/maiasa-rokuji-ni-okimasu.mp3",
+   "text": "まいあさろくじにおきます。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/sorekara-gakkou-e-ikimasu.mp3",
+   "text": "それからがっこうへいきます。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/yoru-uchi-de-bangohan-wo-tabemasu.mp3",
+   "text": "よるうちでばんごはんをたべます。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/pan.mp3",
+   "text": "パン",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/niku.mp3",
+   "text": "にく",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/sakana.mp3",
+   "text": "さかな",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/tamago.mp3",
+   "text": "たまご",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/yasai.mp3",
+   "text": "やさい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kudamono.mp3",
+   "text": "くだもの",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/asagohan-ni-pan-wo-tabemasu.mp3",
+   "text": "あさごはんにパンをたべます。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/ocha.mp3",
+   "text": "おちゃ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/koohii.mp3",
+   "text": "コーヒー",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/gyuunyuu.mp3",
+   "text": "ぎゅうにゅう",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/juusu.mp3",
+   "text": "ジュース",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/biiru.mp3",
+   "text": "ビール",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/osake.mp3",
+   "text": "おさけ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/ocha-wo-nomimasu.mp3",
+   "text": "おちゃをのみます。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/sushi.mp3",
+   "text": "すし",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/raamen.mp3",
+   "text": "ラーメン",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/udon.mp3",
+   "text": "うどん",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/tenpura.mp3",
+   "text": "てんぷら",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/onigiri.mp3",
+   "text": "おにぎり",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/karee.mp3",
+   "text": "カレー",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/bentou.mp3",
+   "text": "べんとう",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/sushi-ga-suki-desu.mp3",
+   "text": "すしがすきです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/menyuu.mp3",
+   "text": "メニュー",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/chuumon.mp3",
+   "text": "ちゅうもん",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/onegaishimasu.mp3",
+   "text": "おねがいします",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/okaikei.mp3",
+   "text": "おかいけい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/mise-no-hito.mp3",
+   "text": "みせのひと",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/menyuu-wo-onegaishimasu.mp3",
+   "text": "メニューをおねがいします。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/raamen-wo-hitotsu-kudasai.mp3",
+   "text": "ラーメンをひとつください。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/okaikei-wo-onegaishimasu.mp3",
+   "text": "おかいけいをおねがいします。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/oishii.mp3",
+   "text": "おいしい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/mazui.mp3",
+   "text": "まずい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/amai.mp3",
+   "text": "あまい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/karai.mp3",
+   "text": "からい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/shoppai.mp3",
+   "text": "しょっぱい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/tsumetai.mp3",
+   "text": "つめたい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/atsui.mp3",
+   "text": "あつい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/kono-raamen-wa-oishii-desu.mp3",
+   "text": "このラーメンはおいしいです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/karee-wa-chotto-karai-desu.mp3",
+   "text": "カレーはちょっとからいです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/irasshaimase.mp3",
+   "text": "いらっしゃいませ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/nanmeisama.mp3",
+   "text": "なんめいさま",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/shoushou-omachi-kudasai.mp3",
+   "text": "しょうしょうおまちください",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/genkin.mp3",
+   "text": "げんきん",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kaado.mp3",
+   "text": "カード",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/irasshaimase-nanmeisama-desu-ka.mp3",
+   "text": "いらっしゃいませ。なんめいさまですか。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/futari-desu.mp3",
+   "text": "ふたりです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/kaado-de-onegaishimasu.mp3",
+   "text": "カードでおねがいします。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kazoku.mp3",
+   "text": "かぞく",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/chichi.mp3",
+   "text": "ちち",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/haha.mp3",
+   "text": "はは",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/ani.mp3",
+   "text": "あに",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/ane.mp3",
+   "text": "あね",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/otouto.mp3",
+   "text": "おとうと",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/imouto.mp3",
+   "text": "いもうと",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/chichi-wa-kaishain-desu.mp3",
+   "text": "ちちはかいしゃいんです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/imouto-wa-gakusei-desu.mp3",
+   "text": "いもうとはがくせいです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/otousan.mp3",
+   "text": "おとうさん",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/okaasan.mp3",
+   "text": "おかあさん",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/oniisan.mp3",
+   "text": "おにいさん",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/oneesan.mp3",
+   "text": "おねえさん",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/gokazoku.mp3",
+   "text": "ごかぞく",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/otousan-wa-oikutsu-desu-ka.mp3",
+   "text": "おとうさんはおいくつですか。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/hito.mp3",
+   "text": "ひと",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kodomo.mp3",
+   "text": "こども",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/otoko-no-hito.mp3",
+   "text": "おとこのひと",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/onna-no-hito.mp3",
+   "text": "おんなのひと",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/douryou.mp3",
+   "text": "どうりょう",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/ano-onna-no-hito-wa-sensei-desu.mp3",
+   "text": "あのおんなのひとはせんせいです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/nannin.mp3",
+   "text": "なんにん",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/sannin.mp3",
+   "text": "さんにん",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/yonin.mp3",
+   "text": "よにん",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/gonin.mp3",
+   "text": "ごにん",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/nannin-kazoku-desu-ka.mp3",
+   "text": "なんにんかぞくですか。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/yonin-kazoku-desu.mp3",
+   "text": "よにんかぞくです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/otouto-ga-futari-imasu.mp3",
+   "text": "おとうとがふたりいます。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/zenbu-de.mp3",
+   "text": "ぜんぶで",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/soshite.mp3",
+   "text": "そして",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/issho-ni.mp3",
+   "text": "いっしょに",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/watashi-no-kazoku-wa-yonin-desu.mp3",
+   "text": "わたしのかぞくはよにんです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/chichi-to-haha-to-imouto-ga-imasu.mp3",
+   "text": "ちちとははといもうとがいます。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/ookii.mp3",
+   "text": "おおきい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/chiisai.mp3",
+   "text": "ちいさい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/atarashii.mp3",
+   "text": "あたらしい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/furui.mp3",
+   "text": "ふるい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/ii.mp3",
+   "text": "いい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/muzukashii.mp3",
+   "text": "むずかしい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/kono-kaban-wa-atarashii-desu.mp3",
+   "text": "このかばんはあたらしいです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/nihongo-wa-muzukashii-desu.mp3",
+   "text": "にほんごはむずかしいです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kirei.mp3",
+   "text": "きれい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/shizuka.mp3",
+   "text": "しずか",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/nigiyaka.mp3",
+   "text": "にぎやか",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/yuumei.mp3",
+   "text": "ゆうめい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/genki.mp3",
+   "text": "げんき",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/benri.mp3",
+   "text": "べんり",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/suki.mp3",
+   "text": "すき",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/kono-kouen-wa-shizuka-desu.mp3",
+   "text": "このこうえんはしずかです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/kirei-na-hana-desu-ne.mp3",
+   "text": "きれいなはなですね。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/akai.mp3",
+   "text": "あかい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/aoi.mp3",
+   "text": "あおい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/shiroi.mp3",
+   "text": "しろい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kuroi.mp3",
+   "text": "くろい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kiiroi.mp3",
+   "text": "きいろい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/midori.mp3",
+   "text": "みどり",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/chairo.mp3",
+   "text": "ちゃいろ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/akai-kasa-wo-kaimasu.mp3",
+   "text": "あかいかさをかいます。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/sono-kuruma-wa-shiroi-desu.mp3",
+   "text": "そのくるまはしろいです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/hare.mp3",
+   "text": "はれ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/ame.mp3",
+   "text": "あめ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/yuki.mp3",
+   "text": "ゆき",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kumori.mp3",
+   "text": "くもり",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/samui.mp3",
+   "text": "さむい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/haru.mp3",
+   "text": "はる",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/natsu.mp3",
+   "text": "なつ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/aki.mp3",
+   "text": "あき",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/fuyu.mp3",
+   "text": "ふゆ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/kyou-wa-atsui-desu-ne.mp3",
+   "text": "きょうはあついですね。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/fuyu-wa-totemo-samui-desu.mp3",
+   "text": "ふゆはとてもさむいです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kunai-desu.mp3",
+   "text": "くないです",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/amari.mp3",
+   "text": "あまり",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/totemo.mp3",
+   "text": "とても",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/chotto.mp3",
+   "text": "ちょっと",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/kono-hon-wa-takakunai-desu.mp3",
+   "text": "このほんはたかくないです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/heya-wa-amari-kirei-ja-arimasen.mp3",
+   "text": "へやはあまりきれいじゃありません。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kute.mp3",
+   "text": "くて",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/kono-mise-wa-yasukute-oishii-desu.mp3",
+   "text": "このみせはやすくておいしいです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/kyouto-wa-shizuka-de-kirei-desu.mp3",
+   "text": "きょうとはしずかできれいです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/suupaa.mp3",
+   "text": "スーパー",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/depaato.mp3",
+   "text": "デパート",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/honya.mp3",
+   "text": "ほんや",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/yaoya.mp3",
+   "text": "やおや",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/nikuya.mp3",
+   "text": "にくや",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/panya.mp3",
+   "text": "パンや",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kusuriya.mp3",
+   "text": "くすりや",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/suupaa-de-yasai-o-kaimasu.mp3",
+   "text": "スーパーでやさいをかいます。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/ashita-depaato-e-ikimasu.mp3",
+   "text": "あしたデパートへいきます。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/fuku.mp3",
+   "text": "ふく",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/shatsu.mp3",
+   "text": "シャツ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/zubon.mp3",
+   "text": "ズボン",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/sukaato.mp3",
+   "text": "スカート",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kooto.mp3",
+   "text": "コート",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kutsu.mp3",
+   "text": "くつ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/boushi.mp3",
+   "text": "ぼうし",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/kono-shatsu-wa-yasui-desu.mp3",
+   "text": "このシャツはやすいです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/akai-kutsu-o-kaimashita.mp3",
+   "text": "あかいくつをかいました。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/reji.mp3",
+   "text": "レジ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/otsuri.mp3",
+   "text": "おつり",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/nedan.mp3",
+   "text": "ねだん",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/fukuro.mp3",
+   "text": "ふくろ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/reshiito.mp3",
+   "text": "レシート",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/fukuro-o-onegaishimasu.mp3",
+   "text": "ふくろをおねがいします。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/saizu.mp3",
+   "text": "サイズ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/iro.mp3",
+   "text": "いろ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/nagai.mp3",
+   "text": "ながい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/mijikai.mp3",
+   "text": "みじかい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/choudo-ii.mp3",
+   "text": "ちょうどいい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/arimasu-ka.mp3",
+   "text": "ありますか",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/ookii-saizu-wa-arimasu-ka.mp3",
+   "text": "おおきいサイズはありますか。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/kono-iro-ga-suki-desu.mp3",
+   "text": "このいろがすきです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/seeru.mp3",
+   "text": "セール",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/hangaku.mp3",
+   "text": "はんがく",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/muryou.mp3",
+   "text": "むりょう",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/pointo-kaado.mp3",
+   "text": "ポイントカード",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/takasugimasu.mp3",
+   "text": "たかすぎます",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/kyou-wa-seeru-desu.mp3",
+   "text": "きょうはセールです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/kono-boushi-wa-hangaku-desu.mp3",
+   "text": "このぼうしははんがくです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/misete-kudasai.mp3",
+   "text": "みせてください",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kore-ni-shimasu.mp3",
+   "text": "これにします",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kekkou-desu.mp3",
+   "text": "けっこうです",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/chotto-matte-kudasai.mp3",
+   "text": "ちょっとまってください",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/sore-o-misete-kudasai.mp3",
+   "text": "それをみせてください。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/kore-ni-shimasu-kaado-de-onegaishimasu.mp3",
+   "text": "これにします。カードでおねがいします。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/basu.mp3",
+   "text": "バス",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/takushii.mp3",
+   "text": "タクシー",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/jitensha.mp3",
+   "text": "じてんしゃ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kuruma.mp3",
+   "text": "くるま",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/hikouki.mp3",
+   "text": "ひこうき",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/chikatetsu.mp3",
+   "text": "ちかてつ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/shinkansen.mp3",
+   "text": "しんかんせん",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/mainichi-basu-de-gakkou-e-ikimasu.mp3",
+   "text": "まいにちバスでがっこうへいきます。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/hikouki-de-betonamu-e-kaerimasu.mp3",
+   "text": "ひこうきでベトナムへかえります。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kippu.mp3",
+   "text": "きっぷ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/hoomu.mp3",
+   "text": "ホーム",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/deguchi.mp3",
+   "text": "でぐち",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kaisatsu.mp3",
+   "text": "かいさつ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/iriguchi.mp3",
+   "text": "いりぐち",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/bansen.mp3",
+   "text": "ばんせん",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/eki-de-kippu-o-kaimasu.mp3",
+   "text": "えきできっぷをかいます。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/deguchi-wa-doko-desu-ka.mp3",
+   "text": "でぐちはどこですか。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/norimasu.mp3",
+   "text": "のります",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/orimasu.mp3",
+   "text": "おります",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/norikaemasu.mp3",
+   "text": "のりかえます",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/aruite.mp3",
+   "text": "あるいて",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/tsugi.mp3",
+   "text": "つぎ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/eki-de-chikatetsu-ni-norimasu.mp3",
+   "text": "えきでちかてつにのります。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/tsugi-no-eki-de-orimasu.mp3",
+   "text": "つぎのえきでおります。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/shingou.mp3",
+   "text": "しんごう",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/hashi.mp3",
+   "text": "はし",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kousaten.mp3",
+   "text": "こうさてん",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kado.mp3",
+   "text": "かど",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/tooi.mp3",
+   "text": "とおい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/chikai.mp3",
+   "text": "ちかい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/eki-wa-tooi-desu-ka.mp3",
+   "text": "えきはとおいですか。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/shingou-o-migi-ni-magatte-kudasai.mp3",
+   "text": "しんごうをみぎにまがってください。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kakarimasu.mp3",
+   "text": "かかります",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/jikan.mp3",
+   "text": "じかん",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/hayai.mp3",
+   "text": "はやい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/osoi.mp3",
+   "text": "おそい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/dono-kurai.mp3",
+   "text": "どのくらい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/uchi-kara-eki-made-juppun-kakarimasu.mp3",
+   "text": "うちからえきまでじゅっぷんかかります。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/shinkansen-wa-hayai-desu.mp3",
+   "text": "しんかんせんははやいです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/okurete.mp3",
+   "text": "おくれて",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/machimasu.mp3",
+   "text": "まちます",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/konde-imasu.mp3",
+   "text": "こんでいます",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/suite-imasu.mp3",
+   "text": "すいています",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/saishuu.mp3",
+   "text": "さいしゅう",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/densha-ga-okurete-imasu.mp3",
+   "text": "でんしゃがおくれています。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/koko-de-tomodachi-o-machimasu.mp3",
+   "text": "ここでともだちをまちます。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/shumi.mp3",
+   "text": "しゅみ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/ryokou.mp3",
+   "text": "りょこう",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/dokusho.mp3",
+   "text": "どくしょ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/ryouri.mp3",
+   "text": "りょうり",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/shashin.mp3",
+   "text": "しゃしん",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kaimono.mp3",
+   "text": "かいもの",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/watashi-no-shumi-wa-ryouri-desu.mp3",
+   "text": "わたしのしゅみはりょうりです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/nichiyoubi-ni-ryokou-e-ikimasu.mp3",
+   "text": "にちようびにりょこうへいきます。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/supootsu.mp3",
+   "text": "スポーツ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/sakkaa.mp3",
+   "text": "サッカー",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/yakyuu.mp3",
+   "text": "やきゅう",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/tenisu.mp3",
+   "text": "テニス",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/suiei.mp3",
+   "text": "すいえい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/jogingu.mp3",
+   "text": "ジョギング",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/shimasu.mp3",
+   "text": "します",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/maiasa-jogingu-o-shimasu.mp3",
+   "text": "まいあさジョギングをします。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/doyoubi-ni-tenisu-o-shimasu.mp3",
+   "text": "どようびにテニスをします。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/eiga.mp3",
+   "text": "えいが",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/geemu.mp3",
+   "text": "ゲーム",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/uta.mp3",
+   "text": "うた",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/utaimasu.mp3",
+   "text": "うたいます",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/anime.mp3",
+   "text": "アニメ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/manga.mp3",
+   "text": "まんが",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/yoru-eiga-o-mimasu.mp3",
+   "text": "よるえいがをみます。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/uchi-de-uta-o-utaimasu.mp3",
+   "text": "うちでうたをうたいます。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/daisuki.mp3",
+   "text": "だいすき",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kirai.mp3",
+   "text": "きらい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/daikirai.mp3",
+   "text": "だいきらい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/suki-ja-arimasen.mp3",
+   "text": "すきじゃありません",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/watashi-wa-sushi-ga-daisuki-desu.mp3",
+   "text": "わたしはすしがだいすきです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/biiru-wa-amari-suki-ja-arimasen.mp3",
+   "text": "ビールはあまりすきじゃありません。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/jouzu.mp3",
+   "text": "じょうず",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/heta.mp3",
+   "text": "へた",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/tokui.mp3",
+   "text": "とくい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/dekimasu.mp3",
+   "text": "できます",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/ano-hito-wa-eigo-ga-jouzu-desu.mp3",
+   "text": "あのひとはえいごがじょうずです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/watashi-wa-ryouri-ga-heta-desu.mp3",
+   "text": "わたしはりょうりがへたです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/shuumatsu.mp3",
+   "text": "しゅうまつ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/itsumo.mp3",
+   "text": "いつも",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/yoku.mp3",
+   "text": "よく",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/tokidoki.mp3",
+   "text": "ときどき",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/zenzen.mp3",
+   "text": "ぜんぜん",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/shuumatsu-wa-itsumo-uchi-ni-imasu.mp3",
+   "text": "しゅうまつはいつもうちにいます。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/nichiyoubi-wa-yoku-eiga-o-mimasu.mp3",
+   "text": "にちようびはよくえいがをみます。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/me.mp3",
+   "text": "め",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/hana.mp3",
+   "text": "はな",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kuchi.mp3",
+   "text": "くち",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/mimi.mp3",
+   "text": "みみ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/te.mp3",
+   "text": "て",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/ashi.mp3",
+   "text": "あし",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/atama.mp3",
+   "text": "あたま",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/onaka.mp3",
+   "text": "おなか",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/kodomo-wa-me-ga-ookii-desu.mp3",
+   "text": "こどもはめがおおきいです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/otousan-wa-ashi-ga-nagai-desu.mp3",
+   "text": "おとうさんはあしがながいです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/itai.mp3",
+   "text": "いたい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/netsu.mp3",
+   "text": "ねつ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kaze.mp3",
+   "text": "かぜ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/seki.mp3",
+   "text": "せき",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/nodo.mp3",
+   "text": "のど",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/atama-ga-itai-desu.mp3",
+   "text": "あたまがいたいです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/kyou-wa-netsu-ga-arimasu.mp3",
+   "text": "きょうはねつがあります。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kusuri.mp3",
+   "text": "くすり",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/chuusha.mp3",
+   "text": "ちゅうしゃ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kensa.mp3",
+   "text": "けんさ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/byouki.mp3",
+   "text": "びょうき",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/shinsatsu.mp3",
+   "text": "しんさつ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/byouin-e-ikimasu.mp3",
+   "text": "びょういんへいきます。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/asa-kusuri-o-nomimasu.mp3",
+   "text": "あさくすりをのみます。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/tsukaremashita.mp3",
+   "text": "つかれました",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/nemui.mp3",
+   "text": "ねむい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kibun-ga-warui.mp3",
+   "text": "きぶんがわるい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kimochi-ga-ii.mp3",
+   "text": "きもちがいい",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/genki-ni-narimashita.mp3",
+   "text": "げんきになりました",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/kyou-wa-totemo-tsukaremashita.mp3",
+   "text": "きょうはとてもつかれました。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/asa-wa-itsumo-nemui-desu.mp3",
+   "text": "あさはいつもねむいです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/yasumimasu.mp3",
+   "text": "やすみます",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/yasunde-kudasai.mp3",
+   "text": "やすんでください",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/odaijini.mp3",
+   "text": "おだいじに",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/muri-shinaide.mp3",
+   "text": "むりしないで",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/yukkuri.mp3",
+   "text": "ゆっくり",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/kyou-wa-uchi-de-yasunde-kudasai.mp3",
+   "text": "きょうはうちでやすんでください。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/ashita-wa-shigoto-o-yasumimasu.mp3",
+   "text": "あしたはしごとをやすみます。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/dou-shimashita-ka.mp3",
+   "text": "どうしましたか",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/itsu-kara-desu-ka.mp3",
+   "text": "いつからですか",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/kinou-kara.mp3",
+   "text": "きのうから",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/mainichi-nomimasu.mp3",
+   "text": "まいにちのみます",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/dou-shimashita-ka-atama-ga-itai-desu.mp3",
+   "text": "どうしましたか。あたまがいたいです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/itsu-kara-desu-ka-kinou-kara-desu.mp3",
+   "text": "いつからですか。きのうからです。",
+   "voice": "ja-JP-NanamiNeural"
+  }
+ ],
+ "image": [
+  {
+   "rel": "vocab/ohayou-gozaimasu.png",
+   "emoji": "🌅",
+   "label": "chào buổi sáng (lịch sự)"
+  },
+  {
+   "rel": "vocab/ohayou.png",
+   "emoji": "🌄",
+   "label": "chào buổi sáng (thân mật)"
+  },
+  {
+   "rel": "vocab/konnichiwa.png",
+   "emoji": "☀️",
+   "label": "xin chào (ban ngày)"
+  },
+  {
+   "rel": "vocab/konbanwa.png",
+   "emoji": "🌆",
+   "label": "chào buổi tối"
+  },
+  {
+   "rel": "vocab/oyasuminasai.png",
+   "emoji": "🌙",
+   "label": "chúc ngủ ngon"
+  },
+  {
+   "rel": "vocab/arigatou-gozaimasu.png",
+   "emoji": "🙏",
+   "label": "cảm ơn (lịch sự)"
+  },
+  {
+   "rel": "vocab/arigatou.png",
+   "emoji": "😊",
+   "label": "cảm ơn (thân mật)"
+  },
+  {
+   "rel": "vocab/dou-itashimashite.png",
+   "emoji": "🤝",
+   "label": "không có chi"
+  },
+  {
+   "rel": "vocab/sumimasen.png",
+   "emoji": "🙇",
+   "label": "xin lỗi / cho hỏi"
+  },
+  {
+   "rel": "vocab/gomen-nasai.png",
+   "emoji": "😔",
+   "label": "tôi xin lỗi"
+  },
+  {
+   "rel": "vocab/daijoubu-desu.png",
+   "emoji": "👌",
+   "label": "không sao đâu"
+  },
+  {
+   "rel": "vocab/hajimemashite.png",
+   "emoji": "🤝",
+   "label": "rất hân hạnh được gặp"
+  },
+  {
+   "rel": "vocab/yoroshiku-onegaishimasu.png",
+   "emoji": "🙇",
+   "label": "mong được giúp đỡ"
+  },
+  {
+   "rel": "vocab/ogenki-desu-ka.png",
+   "emoji": "❓",
+   "label": "bạn có khỏe không?"
+  },
+  {
+   "rel": "vocab/genki-desu.png",
+   "emoji": "💪",
+   "label": "tôi khỏe"
+  },
+  {
+   "rel": "vocab/onamae-wa.png",
+   "emoji": "📛",
+   "label": "tên bạn là gì?"
+  },
+  {
+   "rel": "vocab/sayounara.png",
+   "emoji": "👋",
+   "label": "tạm biệt"
+  },
+  {
+   "rel": "vocab/mata-ashita.png",
+   "emoji": "📅",
+   "label": "hẹn mai gặp lại"
+  },
+  {
+   "rel": "vocab/mata-ne.png",
+   "emoji": "✌️",
+   "label": "gặp lại nhé (thân mật)"
+  },
+  {
+   "rel": "vocab/shitsurei-shimasu.png",
+   "emoji": "🚪",
+   "label": "tôi xin phép (đi trước)"
+  },
+  {
+   "rel": "vocab/ki-wo-tsukete.png",
+   "emoji": "⚠️",
+   "label": "đi cẩn thận nhé"
+  },
+  {
+   "rel": "vocab/ittekimasu.png",
+   "emoji": "🚶",
+   "label": "con/tôi đi đây"
+  },
+  {
+   "rel": "vocab/itterasshai.png",
+   "emoji": "👋",
+   "label": "đi rồi về nhé"
+  },
+  {
+   "rel": "vocab/tadaima.png",
+   "emoji": "🏠",
+   "label": "con/tôi về rồi"
+  },
+  {
+   "rel": "vocab/okaerinasai.png",
+   "emoji": "🤗",
+   "label": "mừng bạn về"
+  },
+  {
+   "rel": "vocab/itadakimasu.png",
+   "emoji": "🍽️",
+   "label": "xin phép được ăn"
+  },
+  {
+   "rel": "vocab/gochisousama-deshita.png",
+   "emoji": "😋",
+   "label": "cảm ơn vì bữa ăn"
+  },
+  {
+   "rel": "vocab/otsukaresama-desu.png",
+   "emoji": "💼",
+   "label": "bạn vất vả rồi"
+  },
+  {
+   "rel": "vocab/ganbatte.png",
+   "emoji": "🔥",
+   "label": "cố lên nhé"
+  },
+  {
+   "rel": "vocab/omedetou-gozaimasu.png",
+   "emoji": "🎉",
+   "label": "xin chúc mừng"
+  },
+  {
+   "rel": "vocab/watashi.png",
+   "emoji": "🙋",
+   "label": "tôi"
+  },
+  {
+   "rel": "vocab/daigaku.png",
+   "emoji": "🏛️",
+   "label": "trường đại học"
+  },
+  {
+   "rel": "vocab/ano-hito.png",
+   "emoji": "🧍",
+   "label": "người kia"
+  },
+  {
+   "rel": "vocab/kaisha.png",
+   "emoji": "🏢",
+   "label": "công ty"
+  },
+  {
+   "rel": "vocab/anata.png",
+   "emoji": "👉",
+   "label": "bạn"
+  },
+  {
+   "rel": "vocab/namae.png",
+   "emoji": "📛",
+   "label": "tên"
+  },
+  {
+   "rel": "vocab/san.png",
+   "emoji": "🎎",
+   "label": "anh/chị/ông/bà (hậu tố lịch sự)"
+  },
+  {
+   "rel": "vocab/nihon.png",
+   "emoji": "🇯🇵",
+   "label": "Nhật Bản"
+  },
+  {
+   "rel": "vocab/nihongo.png",
+   "emoji": "🗣️",
+   "label": "tiếng Nhật"
+  },
+  {
+   "rel": "vocab/kokku.png",
+   "emoji": "👨‍🍳",
+   "label": "đầu bếp"
+  },
+  {
+   "rel": "vocab/sensei.png",
+   "emoji": "👨‍🏫",
+   "label": "giáo viên"
+  },
+  {
+   "rel": "vocab/betonamu.png",
+   "emoji": "🇻🇳",
+   "label": "Việt Nam"
+  },
+  {
+   "rel": "vocab/amerika.png",
+   "emoji": "🇺🇸",
+   "label": "Mỹ"
+  },
+  {
+   "rel": "vocab/kankoku.png",
+   "emoji": "🇰🇷",
+   "label": "Hàn Quốc"
+  },
+  {
+   "rel": "vocab/kaishain.png",
+   "emoji": "💼",
+   "label": "nhân viên công ty"
+  },
+  {
+   "rel": "vocab/isha.png",
+   "emoji": "👨‍⚕️",
+   "label": "bác sĩ"
+  },
+  {
+   "rel": "vocab/chuugoku.png",
+   "emoji": "🇨🇳",
+   "label": "Trung Quốc"
+  },
+  {
+   "rel": "vocab/nihonjin.png",
+   "emoji": "🎎",
+   "label": "người Nhật"
+  },
+  {
+   "rel": "vocab/betonamujin.png",
+   "emoji": "👨‍🌾",
+   "label": "người Việt Nam"
+  },
+  {
+   "rel": "vocab/enjinia.png",
+   "emoji": "👷",
+   "label": "kỹ sư"
+  },
+  {
+   "rel": "vocab/eigo.png",
+   "emoji": "🔤",
+   "label": "tiếng Anh"
+  },
+  {
+   "rel": "vocab/gakusei.png",
+   "emoji": "🎓",
+   "label": "học sinh, sinh viên"
+  },
+  {
+   "rel": "vocab/ginkouin.png",
+   "emoji": "🏦",
+   "label": "nhân viên ngân hàng"
+  },
+  {
+   "rel": "vocab/hai.png",
+   "emoji": "⭕",
+   "label": "vâng, đúng vậy"
+  },
+  {
+   "rel": "vocab/iie.png",
+   "emoji": "❌",
+   "label": "không"
+  },
+  {
+   "rel": "vocab/sou-desu.png",
+   "emoji": "👍",
+   "label": "đúng vậy"
+  },
+  {
+   "rel": "vocab/dare.png",
+   "emoji": "🕵️",
+   "label": "ai"
+  },
+  {
+   "rel": "vocab/nan.png",
+   "emoji": "❓",
+   "label": "cái gì"
+  },
+  {
+   "rel": "vocab/ja-arimasen.png",
+   "emoji": "🚫",
+   "label": "không phải là…"
+  },
+  {
+   "rel": "vocab/dewa-arimasen.png",
+   "emoji": "📄",
+   "label": "không phải là… (trang trọng)"
+  },
+  {
+   "rel": "vocab/chigaimasu.png",
+   "emoji": "🙅",
+   "label": "không phải, bạn nhầm rồi"
+  },
+  {
+   "rel": "vocab/mada.png",
+   "emoji": "⏳",
+   "label": "vẫn chưa"
+  },
+  {
+   "rel": "vocab/demo.png",
+   "emoji": "🔄",
+   "label": "nhưng mà"
+  },
+  {
+   "rel": "vocab/no.png",
+   "emoji": "🔗",
+   "label": "của (nối 2 danh từ)"
+  },
+  {
+   "rel": "vocab/tomodachi.png",
+   "emoji": "👫",
+   "label": "bạn bè"
+  },
+  {
+   "rel": "vocab/ichi.png",
+   "emoji": "1️⃣",
+   "label": "số 1"
+  },
+  {
+   "rel": "vocab/gojuu.png",
+   "emoji": "🔢",
+   "label": "số 50"
+  },
+  {
+   "rel": "vocab/mittsu.png",
+   "emoji": "🤟",
+   "label": "ba cái"
+  },
+  {
+   "rel": "vocab/ippon.png",
+   "emoji": "🖊️",
+   "label": "một cây/chai"
+  },
+  {
+   "rel": "vocab/ni.png",
+   "emoji": "2️⃣",
+   "label": "số 2"
+  },
+  {
+   "rel": "vocab/san-2.png",
+   "emoji": "3️⃣",
+   "label": "số 3"
+  },
+  {
+   "rel": "vocab/yon.png",
+   "emoji": "4️⃣",
+   "label": "số 4"
+  },
+  {
+   "rel": "vocab/sanjuu.png",
+   "emoji": "🔢",
+   "label": "số 30"
+  },
+  {
+   "rel": "vocab/hachi.png",
+   "emoji": "8️⃣",
+   "label": "số 8"
+  },
+  {
+   "rel": "vocab/go.png",
+   "emoji": "5️⃣",
+   "label": "số 5"
+  },
+  {
+   "rel": "vocab/roku.png",
+   "emoji": "6️⃣",
+   "label": "số 6"
+  },
+  {
+   "rel": "vocab/nana.png",
+   "emoji": "7️⃣",
+   "label": "số 7"
+  },
+  {
+   "rel": "vocab/sanzen.png",
+   "emoji": "🔢",
+   "label": "3.000"
+  },
+  {
+   "rel": "vocab/en.png",
+   "emoji": "💴",
+   "label": "yên (tiền Nhật)"
+  },
+  {
+   "rel": "vocab/kyuu.png",
+   "emoji": "9️⃣",
+   "label": "số 9"
+  },
+  {
+   "rel": "vocab/juu.png",
+   "emoji": "🔟",
+   "label": "số 10"
+  },
+  {
+   "rel": "vocab/futari.png",
+   "emoji": "👬",
+   "label": "hai người"
+  },
+  {
+   "rel": "vocab/hyaku.png",
+   "emoji": "💯",
+   "label": "số 100"
+  },
+  {
+   "rel": "vocab/juuichi.png",
+   "emoji": "🔢",
+   "label": "số 11"
+  },
+  {
+   "rel": "vocab/kudasai.png",
+   "emoji": "🛒",
+   "label": "cho tôi xin…"
+  },
+  {
+   "rel": "vocab/ichimai.png",
+   "emoji": "📄",
+   "label": "một tờ/tấm"
+  },
+  {
+   "rel": "vocab/juugo.png",
+   "emoji": "🔢",
+   "label": "số 15"
+  },
+  {
+   "rel": "vocab/nijuu.png",
+   "emoji": "🔢",
+   "label": "số 20"
+  },
+  {
+   "rel": "vocab/hitotsu.png",
+   "emoji": "☝️",
+   "label": "một cái"
+  },
+  {
+   "rel": "vocab/takai.png",
+   "emoji": "📈",
+   "label": "đắt"
+  },
+  {
+   "rel": "vocab/kyuujuu.png",
+   "emoji": "🔢",
+   "label": "số 90"
+  },
+  {
+   "rel": "vocab/ichiman.png",
+   "emoji": "💰",
+   "label": "10.000 (một vạn)"
+  },
+  {
+   "rel": "vocab/nihyaku.png",
+   "emoji": "🔢",
+   "label": "200"
+  },
+  {
+   "rel": "vocab/futatsu.png",
+   "emoji": "✌️",
+   "label": "hai cái"
+  },
+  {
+   "rel": "vocab/gohyaku.png",
+   "emoji": "🔢",
+   "label": "500"
+  },
+  {
+   "rel": "vocab/sen.png",
+   "emoji": "🔢",
+   "label": "1.000"
+  },
+  {
+   "rel": "vocab/sai.png",
+   "emoji": "🎂",
+   "label": "…tuổi"
+  },
+  {
+   "rel": "vocab/hatachi.png",
+   "emoji": "🎊",
+   "label": "20 tuổi"
+  },
+  {
+   "rel": "vocab/nansai.png",
+   "emoji": "❓",
+   "label": "bao nhiêu tuổi"
+  },
+  {
+   "rel": "vocab/denwa-bangou.png",
+   "emoji": "📱",
+   "label": "số điện thoại"
+  },
+  {
+   "rel": "vocab/nanban.png",
+   "emoji": "🔢",
+   "label": "số mấy"
+  },
+  {
+   "rel": "vocab/ikura.png",
+   "emoji": "💴",
+   "label": "bao nhiêu tiền"
+  },
+  {
+   "rel": "vocab/yasui.png",
+   "emoji": "📉",
+   "label": "rẻ"
+  },
+  {
+   "rel": "vocab/hitori.png",
+   "emoji": "🧍",
+   "label": "một người"
+  },
+  {
+   "rel": "vocab/mise.png",
+   "emoji": "🏪",
+   "label": "cửa hàng"
+  },
+  {
+   "rel": "vocab/kore.png",
+   "emoji": "👇",
+   "label": "cái này"
+  },
+  {
+   "rel": "vocab/sore.png",
+   "emoji": "👉",
+   "label": "cái đó"
+  },
+  {
+   "rel": "vocab/are.png",
+   "emoji": "👆",
+   "label": "cái kia"
+  },
+  {
+   "rel": "vocab/dore.png",
+   "emoji": "❔",
+   "label": "cái nào"
+  },
+  {
+   "rel": "vocab/nan-desu-ka.png",
+   "emoji": "❓",
+   "label": "là cái gì vậy?"
+  },
+  {
+   "rel": "vocab/hon.png",
+   "emoji": "📖",
+   "label": "quyển sách"
+  },
+  {
+   "rel": "vocab/nooto.png",
+   "emoji": "📓",
+   "label": "quyển vở"
+  },
+  {
+   "rel": "vocab/megane.png",
+   "emoji": "👓",
+   "label": "cái kính"
+  },
+  {
+   "rel": "vocab/kagi.png",
+   "emoji": "🔑",
+   "label": "chìa khóa"
+  },
+  {
+   "rel": "vocab/enpitsu.png",
+   "emoji": "✏️",
+   "label": "bút chì"
+  },
+  {
+   "rel": "vocab/pen.png",
+   "emoji": "🖊️",
+   "label": "cây bút"
+  },
+  {
+   "rel": "vocab/sumaho.png",
+   "emoji": "📱",
+   "label": "điện thoại thông minh"
+  },
+  {
+   "rel": "vocab/keshigomu.png",
+   "emoji": "🧽",
+   "label": "cục tẩy"
+  },
+  {
+   "rel": "vocab/kaban.png",
+   "emoji": "🎒",
+   "label": "cái cặp"
+  },
+  {
+   "rel": "vocab/jisho.png",
+   "emoji": "📕",
+   "label": "quyển từ điển"
+  },
+  {
+   "rel": "vocab/tokei.png",
+   "emoji": "⌚",
+   "label": "cái đồng hồ"
+  },
+  {
+   "rel": "vocab/tsukue.png",
+   "emoji": "🪑",
+   "label": "cái bàn học"
+  },
+  {
+   "rel": "vocab/watashi-no.png",
+   "emoji": "🙋",
+   "label": "của tôi"
+  },
+  {
+   "rel": "vocab/kasa.png",
+   "emoji": "☂️",
+   "label": "cái ô"
+  },
+  {
+   "rel": "vocab/saifu.png",
+   "emoji": "👛",
+   "label": "cái ví"
+  },
+  {
+   "rel": "vocab/kagu.png",
+   "emoji": "🛋️",
+   "label": "đồ nội thất"
+  },
+  {
+   "rel": "vocab/betonamugo.png",
+   "emoji": "💬",
+   "label": "tiếng Việt"
+  },
+  {
+   "rel": "vocab/kono.png",
+   "emoji": "👇",
+   "label": "…này"
+  },
+  {
+   "rel": "vocab/sono.png",
+   "emoji": "👉",
+   "label": "…đó"
+  },
+  {
+   "rel": "vocab/ano.png",
+   "emoji": "👆",
+   "label": "…kia"
+  },
+  {
+   "rel": "vocab/dono.png",
+   "emoji": "❔",
+   "label": "…nào"
+  },
+  {
+   "rel": "vocab/dare-no.png",
+   "emoji": "🤷",
+   "label": "của ai"
+  },
+  {
+   "rel": "vocab/kaisha-no.png",
+   "emoji": "🏢",
+   "label": "của công ty"
+  },
+  {
+   "rel": "vocab/wasuremono.png",
+   "emoji": "🧳",
+   "label": "đồ bỏ quên"
+  },
+  {
+   "rel": "vocab/otoshimono.png",
+   "emoji": "💧",
+   "label": "đồ đánh rơi"
+  },
+  {
+   "rel": "vocab/mitsukemashita.png",
+   "emoji": "🔎",
+   "label": "tôi tìm thấy rồi"
+  },
+  {
+   "rel": "vocab/koko.png",
+   "emoji": "📍",
+   "label": "chỗ này"
+  },
+  {
+   "rel": "vocab/soko.png",
+   "emoji": "📌",
+   "label": "chỗ đó"
+  },
+  {
+   "rel": "vocab/asoko.png",
+   "emoji": "🗺️",
+   "label": "chỗ kia"
+  },
+  {
+   "rel": "vocab/doko.png",
+   "emoji": "❔",
+   "label": "chỗ nào, ở đâu"
+  },
+  {
+   "rel": "vocab/toire.png",
+   "emoji": "🚻",
+   "label": "nhà vệ sinh"
+  },
+  {
+   "rel": "vocab/eki.png",
+   "emoji": "🚉",
+   "label": "nhà ga"
+  },
+  {
+   "rel": "vocab/resutoran.png",
+   "emoji": "🍽️",
+   "label": "nhà hàng"
+  },
+  {
+   "rel": "vocab/genkan.png",
+   "emoji": "🚪",
+   "label": "lối vào để cởi giày"
+  },
+  {
+   "rel": "vocab/massugu.png",
+   "emoji": "⬆️",
+   "label": "đi thẳng"
+  },
+  {
+   "rel": "vocab/byouin.png",
+   "emoji": "🏥",
+   "label": "bệnh viện"
+  },
+  {
+   "rel": "vocab/gakkou.png",
+   "emoji": "🏫",
+   "label": "trường học"
+  },
+  {
+   "rel": "vocab/ginkou.png",
+   "emoji": "🏦",
+   "label": "ngân hàng"
+  },
+  {
+   "rel": "vocab/ue.png",
+   "emoji": "⬆️",
+   "label": "phía trên"
+  },
+  {
+   "rel": "vocab/ushiro.png",
+   "emoji": "⏩",
+   "label": "phía sau"
+  },
+  {
+   "rel": "vocab/konbini.png",
+   "emoji": "🏪",
+   "label": "cửa hàng tiện lợi"
+  },
+  {
+   "rel": "vocab/yuubinkyoku.png",
+   "emoji": "📮",
+   "label": "bưu điện"
+  },
+  {
+   "rel": "vocab/migi-ni-magatte.png",
+   "emoji": "↩️",
+   "label": "rẽ phải"
+  },
+  {
+   "rel": "vocab/kouen.png",
+   "emoji": "🏞️",
+   "label": "công viên"
+  },
+  {
+   "rel": "vocab/heya.png",
+   "emoji": "🛏️",
+   "label": "căn phòng"
+  },
+  {
+   "rel": "vocab/ofuro.png",
+   "emoji": "🛁",
+   "label": "phòng tắm"
+  },
+  {
+   "rel": "vocab/chikaku.png",
+   "emoji": "📍",
+   "label": "gần đây"
+  },
+  {
+   "rel": "vocab/daidokoro.png",
+   "emoji": "🍳",
+   "label": "nhà bếp"
+  },
+  {
+   "rel": "vocab/mado.png",
+   "emoji": "🪟",
+   "label": "cửa sổ"
+  },
+  {
+   "rel": "vocab/niwa.png",
+   "emoji": "🌳",
+   "label": "khu vườn"
+  },
+  {
+   "rel": "vocab/mae.png",
+   "emoji": "⏪",
+   "label": "phía trước"
+  },
+  {
+   "rel": "vocab/hidari.png",
+   "emoji": "⬅️",
+   "label": "bên trái"
+  },
+  {
+   "rel": "vocab/arimasu.png",
+   "emoji": "📦",
+   "label": "có (đồ vật)"
+  },
+  {
+   "rel": "vocab/imasu.png",
+   "emoji": "🧍",
+   "label": "có (người, động vật)"
+  },
+  {
+   "rel": "vocab/ga.png",
+   "emoji": "🔗",
+   "label": "trợ từ chủ ngữ"
+  },
+  {
+   "rel": "vocab/ni-2.png",
+   "emoji": "📍",
+   "label": "ở (chỉ nơi tồn tại)"
+  },
+  {
+   "rel": "vocab/migi.png",
+   "emoji": "➡️",
+   "label": "bên phải"
+  },
+  {
+   "rel": "vocab/shita.png",
+   "emoji": "⬇️",
+   "label": "phía dưới"
+  },
+  {
+   "rel": "vocab/naka.png",
+   "emoji": "📥",
+   "label": "bên trong"
+  },
+  {
+   "rel": "vocab/michi.png",
+   "emoji": "🛣️",
+   "label": "con đường"
+  },
+  {
+   "rel": "vocab/tonari.png",
+   "emoji": "↔️",
+   "label": "bên cạnh"
+  },
+  {
+   "rel": "vocab/ichiji.png",
+   "emoji": "🕐",
+   "label": "1 giờ"
+  },
+  {
+   "rel": "vocab/doyoubi.png",
+   "emoji": "🏔️",
+   "label": "thứ Bảy"
+  },
+  {
+   "rel": "vocab/sanji.png",
+   "emoji": "🕒",
+   "label": "3 giờ"
+  },
+  {
+   "rel": "vocab/hiru.png",
+   "emoji": "☀️",
+   "label": "buổi trưa"
+  },
+  {
+   "rel": "vocab/yoji.png",
+   "emoji": "🕓",
+   "label": "4 giờ (bất quy tắc)"
+  },
+  {
+   "rel": "vocab/shichiji.png",
+   "emoji": "🕖",
+   "label": "7 giờ (bất quy tắc)"
+  },
+  {
+   "rel": "vocab/kayoubi.png",
+   "emoji": "🔥",
+   "label": "thứ Ba"
+  },
+  {
+   "rel": "vocab/shigatsu.png",
+   "emoji": "🌸",
+   "label": "tháng 4 (bất quy tắc)"
+  },
+  {
+   "rel": "vocab/futsuka.png",
+   "emoji": "2️⃣",
+   "label": "ngày mùng 2"
+  },
+  {
+   "rel": "vocab/kuji.png",
+   "emoji": "🕘",
+   "label": "9 giờ (bất quy tắc)"
+  },
+  {
+   "rel": "vocab/juuniji.png",
+   "emoji": "🕛",
+   "label": "12 giờ"
+  },
+  {
+   "rel": "vocab/nanji.png",
+   "emoji": "❓",
+   "label": "mấy giờ"
+  },
+  {
+   "rel": "vocab/gofun.png",
+   "emoji": "⏱️",
+   "label": "5 phút"
+  },
+  {
+   "rel": "vocab/ashita.png",
+   "emoji": "➡️",
+   "label": "ngày mai"
+  },
+  {
+   "rel": "vocab/shigoto.png",
+   "emoji": "💼",
+   "label": "công việc"
+  },
+  {
+   "rel": "vocab/juppun.png",
+   "emoji": "⏱️",
+   "label": "10 phút"
+  },
+  {
+   "rel": "vocab/sanjuppun.png",
+   "emoji": "⏱️",
+   "label": "30 phút"
+  },
+  {
+   "rel": "vocab/han.png",
+   "emoji": "🕧",
+   "label": "rưỡi"
+  },
+  {
+   "rel": "vocab/nanpun.png",
+   "emoji": "❓",
+   "label": "bao nhiêu phút"
+  },
+  {
+   "rel": "vocab/ima.png",
+   "emoji": "⏰",
+   "label": "bây giờ"
+  },
+  {
+   "rel": "vocab/asa.png",
+   "emoji": "🌅",
+   "label": "buổi sáng"
+  },
+  {
+   "rel": "vocab/kinou.png",
+   "emoji": "⬅️",
+   "label": "hôm qua"
+  },
+  {
+   "rel": "vocab/mainichi.png",
+   "emoji": "🔁",
+   "label": "hằng ngày"
+  },
+  {
+   "rel": "vocab/yoru.png",
+   "emoji": "🌃",
+   "label": "buổi tối"
+  },
+  {
+   "rel": "vocab/kyou.png",
+   "emoji": "📅",
+   "label": "hôm nay"
+  },
+  {
+   "rel": "vocab/ichigatsu.png",
+   "emoji": "🎍",
+   "label": "tháng 1"
+  },
+  {
+   "rel": "vocab/shichigatsu.png",
+   "emoji": "🎋",
+   "label": "tháng 7 (bất quy tắc)"
+  },
+  {
+   "rel": "vocab/getsuyoubi.png",
+   "emoji": "🌙",
+   "label": "thứ Hai"
+  },
+  {
+   "rel": "vocab/nichiyoubi.png",
+   "emoji": "☀️",
+   "label": "Chủ nhật"
+  },
+  {
+   "rel": "vocab/hatsuka.png",
+   "emoji": "🔢",
+   "label": "ngày 20"
+  },
+  {
+   "rel": "vocab/suiyoubi.png",
+   "emoji": "💧",
+   "label": "thứ Tư"
+  },
+  {
+   "rel": "vocab/mokuyoubi.png",
+   "emoji": "🌳",
+   "label": "thứ Năm"
+  },
+  {
+   "rel": "vocab/kinyoubi.png",
+   "emoji": "💰",
+   "label": "thứ Sáu"
+  },
+  {
+   "rel": "vocab/nanyoubi.png",
+   "emoji": "❓",
+   "label": "thứ mấy"
+  },
+  {
+   "rel": "vocab/kugatsu.png",
+   "emoji": "🍁",
+   "label": "tháng 9 (bất quy tắc)"
+  },
+  {
+   "rel": "vocab/tsuitachi.png",
+   "emoji": "1️⃣",
+   "label": "ngày mùng 1"
+  },
+  {
+   "rel": "vocab/yasumi.png",
+   "emoji": "🏖️",
+   "label": "ngày nghỉ"
+  },
+  {
+   "rel": "vocab/tanjoubi.png",
+   "emoji": "🎂",
+   "label": "sinh nhật"
+  },
+  {
+   "rel": "vocab/kara.png",
+   "emoji": "🅰️",
+   "label": "từ…"
+  },
+  {
+   "rel": "vocab/made.png",
+   "emoji": "🅱️",
+   "label": "đến…"
+  },
+  {
+   "rel": "vocab/okimasu.png",
+   "emoji": "⏰",
+   "label": "thức dậy"
+  },
+  {
+   "rel": "vocab/densha.png",
+   "emoji": "🚃",
+   "label": "tàu điện"
+  },
+  {
+   "rel": "vocab/bangohan.png",
+   "emoji": "🍲",
+   "label": "bữa tối"
+  },
+  {
+   "rel": "vocab/tabemasu.png",
+   "emoji": "🍚",
+   "label": "ăn"
+  },
+  {
+   "rel": "vocab/nemasu.png",
+   "emoji": "😴",
+   "label": "đi ngủ"
+  },
+  {
+   "rel": "vocab/nomimasu.png",
+   "emoji": "🥤",
+   "label": "uống"
+  },
+  {
+   "rel": "vocab/mimasu.png",
+   "emoji": "👀",
+   "label": "xem, nhìn"
+  },
+  {
+   "rel": "vocab/ikimasu.png",
+   "emoji": "🚶",
+   "label": "đi"
+  },
+  {
+   "rel": "vocab/mizu.png",
+   "emoji": "💧",
+   "label": "nước"
+  },
+  {
+   "rel": "vocab/kikimasu.png",
+   "emoji": "🎧",
+   "label": "nghe"
+  },
+  {
+   "rel": "vocab/uchi.png",
+   "emoji": "🏠",
+   "label": "nhà (của mình)"
+  },
+  {
+   "rel": "vocab/kimasu.png",
+   "emoji": "🏃",
+   "label": "đến"
+  },
+  {
+   "rel": "vocab/kaerimasu.png",
+   "emoji": "🏠",
+   "label": "về nhà"
+  },
+  {
+   "rel": "vocab/e.png",
+   "emoji": "➡️",
+   "label": "đến (chỉ hướng)"
+  },
+  {
+   "rel": "vocab/wo.png",
+   "emoji": "🎯",
+   "label": "trợ từ tân ngữ"
+  },
+  {
+   "rel": "vocab/gohan.png",
+   "emoji": "🍚",
+   "label": "cơm, bữa ăn"
+  },
+  {
+   "rel": "vocab/terebi.png",
+   "emoji": "📺",
+   "label": "ti vi"
+  },
+  {
+   "rel": "vocab/toshokan.png",
+   "emoji": "📚",
+   "label": "thư viện"
+  },
+  {
+   "rel": "vocab/kaimasu.png",
+   "emoji": "🛒",
+   "label": "mua"
+  },
+  {
+   "rel": "vocab/ongaku.png",
+   "emoji": "🎵",
+   "label": "âm nhạc"
+  },
+  {
+   "rel": "vocab/de.png",
+   "emoji": "📍",
+   "label": "tại (nơi làm gì đó)"
+  },
+  {
+   "rel": "vocab/benkyou-shimasu.png",
+   "emoji": "📚",
+   "label": "học bài"
+  },
+  {
+   "rel": "vocab/hatarakimasu.png",
+   "emoji": "💼",
+   "label": "làm việc"
+  },
+  {
+   "rel": "vocab/yomimasu.png",
+   "emoji": "📖",
+   "label": "đọc"
+  },
+  {
+   "rel": "vocab/masen.png",
+   "emoji": "🚫",
+   "label": "không… (phủ định)"
+  },
+  {
+   "rel": "vocab/mashita.png",
+   "emoji": "⏮️",
+   "label": "đã… (quá khứ)"
+  },
+  {
+   "rel": "vocab/masen-deshita.png",
+   "emoji": "❎",
+   "label": "đã không…"
+  },
+  {
+   "rel": "vocab/ni-3.png",
+   "emoji": "🕐",
+   "label": "vào lúc (thời điểm)"
+  },
+  {
+   "rel": "vocab/asagohan.png",
+   "emoji": "🍳",
+   "label": "bữa sáng"
+  },
+  {
+   "rel": "vocab/hirugohan.png",
+   "emoji": "🍱",
+   "label": "bữa trưa"
+  },
+  {
+   "rel": "vocab/sorekara.png",
+   "emoji": "➡️",
+   "label": "sau đó"
+  },
+  {
+   "rel": "vocab/maiasa.png",
+   "emoji": "🌅",
+   "label": "mỗi buổi sáng"
+  },
+  {
+   "rel": "vocab/kudamono.png",
+   "emoji": "🍎",
+   "label": "trái cây"
+  },
+  {
+   "rel": "vocab/shoushou-omachi-kudasai.png",
+   "emoji": "⏳",
+   "label": "xin đợi một lát"
+  },
+  {
+   "rel": "vocab/udon.png",
+   "emoji": "🍲",
+   "label": "mì udon"
+  },
+  {
+   "rel": "vocab/pan.png",
+   "emoji": "🍞",
+   "label": "bánh mì"
+  },
+  {
+   "rel": "vocab/niku.png",
+   "emoji": "🍖",
+   "label": "thịt"
+  },
+  {
+   "rel": "vocab/sakana.png",
+   "emoji": "🐟",
+   "label": "cá"
+  },
+  {
+   "rel": "vocab/shoppai.png",
+   "emoji": "🧂",
+   "label": "mặn"
+  },
+  {
+   "rel": "vocab/atsui.png",
+   "emoji": "♨️",
+   "label": "nóng"
+  },
+  {
+   "rel": "vocab/tamago.png",
+   "emoji": "🥚",
+   "label": "trứng"
+  },
+  {
+   "rel": "vocab/yasai.png",
+   "emoji": "🥬",
+   "label": "rau củ"
+  },
+  {
+   "rel": "vocab/menyuu.png",
+   "emoji": "📋",
+   "label": "thực đơn"
+  },
+  {
+   "rel": "vocab/karee.png",
+   "emoji": "🍛",
+   "label": "cà ri"
+  },
+  {
+   "rel": "vocab/gyuunyuu.png",
+   "emoji": "🥛",
+   "label": "sữa bò"
+  },
+  {
+   "rel": "vocab/ocha.png",
+   "emoji": "🍵",
+   "label": "trà"
+  },
+  {
+   "rel": "vocab/koohii.png",
+   "emoji": "☕",
+   "label": "cà phê"
+  },
+  {
+   "rel": "vocab/chuumon.png",
+   "emoji": "✍️",
+   "label": "gọi món, đặt hàng"
+  },
+  {
+   "rel": "vocab/raamen.png",
+   "emoji": "🍜",
+   "label": "mì ramen"
+  },
+  {
+   "rel": "vocab/juusu.png",
+   "emoji": "🧃",
+   "label": "nước ép"
+  },
+  {
+   "rel": "vocab/biiru.png",
+   "emoji": "🍺",
+   "label": "bia"
+  },
+  {
+   "rel": "vocab/osake.png",
+   "emoji": "🍶",
+   "label": "rượu"
+  },
+  {
+   "rel": "vocab/sushi.png",
+   "emoji": "🍣",
+   "label": "sushi"
+  },
+  {
+   "rel": "vocab/tenpura.png",
+   "emoji": "🍤",
+   "label": "món tempura chiên"
+  },
+  {
+   "rel": "vocab/oishii.png",
+   "emoji": "😋",
+   "label": "ngon"
+  },
+  {
+   "rel": "vocab/mise-no-hito.png",
+   "emoji": "🧑‍💼",
+   "label": "nhân viên cửa hàng"
+  },
+  {
+   "rel": "vocab/onigiri.png",
+   "emoji": "🍙",
+   "label": "cơm nắm"
+  },
+  {
+   "rel": "vocab/bentou.png",
+   "emoji": "🍱",
+   "label": "cơm hộp"
+  },
+  {
+   "rel": "vocab/genkin.png",
+   "emoji": "💴",
+   "label": "tiền mặt"
+  },
+  {
+   "rel": "vocab/onegaishimasu.png",
+   "emoji": "🙏",
+   "label": "làm ơn cho tôi…"
+  },
+  {
+   "rel": "vocab/okaikei.png",
+   "emoji": "🧾",
+   "label": "tính tiền"
+  },
+  {
+   "rel": "vocab/amai.png",
+   "emoji": "🍬",
+   "label": "ngọt"
+  },
+  {
+   "rel": "vocab/tsumetai.png",
+   "emoji": "🧊",
+   "label": "lạnh (đồ uống)"
+  },
+  {
+   "rel": "vocab/mazui.png",
+   "emoji": "😖",
+   "label": "dở, không ngon"
+  },
+  {
+   "rel": "vocab/karai.png",
+   "emoji": "🌶️",
+   "label": "cay"
+  },
+  {
+   "rel": "vocab/kaado.png",
+   "emoji": "💳",
+   "label": "thẻ thanh toán"
+  },
+  {
+   "rel": "vocab/irasshaimase.png",
+   "emoji": "🙇",
+   "label": "kính chào quý khách"
+  },
+  {
+   "rel": "vocab/nanmeisama.png",
+   "emoji": "👥",
+   "label": "quý khách mấy người"
+  },
+  {
+   "rel": "vocab/kazoku.png",
+   "emoji": "👨‍👩‍👧‍👦",
+   "label": "gia đình"
+  },
+  {
+   "rel": "vocab/okaasan.png",
+   "emoji": "👩",
+   "label": "mẹ (của bạn)"
+  },
+  {
+   "rel": "vocab/gonin.png",
+   "emoji": "👨‍👩‍👧‍👧",
+   "label": "năm người"
+  },
+  {
+   "rel": "vocab/chichi.png",
+   "emoji": "👨",
+   "label": "bố tôi"
+  },
+  {
+   "rel": "vocab/haha.png",
+   "emoji": "👩",
+   "label": "mẹ tôi"
+  },
+  {
+   "rel": "vocab/ani.png",
+   "emoji": "👦",
+   "label": "anh trai tôi"
+  },
+  {
+   "rel": "vocab/otoko-no-hito.png",
+   "emoji": "👨",
+   "label": "người đàn ông"
+  },
+  {
+   "rel": "vocab/oneesan.png",
+   "emoji": "👧",
+   "label": "chị gái (của bạn)"
+  },
+  {
+   "rel": "vocab/ane.png",
+   "emoji": "👧",
+   "label": "chị gái tôi"
+  },
+  {
+   "rel": "vocab/otouto.png",
+   "emoji": "🧒",
+   "label": "em trai tôi"
+  },
+  {
+   "rel": "vocab/imouto.png",
+   "emoji": "👶",
+   "label": "em gái tôi"
+  },
+  {
+   "rel": "vocab/onna-no-hito.png",
+   "emoji": "👩",
+   "label": "người phụ nữ"
+  },
+  {
+   "rel": "vocab/hito.png",
+   "emoji": "🧍",
+   "label": "người"
+  },
+  {
+   "rel": "vocab/yonin.png",
+   "emoji": "👨‍👩‍👧‍👦",
+   "label": "bốn người"
+  },
+  {
+   "rel": "vocab/otousan.png",
+   "emoji": "👨",
+   "label": "bố (của bạn)"
+  },
+  {
+   "rel": "vocab/oniisan.png",
+   "emoji": "👦",
+   "label": "anh trai (của bạn)"
+  },
+  {
+   "rel": "vocab/douryou.png",
+   "emoji": "🤝",
+   "label": "đồng nghiệp"
+  },
+  {
+   "rel": "vocab/gokazoku.png",
+   "emoji": "👨‍👩‍👧",
+   "label": "gia đình (của bạn)"
+  },
+  {
+   "rel": "vocab/kodomo.png",
+   "emoji": "🧒",
+   "label": "trẻ con"
+  },
+  {
+   "rel": "vocab/nannin.png",
+   "emoji": "❓",
+   "label": "mấy người"
+  },
+  {
+   "rel": "vocab/sannin.png",
+   "emoji": "👨‍👩‍👦",
+   "label": "ba người"
+  },
+  {
+   "rel": "vocab/zenbu-de.png",
+   "emoji": "➕",
+   "label": "tổng cộng"
+  },
+  {
+   "rel": "vocab/soshite.png",
+   "emoji": "🔗",
+   "label": "và, ngoài ra"
+  },
+  {
+   "rel": "vocab/issho-ni.png",
+   "emoji": "👥",
+   "label": "cùng nhau"
+  },
+  {
+   "rel": "vocab/ookii.png",
+   "emoji": "🐘",
+   "label": "to, lớn"
+  },
+  {
+   "rel": "vocab/yuumei.png",
+   "emoji": "⭐",
+   "label": "nổi tiếng"
+  },
+  {
+   "rel": "vocab/kiiroi.png",
+   "emoji": "🟡",
+   "label": "màu vàng"
+  },
+  {
+   "rel": "vocab/ii.png",
+   "emoji": "👍",
+   "label": "tốt"
+  },
+  {
+   "rel": "vocab/chiisai.png",
+   "emoji": "🐜",
+   "label": "nhỏ, bé"
+  },
+  {
+   "rel": "vocab/takai-2.png",
+   "emoji": "🏔️",
+   "label": "cao, đắt"
+  },
+  {
+   "rel": "vocab/yasui-2.png",
+   "emoji": "🏷️",
+   "label": "rẻ"
+  },
+  {
+   "rel": "vocab/nigiyaka.png",
+   "emoji": "🎊",
+   "label": "nhộn nhịp"
+  },
+  {
+   "rel": "vocab/genki.png",
+   "emoji": "💪",
+   "label": "khỏe mạnh"
+  },
+  {
+   "rel": "vocab/chairo.png",
+   "emoji": "🟤",
+   "label": "màu nâu"
+  },
+  {
+   "rel": "vocab/atarashii.png",
+   "emoji": "✨",
+   "label": "mới"
+  },
+  {
+   "rel": "vocab/furui.png",
+   "emoji": "🏚️",
+   "label": "cũ"
+  },
+  {
+   "rel": "vocab/aoi.png",
+   "emoji": "🔵",
+   "label": "màu xanh dương"
+  },
+  {
+   "rel": "vocab/muzukashii.png",
+   "emoji": "😣",
+   "label": "khó"
+  },
+  {
+   "rel": "vocab/kirei.png",
+   "emoji": "🌸",
+   "label": "đẹp, sạch sẽ"
+  },
+  {
+   "rel": "vocab/kuroi.png",
+   "emoji": "⚫",
+   "label": "màu đen"
+  },
+  {
+   "rel": "vocab/kumori.png",
+   "emoji": "☁️",
+   "label": "trời nhiều mây"
+  },
+  {
+   "rel": "vocab/shizuka.png",
+   "emoji": "🤫",
+   "label": "yên tĩnh"
+  },
+  {
+   "rel": "vocab/natsu.png",
+   "emoji": "🏖️",
+   "label": "mùa hè"
+  },
+  {
+   "rel": "vocab/benri.png",
+   "emoji": "🔧",
+   "label": "tiện lợi"
+  },
+  {
+   "rel": "vocab/suki.png",
+   "emoji": "❤️",
+   "label": "thích"
+  },
+  {
+   "rel": "vocab/akai.png",
+   "emoji": "🔴",
+   "label": "màu đỏ"
+  },
+  {
+   "rel": "vocab/shiroi.png",
+   "emoji": "⚪",
+   "label": "màu trắng"
+  },
+  {
+   "rel": "vocab/midori.png",
+   "emoji": "🟢",
+   "label": "màu xanh lá"
+  },
+  {
+   "rel": "vocab/hare.png",
+   "emoji": "☀️",
+   "label": "trời nắng"
+  },
+  {
+   "rel": "vocab/ame.png",
+   "emoji": "🌧️",
+   "label": "mưa"
+  },
+  {
+   "rel": "vocab/yuki.png",
+   "emoji": "❄️",
+   "label": "tuyết"
+  },
+  {
+   "rel": "vocab/samui.png",
+   "emoji": "🥶",
+   "label": "lạnh (thời tiết)"
+  },
+  {
+   "rel": "vocab/haru.png",
+   "emoji": "🌸",
+   "label": "mùa xuân"
+  },
+  {
+   "rel": "vocab/fuyu.png",
+   "emoji": "⛄",
+   "label": "mùa đông"
+  },
+  {
+   "rel": "vocab/aki.png",
+   "emoji": "🍁",
+   "label": "mùa thu"
+  },
+  {
+   "rel": "vocab/kunai-desu.png",
+   "emoji": "🚫",
+   "label": "không… (tính từ い)"
+  },
+  {
+   "rel": "vocab/amari.png",
+   "emoji": "➖",
+   "label": "không… lắm"
+  },
+  {
+   "rel": "vocab/totemo.png",
+   "emoji": "‼️",
+   "label": "rất"
+  },
+  {
+   "rel": "vocab/chotto.png",
+   "emoji": "🤏",
+   "label": "một chút"
+  },
+  {
+   "rel": "vocab/kute.png",
+   "emoji": "🔗",
+   "label": "…và… (nối tính từ い)"
+  },
+  {
+   "rel": "vocab/de-2.png",
+   "emoji": "🔗",
+   "label": "…và… (nối tính từ な)"
+  },
+  {
+   "rel": "vocab/soshite-2.png",
+   "emoji": "➕",
+   "label": "và, hơn nữa"
+  },
+  {
+   "rel": "vocab/suupaa.png",
+   "emoji": "🛒",
+   "label": "siêu thị"
+  },
+  {
+   "rel": "vocab/kutsu.png",
+   "emoji": "👟",
+   "label": "giày"
+  },
+  {
+   "rel": "vocab/fuku.png",
+   "emoji": "👕",
+   "label": "quần áo"
+  },
+  {
+   "rel": "vocab/kooto.png",
+   "emoji": "🧥",
+   "label": "áo khoác"
+  },
+  {
+   "rel": "vocab/depaato.png",
+   "emoji": "🏬",
+   "label": "trung tâm thương mại"
+  },
+  {
+   "rel": "vocab/honya.png",
+   "emoji": "📚",
+   "label": "hiệu sách"
+  },
+  {
+   "rel": "vocab/yaoya.png",
+   "emoji": "🥬",
+   "label": "hàng rau quả"
+  },
+  {
+   "rel": "vocab/reji.png",
+   "emoji": "🧾",
+   "label": "quầy tính tiền"
+  },
+  {
+   "rel": "vocab/nikuya.png",
+   "emoji": "🥩",
+   "label": "hàng thịt"
+  },
+  {
+   "rel": "vocab/panya.png",
+   "emoji": "🥖",
+   "label": "tiệm bánh mì"
+  },
+  {
+   "rel": "vocab/kusuriya.png",
+   "emoji": "💊",
+   "label": "hiệu thuốc"
+  },
+  {
+   "rel": "vocab/choudo-ii.png",
+   "emoji": "👌",
+   "label": "vừa vặn, vừa đủ"
+  },
+  {
+   "rel": "vocab/boushi.png",
+   "emoji": "🧢",
+   "label": "mũ, nón"
+  },
+  {
+   "rel": "vocab/zubon.png",
+   "emoji": "👖",
+   "label": "quần dài"
+  },
+  {
+   "rel": "vocab/shatsu.png",
+   "emoji": "👔",
+   "label": "áo sơ mi"
+  },
+  {
+   "rel": "vocab/sukaato.png",
+   "emoji": "👗",
+   "label": "váy"
+  },
+  {
+   "rel": "vocab/seeru.png",
+   "emoji": "🔖",
+   "label": "đợt giảm giá"
+  },
+  {
+   "rel": "vocab/iro.png",
+   "emoji": "🎨",
+   "label": "màu sắc"
+  },
+  {
+   "rel": "vocab/muryou.png",
+   "emoji": "🆓",
+   "label": "miễn phí"
+  },
+  {
+   "rel": "vocab/kore-ni-shimasu.png",
+   "emoji": "✅",
+   "label": "tôi lấy cái này"
+  },
+  {
+   "rel": "vocab/otsuri.png",
+   "emoji": "🪙",
+   "label": "tiền thừa, tiền thối"
+  },
+  {
+   "rel": "vocab/nedan.png",
+   "emoji": "🏷️",
+   "label": "giá cả"
+  },
+  {
+   "rel": "vocab/saizu.png",
+   "emoji": "📏",
+   "label": "cỡ, kích thước"
+  },
+  {
+   "rel": "vocab/kekkou-desu.png",
+   "emoji": "🙅",
+   "label": "thôi, không cần ạ"
+  },
+  {
+   "rel": "vocab/misete-kudasai.png",
+   "emoji": "👀",
+   "label": "cho tôi xem với"
+  },
+  {
+   "rel": "vocab/hangaku.png",
+   "emoji": "💸",
+   "label": "nửa giá"
+  },
+  {
+   "rel": "vocab/pointo-kaado.png",
+   "emoji": "💳",
+   "label": "thẻ tích điểm"
+  },
+  {
+   "rel": "vocab/basu.png",
+   "emoji": "🚌",
+   "label": "xe buýt"
+  },
+  {
+   "rel": "vocab/shingou.png",
+   "emoji": "🚦",
+   "label": "đèn giao thông"
+  },
+  {
+   "rel": "vocab/kippu.png",
+   "emoji": "🎫",
+   "label": "vé"
+  },
+  {
+   "rel": "vocab/hashi.png",
+   "emoji": "🌉",
+   "label": "cây cầu"
+  },
+  {
+   "rel": "vocab/takushii.png",
+   "emoji": "🚕",
+   "label": "taxi"
+  },
+  {
+   "rel": "vocab/jitensha.png",
+   "emoji": "🚲",
+   "label": "xe đạp"
+  },
+  {
+   "rel": "vocab/kuruma.png",
+   "emoji": "🚗",
+   "label": "ô tô"
+  },
+  {
+   "rel": "vocab/aruite.png",
+   "emoji": "🚶",
+   "label": "đi bộ"
+  },
+  {
+   "rel": "vocab/osoi.png",
+   "emoji": "🐌",
+   "label": "chậm, muộn"
+  },
+  {
+   "rel": "vocab/hikouki.png",
+   "emoji": "✈️",
+   "label": "máy bay"
+  },
+  {
+   "rel": "vocab/chikatetsu.png",
+   "emoji": "🚇",
+   "label": "tàu điện ngầm"
+  },
+  {
+   "rel": "vocab/shinkansen.png",
+   "emoji": "🚄",
+   "label": "tàu siêu tốc"
+  },
+  {
+   "rel": "vocab/hayai.png",
+   "emoji": "💨",
+   "label": "nhanh, sớm"
+  },
+  {
+   "rel": "vocab/hoomu.png",
+   "emoji": "🚉",
+   "label": "sân ga"
+  },
+  {
+   "rel": "vocab/deguchi.png",
+   "emoji": "🚪",
+   "label": "lối ra"
+  },
+  {
+   "rel": "vocab/kakarimasu.png",
+   "emoji": "⏳",
+   "label": "mất (thời gian)"
+  },
+  {
+   "rel": "vocab/jikan.png",
+   "emoji": "⏰",
+   "label": "tiếng đồng hồ"
+  },
+  {
+   "rel": "vocab/ryokou.png",
+   "emoji": "🧳",
+   "label": "du lịch"
+  },
+  {
+   "rel": "vocab/dokusho.png",
+   "emoji": "📖",
+   "label": "đọc sách"
+  },
+  {
+   "rel": "vocab/ryouri.png",
+   "emoji": "🍳",
+   "label": "nấu ăn"
+  },
+  {
+   "rel": "vocab/shashin.png",
+   "emoji": "📷",
+   "label": "ảnh, chụp ảnh"
+  },
+  {
+   "rel": "vocab/suiei.png",
+   "emoji": "🏊",
+   "label": "bơi lội"
+  },
+  {
+   "rel": "vocab/geemu.png",
+   "emoji": "🎮",
+   "label": "trò chơi điện tử"
+  },
+  {
+   "rel": "vocab/kaimono.png",
+   "emoji": "🛍️",
+   "label": "mua sắm"
+  },
+  {
+   "rel": "vocab/supootsu.png",
+   "emoji": "🏅",
+   "label": "thể thao"
+  },
+  {
+   "rel": "vocab/jouzu.png",
+   "emoji": "👍",
+   "label": "giỏi, khéo"
+  },
+  {
+   "rel": "vocab/sakkaa.png",
+   "emoji": "⚽",
+   "label": "bóng đá"
+  },
+  {
+   "rel": "vocab/yakyuu.png",
+   "emoji": "⚾",
+   "label": "bóng chày"
+  },
+  {
+   "rel": "vocab/tenisu.png",
+   "emoji": "🎾",
+   "label": "quần vợt"
+  },
+  {
+   "rel": "vocab/jogingu.png",
+   "emoji": "🏃",
+   "label": "chạy bộ"
+  },
+  {
+   "rel": "vocab/eiga.png",
+   "emoji": "🎬",
+   "label": "phim"
+  },
+  {
+   "rel": "vocab/uta.png",
+   "emoji": "🎵",
+   "label": "bài hát"
+  },
+  {
+   "rel": "vocab/utaimasu.png",
+   "emoji": "🎤",
+   "label": "hát"
+  },
+  {
+   "rel": "vocab/shuumatsu.png",
+   "emoji": "🗓️",
+   "label": "cuối tuần"
+  },
+  {
+   "rel": "vocab/daisuki.png",
+   "emoji": "❤️",
+   "label": "rất thích"
+  },
+  {
+   "rel": "vocab/heta.png",
+   "emoji": "😅",
+   "label": "kém, vụng"
+  },
+  {
+   "rel": "vocab/kirai.png",
+   "emoji": "👎",
+   "label": "ghét, không thích"
+  },
+  {
+   "rel": "vocab/daikirai.png",
+   "emoji": "💢",
+   "label": "rất ghét"
+  },
+  {
+   "rel": "vocab/me.png",
+   "emoji": "👁️",
+   "label": "mắt"
+  },
+  {
+   "rel": "vocab/chuusha.png",
+   "emoji": "💉",
+   "label": "tiêm"
+  },
+  {
+   "rel": "vocab/tsukaremashita.png",
+   "emoji": "😫",
+   "label": "mệt rồi"
+  },
+  {
+   "rel": "vocab/hana.png",
+   "emoji": "👃",
+   "label": "mũi"
+  },
+  {
+   "rel": "vocab/kuchi.png",
+   "emoji": "👄",
+   "label": "miệng"
+  },
+  {
+   "rel": "vocab/mimi.png",
+   "emoji": "👂",
+   "label": "tai"
+  },
+  {
+   "rel": "vocab/nemui.png",
+   "emoji": "😴",
+   "label": "buồn ngủ"
+  },
+  {
+   "rel": "vocab/te.png",
+   "emoji": "✋",
+   "label": "tay"
+  },
+  {
+   "rel": "vocab/ashi.png",
+   "emoji": "🦵",
+   "label": "chân"
+  },
+  {
+   "rel": "vocab/itai.png",
+   "emoji": "😣",
+   "label": "đau"
+  },
+  {
+   "rel": "vocab/kaze.png",
+   "emoji": "🤧",
+   "label": "cảm, cảm lạnh"
+  },
+  {
+   "rel": "vocab/netsu.png",
+   "emoji": "🤒",
+   "label": "sốt"
+  },
+  {
+   "rel": "vocab/kusuri.png",
+   "emoji": "💊",
+   "label": "thuốc"
+  },
+  {
+   "rel": "vocab/kensa.png",
+   "emoji": "🩺",
+   "label": "xét nghiệm, kiểm tra"
+  },
+  {
+   "rel": "vocab/yasunde-kudasai.png",
+   "emoji": "🛌",
+   "label": "hãy nghỉ ngơi đi"
+  }
+ ]
+}
