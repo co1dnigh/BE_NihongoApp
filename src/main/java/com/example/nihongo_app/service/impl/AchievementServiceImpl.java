@@ -7,6 +7,7 @@ import com.example.nihongo_app.repository.AchievementRepository;
 import com.example.nihongo_app.repository.UserAchievementRepository;
 import com.example.nihongo_app.service.AchievementProgress;
 import com.example.nihongo_app.service.AchievementService;
+import com.example.nihongo_app.service.PostService;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,6 +39,7 @@ public class AchievementServiceImpl implements AchievementService {
 
     private final AchievementRepository achievementRepository;
     private final UserAchievementRepository userAchievementRepository;
+    private final PostService postService;
 
     @Override
     @Transactional
@@ -139,18 +141,29 @@ public class AchievementServiceImpl implements AchievementService {
         // Đủ điều kiện unlock.
         userAchievementRepository.findByUserIdAndAchievementId(userId, achievement.getId())
                 .map(ua -> {
-                    if (ua.getUnlockedAt() == null) {
+                    boolean wasLocked = ua.getUnlockedAt() == null;
+                    if (wasLocked) {
                         ua.setUnlockedAt(LocalDateTime.now());
                     }
                     ua.setProgress(Math.max(ua.getProgress(), value));
+                    // Chi dang bai "khoe thanh tich" dung 1 lan, ngay luc vua chuyen tu
+                    // chua-unlock sang unlock (khong dang lai moi khi progress duoc cham lai).
+                    if (wasLocked) {
+                        postService.createSystemAchievementPost(userId, achievement);
+                    }
                     return ua;
                 })
-                .orElseGet(() -> userAchievementRepository.save(UserAchievement.builder()
-                        .userId(userId)
-                        .achievement(achievement)
-                        .unlockedAt(LocalDateTime.now())
-                        .progress(value)
-                        .build()));
+                .orElseGet(() -> {
+                    UserAchievement saved = userAchievementRepository.save(UserAchievement.builder()
+                            .userId(userId)
+                            .achievement(achievement)
+                            .unlockedAt(LocalDateTime.now())
+                            .progress(value)
+                            .build());
+                    // Row moi tao voi unlockedAt != null luon la lan unlock dau tien.
+                    postService.createSystemAchievementPost(userId, achievement);
+                    return saved;
+                });
     }
 
     @Override
