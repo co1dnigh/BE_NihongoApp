@@ -17,11 +17,13 @@ import com.example.nihongo_app.entity.LessonQuestionOption;
 import com.example.nihongo_app.entity.QuestDefinition.QuestType;
 import com.example.nihongo_app.entity.Rank;
 import com.example.nihongo_app.entity.ShopItem;
+import com.example.nihongo_app.entity.Topic;
 import com.example.nihongo_app.entity.User;
 import com.example.nihongo_app.entity.UserExpLog;
 import com.example.nihongo_app.entity.LessonAttemptAnswer;
 import com.example.nihongo_app.entity.UserLessonProgress;
 import com.example.nihongo_app.entity.UserLessonProgress.ProgressStatus;
+import com.example.nihongo_app.entity.UserVocabularyProgress;
 import com.example.nihongo_app.exception.InsufficientEnergyException;
 import com.example.nihongo_app.exception.LessonLockedException;
 import com.example.nihongo_app.exception.ResourceNotFoundException;
@@ -31,9 +33,12 @@ import com.example.nihongo_app.repository.LessonQuestionOptionRepository;
 import com.example.nihongo_app.repository.LessonQuestionRepository;
 import com.example.nihongo_app.repository.LessonRepository;
 import com.example.nihongo_app.repository.RankRepository;
+import com.example.nihongo_app.repository.TopicRepository;
 import com.example.nihongo_app.repository.UserExpLogRepository;
 import com.example.nihongo_app.repository.UserLessonProgressRepository;
 import com.example.nihongo_app.repository.UserRepository;
+import com.example.nihongo_app.repository.UserVocabularyProgressRepository;
+import com.example.nihongo_app.repository.VocabularyRepository;
 import com.example.nihongo_app.service.AchievementProgress;
 import com.example.nihongo_app.service.AchievementService;
 import com.example.nihongo_app.service.DailyQuestService;
@@ -41,12 +46,18 @@ import com.example.nihongo_app.service.LessonAttemptService;
 import com.example.nihongo_app.service.LessonUnlockPolicy;
 import com.example.nihongo_app.service.MistakeService;
 import com.example.nihongo_app.service.ShopService;
+import com.example.nihongo_app.service.VocabularyService;
 import com.example.nihongo_app.service.StreakService;
 import com.example.nihongo_app.service.EnergyService;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import org.springframework.data.domain.PageRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -63,7 +74,7 @@ import tools.jackson.databind.JsonNode;
  *   <li>Một lệnh lỗi → rollback toàn bộ (không có user "được điểm mà không có log").</li>
  * </ul>
  *
- * <h3>Thuật toán sao (TIMED_REVIEW)</h3>
+ * <h3>Thuật toán sao (TOPIC_REVIEW)</h3>
  * Số sao dựa trên {@code configJson.starThresholds}: một mảng 2 ngưỡng (giây).
  * Nếu thời gian làm bài &le; ngưỡng[0] → 3 sao; &le; ngưỡng[1] → 2 sao; còn lại → 1 sao.
  * Nếu không có config → fallback về công thức đơn giản dựa trên tỉ lệ đúng.
@@ -88,12 +99,18 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
     private final ShopService shopService;
     private final LessonAttemptAnswerRepository lessonAttemptAnswerRepository;
     private final MistakeService mistakeService;
+    private final VocabularyService vocabularyService;
     private final AchievementService achievementService;
+    private final TopicRepository topicRepository;
+    private final VocabularyRepository vocabularyRepository;
+    private final UserVocabularyProgressRepository vocabularyProgressRepository;
 
     private static final int NORMAL_COIN_BASE = 8;
     private static final int NORMAL_COIN_PERFECT_BONUS = 4;
-    private static final int TIMED_REVIEW_COIN_BASE = 6;
-    private static final int TIMED_REVIEW_COIN_PERFECT_BONUS = 3;
+    private static final int TOPIC_REVIEW_COIN_BASE = 6;
+    private static final int TOPIC_REVIEW_COIN_PERFECT_BONUS = 3;
+    private static final int TIMED_REVIEW_COIN_BASE = 4;
+    private static final int TIMED_REVIEW_COIN_PERFECT_BONUS = 2;
     private static final int JUMP_TEST_COIN_REWARD = 20;
     private static final int STREAK_MILESTONE_7_BONUS = 50;
     private static final int STREAK_MILESTONE_30_BONUS = 200;
@@ -165,12 +182,24 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
         }
 
         // 5. Lay bo de thi -> shuffle -> cat lay N cau theo config (questionsPerSession).
-        List<LessonQuestion> allQuestions = questionRepository.findAllByLessonIdOrderByIdAsc(lessonId);
-        int sliceSize = resolveQuestionsPerSession(lesson);
-        List<LessonQuestion> shuffled = ShuffleUtil.shuffle(allQuestions);
-        List<LessonQuestion> picked = shuffled.size() <= sliceSize
-                ? shuffled
-                : shuffled.subList(0, sliceSize);
+        //
+        // TOPIC_REVIEW la ngoai le: thay vi doc bo cau hoi tinh gan voi chinh lesson nay,
+        // no duoc dung DONG tu nhung tu dang den han on (SM-2) cua user -- xem
+        // buildTopicReviewQuestionPool(). Day la noi noi thuat toan SM-2 (von truoc gio
+        // chi phuc vu man "Trung tam on tap" tu-vao) vao dung node "on tap" bat buoc tren map.
+        List<LessonQuestion> picked;
+        if (lesson.getLessonType() == LessonType.TOPIC_REVIEW) {
+            picked = buildTopicReviewQuestionPool(userId, lesson);
+        } else {
+            List<LessonQuestion> allQuestions = questionRepository.findAllByLessonIdOrderByIdAsc(lessonId);
+            int sliceSize = resolveQuestionsPerSession(lesson);
+            List<LessonQuestion> shuffled = ShuffleUtil.shuffle(allQuestions);
+            picked = shuffled.size() <= sliceSize ? shuffled : shuffled.subList(0, sliceSize);
+        }
+
+        // Tu nao nguoi hoc chua tung gap -> client gan nhan "TU VUNG MOI".
+        Map<Long, Boolean> newByQuestion = vocabularyService.resolveNewQuestions(
+                userId, picked.stream().map(LessonQuestion::getId).toList());
 
         List<StartLessonQuestion> questionResponses = new ArrayList<>(picked.size());
         for (LessonQuestion q : picked) {
@@ -195,6 +224,8 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
                     .audioUrl(q.getAudioUrl())
                     .imageUrl(q.getImageUrl())
                     .metadataJson(q.getMetadataJson())
+                    // Cau chua gan tu nao thi khong co can cu de khoe "tu moi" -> false.
+                    .isNew(newByQuestion.getOrDefault(q.getId(), Boolean.FALSE))
                     .options(optionResponses)
                     .build());
         }
@@ -271,6 +302,17 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
                 passed = true;
                 sourceType = UserExpLog.SourceType.NEW_LESSON;
             }
+            case TOPIC_REVIEW -> {
+                expGained = resolveTopicReviewExp(lesson);
+                coinsGained = TOPIC_REVIEW_COIN_BASE + (perfectLesson ? TOPIC_REVIEW_COIN_PERFECT_BONUS : 0);
+                starsEarned = resolveStars(lesson, req);
+                passed = true;
+                sourceType = UserExpLog.SourceType.REVIEW_LESSON;
+            }
+            // TIMED_REVIEW ("on tap tinh gio"): cau hoi la cua CHINH topic hien tai
+            // (doc tinh, khong dung buildTopicReviewQuestionPool), khong bat buoc de
+            // mo khoa duong di (xem LessonUnlockPolicy) -- chi la mot tram luyen them
+            // co dong ho, giong het TOPIC_REVIEW o cach tinh sao/thuong.
             case TIMED_REVIEW -> {
                 expGained = resolveTimedReviewExp(lesson);
                 coinsGained = TIMED_REVIEW_COIN_BASE + (perfectLesson ? TIMED_REVIEW_COIN_PERFECT_BONUS : 0);
@@ -321,7 +363,7 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
             }
             upsertProgress(userId, lesson, ProgressStatus.COMPLETED, starsToPersist);
 
-            // JUMP_TEST pass -> danh dau tat ca NORMAL/TIMED_REVIEW trong topic la COMPLETED.
+            // JUMP_TEST pass -> danh dau tat ca NORMAL/TOPIC_REVIEW trong topic la COMPLETED.
             if (lesson.getLessonType() == LessonType.JUMP_TEST) {
                 markAllInTopicCompleted(userId, lesson.getTopicId());
                 isTopicCompleted = true;
@@ -448,9 +490,22 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
         // Cap nhat Mistake Bank: chi cho bai hoc thuong (khong tinh JUMP_TEST) va khong tinh
         // replay (replay lai bai da hoc khong nen tao/lam nang them mistake moi).
         boolean eligibleForMistakeBank = !isReplay
-                && (lesson.getLessonType() == LessonType.NORMAL || lesson.getLessonType() == LessonType.TIMED_REVIEW);
+                && (lesson.getLessonType() == LessonType.NORMAL
+                        || lesson.getLessonType() == LessonType.TOPIC_REVIEW
+                        || lesson.getLessonType() == LessonType.TIMED_REVIEW);
         if (eligibleForMistakeBank && !gradedAnswers.isEmpty()) {
             mistakeService.recordFromAnswers(userId, gradedAnswers);
+        }
+
+        // Cap nhat lich on tap ngat quang (SM-2). Don vi theo doi la TU chu khong phai
+        // CAU HOI: cung mot tu gap o nhieu bai khac nhau deu cong don vao mot lich.
+        //
+        // Khac Mistake Bank o tren, cho nay KHONG loai replay. Lam lai bai cu chinh la
+        // mot lan nho lai that su -- dung loai du lieu ma he thong on tap can nhat. Rui
+        // ro "cay lich on" da duoc chan ngay trong VocabularyServiceImpl: tra loi dung
+        // khi tu chua toi han thi khong day lich di xa them.
+        if (!gradedAnswers.isEmpty()) {
+            vocabularyService.recordFromAnswers(userId, gradedAnswers);
         }
 
         Rank updatedRank = resolveHighestQualifyingRank(user.getExp());
@@ -631,12 +686,20 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
         return 15;
     }
 
-    private int resolveTimedReviewExp(Lesson lesson) {
+    private int resolveTopicReviewExp(Lesson lesson) {
         JsonNode config = lesson.getConfigJson();
         if (config != null && config.has("expReward")) {
             return config.get("expReward").asInt();
         }
         return 10;
+    }
+
+    private int resolveTimedReviewExp(Lesson lesson) {
+        JsonNode config = lesson.getConfigJson();
+        if (config != null && config.has("expReward")) {
+            return config.get("expReward").asInt();
+        }
+        return 8;
     }
 
     private int resolveJumpTestExp(Lesson lesson) {
@@ -678,7 +741,131 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
     }
 
     /**
-     * Tinh so sao (0-3) cho TIMED_REVIEW dua tren timeTakenSeconds va configJson.starThresholds.
+     * Dung bo cau hoi cho 1 phien TOPIC_REVIEW dua tren lich SM-2 cua user, thay vi doc
+     * lai mot bo cau hoi tinh da clone san luc seed.
+     *
+     * <p>Uu tien theo 3 tang, dung khi tang truoc du roi:</p>
+     * <ol>
+     *   <li>Tu DANG DEN HAN on ({@code nextDueAt <= now}), qua han lau nhat truoc.</li>
+     *   <li>Tu DA HOC nhung CHUA den han, gan den han nhat truoc (on som cho chac).</li>
+     *   <li>Cau hoi ngau nhien tu pool NORMAL trong pham vi topic (chi dung khi user con
+     *       qua moi, chua hoc du tu de lap day 1 phien).</li>
+     * </ol>
+     *
+     * <p>Pham vi topic la moi topic co {@code orderIndex <= topic cua lesson nay} -- dung
+     * "topic cu" theo dung tinh than on tap kieu Duolingo, khong chi rieng topic hien tai.</p>
+     */
+    private List<LessonQuestion> buildTopicReviewQuestionPool(Long userId, Lesson lesson) {
+        int sessionSize = resolveQuestionsPerSession(lesson);
+        List<Long> topicScope = resolveTopicScopeUpTo(lesson.getTopicId());
+        LocalDateTime now = LocalDateTime.now();
+
+        Set<Long> selectedQuestionIds = new LinkedHashSet<>();
+
+        List<Long> dueVocabularyIds = vocabularyProgressRepository
+                .findAllByUserIdAndNextDueAtLessThanEqualOrderByNextDueAtAsc(
+                        userId, now, PageRequest.of(0, sessionSize * 3))
+                .stream()
+                .map(UserVocabularyProgress::getVocabularyId)
+                .toList();
+        pickOneQuestionPerVocabulary(dueVocabularyIds, topicScope, sessionSize, selectedQuestionIds);
+
+        if (selectedQuestionIds.size() < sessionSize) {
+            List<Long> upcomingVocabularyIds = vocabularyProgressRepository
+                    .findAllByUserIdAndFirstLearnedAtIsNotNullAndNextDueAtAfterOrderByNextDueAtAsc(
+                            userId, now, PageRequest.of(0, sessionSize * 3))
+                    .stream()
+                    .map(UserVocabularyProgress::getVocabularyId)
+                    .filter(id -> !dueVocabularyIds.contains(id))
+                    .toList();
+            pickOneQuestionPerVocabulary(upcomingVocabularyIds, topicScope, sessionSize, selectedQuestionIds);
+        }
+
+        List<LessonQuestion> picked = new ArrayList<>(questionRepository.findAllById(selectedQuestionIds));
+
+        if (picked.size() < sessionSize) {
+            // Fallback cuoi: user con qua moi, chua hoc du tu de lap day phien on tap
+            // bang cau hoi that su "dang can on". Don ngau nhien tu pool NORMAL trong
+            // pham vi topic -- dung tinh than fallback cua clone_questions() cu, chi
+            // khac la tinh dong thay vi tinh san luc seed.
+            List<Long> normalLessonIds = lessonRepository
+                    .findAllByTopicIdInAndLessonType(topicScope, LessonType.NORMAL)
+                    .stream()
+                    .map(Lesson::getId)
+                    .toList();
+            if (!normalLessonIds.isEmpty()) {
+                List<LessonQuestion> fallbackPool = questionRepository
+                        .findAllByLessonIdInOrderByIdAsc(normalLessonIds)
+                        .stream()
+                        .filter(q -> !selectedQuestionIds.contains(q.getId()))
+                        .toList();
+                for (LessonQuestion candidate : ShuffleUtil.shuffle(fallbackPool)) {
+                    if (picked.size() >= sessionSize) {
+                        break;
+                    }
+                    picked.add(candidate);
+                }
+            }
+        }
+
+        List<LessonQuestion> shuffled = ShuffleUtil.shuffle(picked);
+        return shuffled.size() <= sessionSize ? shuffled : shuffled.subList(0, sessionSize);
+    }
+
+    /**
+     * Tat ca topic dang active co {@code orderIndex <= orderIndex cua topicId} -- "topic
+     * hien tai va moi topic cu hon", dung de gioi han pham vi cau hoi ung vien cho bai
+     * on tap (khong lay tu topic CHUA hoc toi).
+     */
+    private List<Long> resolveTopicScopeUpTo(Long topicId) {
+        List<Topic> topics = topicRepository.findAllActiveWithLessons();
+        Integer currentOrderIndex = topics.stream()
+                .filter(t -> t.getId().equals(topicId))
+                .map(Topic::getOrderIndex)
+                .findFirst()
+                .orElse(Integer.MAX_VALUE);
+        return topics.stream()
+                .filter(t -> t.getOrderIndex() != null && t.getOrderIndex() <= currentOrderIndex)
+                .map(Topic::getId)
+                .toList();
+    }
+
+    /**
+     * Voi moi tu trong {@code vocabularyIds} (da sap theo do uu tien), chon 1 cau hoi
+     * ngau nhien trong so cac cau nham toi tu do va them vao {@code selectedQuestionIds}
+     * -- dung 1 cau/tu de khong don ep 1 tu xuat hien nhieu lan trong cung 1 phien.
+     * Dung lai ngay khi du {@code sessionSize} cau.
+     */
+    private void pickOneQuestionPerVocabulary(List<Long> vocabularyIds, List<Long> topicScope,
+                                               int sessionSize, Set<Long> selectedQuestionIds) {
+        if (vocabularyIds.isEmpty() || selectedQuestionIds.size() >= sessionSize) {
+            return;
+        }
+        List<Object[]> rows = vocabularyRepository.findCandidateQuestionsForVocabulary(vocabularyIds, topicScope);
+        Map<Long, List<Long>> questionIdsByVocabulary = new LinkedHashMap<>();
+        for (Object[] row : rows) {
+            Long vocabularyId = ((Number) row[0]).longValue();
+            Long questionId = ((Number) row[1]).longValue();
+            questionIdsByVocabulary.computeIfAbsent(vocabularyId, k -> new ArrayList<>()).add(questionId);
+        }
+        for (Long vocabularyId : vocabularyIds) {
+            if (selectedQuestionIds.size() >= sessionSize) {
+                break;
+            }
+            List<Long> candidates = questionIdsByVocabulary.get(vocabularyId);
+            if (candidates == null || candidates.isEmpty()) {
+                continue;
+            }
+            for (Long questionId : ShuffleUtil.shuffle(candidates)) {
+                if (selectedQuestionIds.add(questionId)) {
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
+     * Tinh so sao (0-3) cho TOPIC_REVIEW dua tren timeTakenSeconds va configJson.starThresholds.
      * starThresholds la mang JSON: [thoiGian3Sao, thoiGian2Sao] (giay).
      * Neu khong co config -> fallback theo ti le dung:
      *   >= 90% -> 3 sao, >= 70% -> 2 sao, con lai -> 1 sao.
@@ -714,7 +901,7 @@ public class LessonAttemptServiceImpl implements LessonAttemptService {
     }
 
     /**
-     * JUMP_TEST pass -> danh dau tat ca bai NORMAL/TIMED_REVIEW trong topic la COMPLETED.
+     * JUMP_TEST pass -> danh dau tat ca bai NORMAL/TOPIC_REVIEW trong topic la COMPLETED.
      */
     private void markAllInTopicCompleted(Long userId, Long topicId) {
         List<Lesson> siblings = lessonRepository.findAllByTopicIdOrdered(topicId);

@@ -39,4 +39,7 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
                 l.id ASC
             """)
     List<Lesson> findAllActiveOrdered();
+
+    /** Pool fallback ngẫu nhiên cho TOPIC_REVIEW: mọi lesson thuộc loại cho trước trong 1 tập topic. */
+    List<Lesson> findAllByTopicIdInAndLessonType(List<Long> topicIds, Lesson.LessonType lessonType);
 }

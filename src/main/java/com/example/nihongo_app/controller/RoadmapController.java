@@ -19,7 +19,7 @@ import org.springframework.http.HttpStatus;
  * API lấy lộ trình học (bản đồ) cho user hiện tại.
  *
  * <p>Mỗi bài học được gắn 1 trong 3 trạng thái:
- * {@code LOCKED}, {@code UNLOCKED}, {@code COMPLETED}; với bài TIMED_REVIEW
+ * {@code LOCKED}, {@code UNLOCKED}, {@code COMPLETED}; với bài TOPIC_REVIEW
  * còn trả kèm số sao đã đạt được.</p>
  */
 @RestController

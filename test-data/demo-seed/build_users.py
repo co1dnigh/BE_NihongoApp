@@ -190,17 +190,19 @@ for u in LEARNERS:
         continue
     done_normal = normal_seq[:u["done"]]
     done_ids = {l[0] for l in done_normal}
-    # bài ôn tập tính giờ của chủ đề nào đã học hết bài thường thì cũng coi như đã qua
+    # Chủ đề nào đã học hết bài thường thì bài TOPIC_REVIEW (cổng chặn đường bắt buộc
+    # -- xem LessonUnlockPolicy) và TIMED_REVIEW (tuỳ chọn) cũng coi như đã qua, nếu
+    # không chủ đề KẾ TIẾP sẽ bị khoá sai dù narrative "đã học đến đâu" nói ngược lại.
     for t in topics:
         tl = lessons_by_topic[t[0]]
         norms = [l for l in tl if l[4] == "NORMAL"]
         if norms and all(l[0] in done_ids for l in norms):
             for l in tl:
-                if l[4] == "TIMED_REVIEW":
+                if l[4] in ("TOPIC_REVIEW", "TIMED_REVIEW"):
                     done_ids.add(l[0])
     for lid in sorted(done_ids):
         lesson = S.lessons[lid - 1]
-        stars = random.choice([2, 3, 3]) if lesson[4] == "TIMED_REVIEW" else 0
+        stars = random.choice([2, 3, 3]) if lesson[4] in ("TOPIC_REVIEW", "TIMED_REVIEW") else 0
         A("INSERT INTO user_lesson_progress (user_id, lesson_id, status, stars_earned, unlocked_at) "
           "VALUES (%d, %d, 'COMPLETED', %d, @vn_now);" % (u["id"], lid, stars))
     # bài kế tiếp đang học dở

@@ -13,6 +13,7 @@ import com.example.nihongo_app.repository.LessonRepository;
 import com.example.nihongo_app.repository.TopicRepository;
 import com.example.nihongo_app.repository.UserRepository;
 import com.example.nihongo_app.security.JwtTokenProvider;
+import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -53,6 +54,7 @@ class CoinQuestChestIntegrationTest {
 
     private String bearerToken;
     private Long lessonId;
+    private Long secondLessonId;
     private Long testUserId;
 
     @BeforeEach
@@ -66,13 +68,22 @@ class CoinQuestChestIntegrationTest {
         bearerToken = "Bearer " + jwtTokenProvider.generateToken(user);
 
         Topic topic = topicRepository.save(Topic.builder().title("IT Topic").orderIndex(1).build());
-        Lesson lesson = lessonRepository.save(Lesson.builder()
+        // Hai bai NORMAL rieng biet -- khong dung lai CUNG 1 lessonId hai lan: nop lai
+        // mot bai da COMPLETED bi tinh la "replay" (giam con 30% thuong, xem
+        // LessonAttemptServiceImpl.resolveReplayExpRatio), nen test nay can 2 bai that
+        // su khac nhau de ca hai lan nop deu nhan du thuong nhu mong doi.
+        lessonId = lessonRepository.save(Lesson.builder()
                 .topicId(topic.getId())
-                .title("IT Lesson")
+                .title("IT Lesson 1")
                 .orderIndex(1)
                 .lessonType(LessonType.NORMAL)
-                .build());
-        lessonId = lesson.getId();
+                .build()).getId();
+        secondLessonId = lessonRepository.save(Lesson.builder()
+                .topicId(topic.getId())
+                .title("IT Lesson 2")
+                .orderIndex(2)
+                .lessonType(LessonType.NORMAL)
+                .build()).getId();
     }
 
     @Test
@@ -91,8 +102,8 @@ class CoinQuestChestIntegrationTest {
         //    co the co cua ca 3 loai quest hien tai (COMPLETE_LESSONS<=2, CORRECT_ANSWERS<=20,
         //    PERFECT_LESSON=1), bat ke he thong random gan dung 3 quest nao trong 5 dinh nghia goc.
         String perfectSubmitBody = "{\"totalQuestions\":20,\"totalCorrect\":20,\"totalMistakes\":0}";
-        for (int i = 0; i < 2; i++) {
-            mockMvc.perform(post("/api/v1/lessons/" + lessonId + "/submit")
+        for (Long id : List.of(lessonId, secondLessonId)) {
+            mockMvc.perform(post("/api/v1/lessons/" + id + "/submit")
                             .header("Authorization", bearerToken)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(perfectSubmitBody))

@@ -41,7 +41,7 @@ public class UserExpLog {
      * Phân loại nguồn EXP, tương ứng cột {@code source_type} trong DB:
      * <ul>
      *   <li>{@code NEW_LESSON}    → hoàn thành bài NORMAL.</li>
-     *   <li>{@code REVIEW_LESSON} → hoàn thành bài TIMED_REVIEW (Con cú).</li>
+     *   <li>{@code REVIEW_LESSON} → hoàn thành bài TOPIC_REVIEW (node "ôn tập" bắt buộc).</li>
      *   <li>{@code JUMP_TEST}     → hoàn thành bài JUMP_TEST.</li>
      * </ul>
      */

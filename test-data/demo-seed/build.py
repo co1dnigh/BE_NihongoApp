@@ -266,6 +266,10 @@ REVIEW_CONFIG = {"questionsPerSession": 12, "entryCostEnergy": 5, "expReward": 3
                  "starThresholds": [90, 150], "replayExpRatio": 0.3}
 JUMP_CONFIG = {"questionsPerSession": 15, "entryCostEnergy": 15, "expReward": 80}
 
+# Tu topic thu may (order 1-based trong lo trinh) tro di thi moi tao bai TOPIC_REVIEW.
+# 2 topic dau khong can on tap xuyen topic vi chua co "topic cu" nao du de on.
+TOPIC_REVIEW_FROM_ORDER = 3
+
 # tất cả câu hỏi của 1 topic, để dựng bài ôn tập / thi vượt cấp cuối topic
 topic_question_bank = {}
 
@@ -542,10 +546,10 @@ def build_vocab_topic(tdata, order_index):
 
 
 # ===========================================================================
-# 3) Bài ôn tập tính giờ + bài thi vượt cấp (tái sử dụng câu hỏi trong topic)
+# 3) Bài ôn tập tính giờ + bài thi vượt cấp
 # ===========================================================================
 def clone_questions(target_lesson_id, question_ids):
-    """Nhân bản câu hỏi (kèm đáp án) sang bài ôn tập/thi vượt cấp."""
+    """Nhân bản câu hỏi (kèm đáp án) sang bài thi vượt cấp."""
     by_q = {}
     for o in S.options:
         by_q.setdefault(o[1], []).append(o)
@@ -556,19 +560,46 @@ def clone_questions(target_lesson_id, question_ids):
             S.option(new_qid, o[2], o[5], o[6], image=o[3], audio=o[4], meta=o[7])
 
 
-def add_review_lesson(topic_id, order_index, title, desc, n=14, lesson_type="TIMED_REVIEW"):
-    cfg = dict(REVIEW_CONFIG if lesson_type == "TIMED_REVIEW" else JUMP_CONFIG)
+def add_review_lesson(topic_id, order_index, title, desc, n=14, lesson_type="TOPIC_REVIEW"):
+    """Thêm 1 bài TOPIC_REVIEW / TIMED_REVIEW / JUMP_TEST cho 1 topic.
+
+    3 loại này dùng chung Seed.lesson() nhưng khác hẳn nhau ở CÁCH LẤY CÂU HỎI lúc
+    /start (xem LessonAttemptServiceImpl.startLesson phía backend Java):
+      - TOPIC_REVIEW : ĐỘNG theo lịch SM-2 của user, quét CẢ topic cũ lẫn topic hiện tại
+                       (buildTopicReviewQuestionPool) -- lesson row ở đây không cần câu hỏi
+                       tĩnh, chỉ cần tồn tại để có vị trí/energy-cost/config trên bản đồ.
+      - TIMED_REVIEW : TĨNH, nhân bản từ vựng của CHÍNH topic hiện tại -- bài đánh giá
+                       nhanh tốc độ làm bài, không phải cơ chế ôn tập thích ứng.
+      - JUMP_TEST    : TĨNH, nhân bản từ vựng của CHÍNH topic (hoặc toàn bộ nếu là bài thi
+                       vượt cấp tổng quát) -- vẫn giữ nguyên như thiết kế cũ.
+    """
+    if lesson_type == "TOPIC_REVIEW":
+        cfg = dict(REVIEW_CONFIG)
+    elif lesson_type == "TIMED_REVIEW":
+        cfg = dict(REVIEW_CONFIG)
+    else:
+        cfg = dict(JUMP_CONFIG)
     cfg["description"] = desc
-    # Bài thi vượt cấp KHÔNG nằm trên đường lộ trình: cột order_index của bảng lessons ghi rõ
-    # "NULL cho JUMP_TEST (vẽ ở Header, không nằm trên đường uốn lượn)", và CreateLessonRequest
-    # cũng chỉ bắt buộc orderIndex với NORMAL/TIMED_REVIEW. Đặt số cho nó sẽ khiến frontend vẽ
-    # lẫn vào chuỗi bài thường và người học tưởng mình đã hoàn thành thêm một bài.
-    if lesson_type == "JUMP_TEST":
+    # TOPIC_REVIEW nằm TRÊN đường lộ trình (như NORMAL) nên bắt buộc có order_index.
+    # TIMED_REVIEW và JUMP_TEST đều KHÔNG nằm trên đường lộ trình: cột order_index của
+    # bảng lessons ghi rõ "NULL cho JUMP_TEST/TIMED_REVIEW (vẽ ở Header/cạnh đường, không
+    # nằm trên đường uốn lượn)", và CreateLessonRequest cũng chỉ bắt buộc order_index với
+    # NORMAL/TOPIC_REVIEW. Đặt số cho 2 loại kia sẽ khiến frontend vẽ lẫn vào chuỗi bài
+    # thường và người học tưởng mình đã hoàn thành thêm một bài.
+    if lesson_type in ("TIMED_REVIEW", "JUMP_TEST"):
         order_index = None
     lid = S.lesson(topic_id, title, order_index, lesson_type, cfg)
-    bank = topic_question_bank.get(topic_id, [])
-    picked = random.sample(bank, min(n, len(bank)))
-    clone_questions(lid, picked)
+    if lesson_type in ("TIMED_REVIEW", "JUMP_TEST"):
+        # Bộ đề CỐ ĐỊNH theo thiết kế (không phải cơ chế ôn tập thích ứng) -- nhân bản
+        # tĩnh từ ngân hàng câu hỏi của topic.
+        bank = topic_question_bank.get(topic_id, [])
+        picked = random.sample(bank, min(n, len(bank)))
+        clone_questions(lid, picked)
+    # TOPIC_REVIEW KHÔNG clone câu hỏi tĩnh ở đây: nội dung của nó được chọn ĐỘNG lúc
+    # /start dựa trên lịch ôn SM-2 của từng user (xem
+    # LessonAttemptServiceImpl.buildTopicReviewQuestionPool phía backend Java) -- ưu tiên
+    # từ đang đến hạn quên, rồi mới tới từ sắp đến hạn, rồi mới fallback random trong
+    # phạm vi topic hiện tại VÀ mọi topic cũ hơn.
     return lid
 
 
@@ -588,21 +619,32 @@ def build():
     chỉ dùng từ và ngữ pháp của các bài trước.
     """
     order = 1
-    first_tid = None
-    for tdata in TOPICS_A + TOPICS_B + TOPICS_C:
+    for t_i, tdata in enumerate(TOPICS_A + TOPICS_B + TOPICS_C, start=1):
         tid = build_vocab_topic(tdata, order)
-        if first_tid is None:
-            first_tid = tid
-        add_review_lesson(tid, len(tdata["lessons"]) + 1,
-                          "Ôn tập tốc độ: %s" % tdata["title"], "", n=14)
-        order += 1
+        n_normal = len(tdata["lessons"])
 
-    # Bài thi vượt cấp luôn mở, dành cho người đã biết chút tiếng Nhật muốn nhảy cóc:
-    # một bài ở chủ đề đầu tiên, một bài tổng kết ở chủ đề cuối cùng.
-    add_review_lesson(first_tid, 0, "Thi vượt cấp: Đã giao tiếp cơ bản được?", "",
-                      n=15, lesson_type="JUMP_TEST")
-    add_review_lesson(S.topics[-1][0], 0, "Thi vượt cấp: Kiểm tra trình độ N5", "",
-                      n=15, lesson_type="JUMP_TEST")
+        # TOPIC_REVIEW ("ôn tập topic cũ", bắt buộc, chặn đường): chỉ từ topic thứ
+        # TOPIC_REVIEW_FROM_ORDER trở đi -- 2 topic đầu chưa có topic cũ nào để ôn.
+        # Nằm trên đường đi, ngay sau bài NORMAL cuối cùng.
+        if t_i >= TOPIC_REVIEW_FROM_ORDER:
+            add_review_lesson(tid, n_normal + 1,
+                              "Ôn tập: %s" % tdata["title"], "",
+                              n=14, lesson_type="TOPIC_REVIEW")
+
+        # TIMED_REVIEW ("ôn tập tốc độ", tuỳ chọn, cạnh đường): mọi topic đều có,
+        # dùng vốn từ của CHÍNH topic đó.
+        add_review_lesson(tid, None,
+                          "Ôn tập tốc độ: %s" % tdata["title"], "",
+                          n=14, lesson_type="TIMED_REVIEW")
+
+        # JUMP_TEST riêng của topic ("bài nhảy vượt"): mọi topic đều có, luôn mở, dùng
+        # vốn từ của CHÍNH topic đó -- pass là đánh dấu cả topic COMPLETED (nhảy cóc qua
+        # topic). Tạo SAU CÙNG trong topic (id lớn nhất) để khi sắp theo order_index
+        # kiểu nulls-last, nó luôn là phần tử CUỐI trong danh sách bài học của topic.
+        add_review_lesson(tid, None,
+                          "Thi vượt: %s" % tdata["title"], "",
+                          n=15, lesson_type="JUMP_TEST")
+        order += 1
 
 
 # ===========================================================================
@@ -700,11 +742,12 @@ if __name__ == "__main__":
     sql_path = write_sql()
     media_path = write_media()
     n_normal = sum(1 for l in S.lessons if l[4] == "NORMAL")
-    n_review = sum(1 for l in S.lessons if l[4] == "TIMED_REVIEW")
+    n_topic_review = sum(1 for l in S.lessons if l[4] == "TOPIC_REVIEW")
+    n_timed_review = sum(1 for l in S.lessons if l[4] == "TIMED_REVIEW")
     n_jump = sum(1 for l in S.lessons if l[4] == "JUMP_TEST")
     print("topics          : %d" % len(S.topics))
-    print("lessons         : %d (NORMAL %d / TIMED_REVIEW %d / JUMP_TEST %d)"
-          % (len(S.lessons), n_normal, n_review, n_jump))
+    print("lessons         : %d (NORMAL %d / TOPIC_REVIEW %d / TIMED_REVIEW %d / JUMP_TEST %d)"
+          % (len(S.lessons), n_normal, n_topic_review, n_timed_review, n_jump))
     print("questions       : %d" % len(S.questions))
     print("options         : %d" % len(S.options))
     print("audio files     : %d" % len(audio_registry))

@@ -49,6 +49,13 @@ public class StartLessonResponse {
         String audioUrl;
         String imageUrl;
         JsonNode metadataJson;
+        /**
+         * Tu trong tam cua cau nay la tu NGUOI HOC CHUA TUNG GAP.
+         *
+         * Client dung de gan nhan "TU VUNG MOI" ngay tren cau hoi, giong Duolingo.
+         * Tinh o server vi chi server biet lich su hoc cua tung nguoi.
+         */
+        Boolean isNew;
         List<StartLessonOption> options;
     }
 

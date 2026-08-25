@@ -30,7 +30,7 @@ import lombok.Setter;
 public class Lesson {
 
     public enum LessonType {
-        NORMAL, TIMED_REVIEW, JUMP_TEST
+        NORMAL, TIMED_REVIEW, TOPIC_REVIEW, JUMP_TEST
     }
 
     @Id

@@ -29,16 +29,26 @@ import tools.jackson.databind.JsonNode;
  * <ul>
  *   <li>Bài đã có {@code user_lesson_progress.status = COMPLETED} → COMPLETED.</li>
  *   <li>Bài {@code JUMP_TEST} → luôn UNLOCKED.</li>
- *   <li>Bài NORMAL / TIMED_REVIEW:
+ *   <li>Bài TOPIC_REVIEW (node "ôn tập" bắt buộc, câu hỏi lấy từ topic cũ):
+ *     <ul>
+ *       <li>UNLOCKED theo đúng quy tắc của NORMAL bên dưới (dựa vào bài NORMAL liền trước).</li>
+ *       <li>Hoàn thành nó là ĐIỀU KIỆN BẮT BUỘC để bài NORMAL ngay sau nó (nếu có) được
+ *           UNLOCKED — đây là cổng chặn đường kiểu Duolingo, khác TIMED_REVIEW.</li>
+ *     </ul>
+ *   </li>
+ *   <li>Bài NORMAL:
  *     <ul>
  *       <li>Bài NORMAL đầu tiên toàn hệ thống (topic có orderIndex nhỏ nhất, bài có
  *           orderIndex nhỏ nhất) → UNLOCKED mặc định.</li>
- *       <li>Ngược lại → UNLOCKED nếu bài NORMAL ngay trước nó đã COMPLETED. Cờ này được
- *           CARRY xuyên suốt Topic: bài đầu tiên của Topic N+1 dựa vào trạng thái bài
+ *       <li>Ngược lại → UNLOCKED nếu bài NORMAL ngay trước nó đã COMPLETED VÀ (nếu có
+ *           TOPIC_REVIEW xen giữa) TOPIC_REVIEW đó cũng đã COMPLETED. Cờ NORMAL-completed
+ *           được CARRY xuyên suốt Topic: bài đầu tiên của Topic N+1 dựa vào trạng thái bài
  *           NORMAL cuối cùng của Topic N, chứ không reset về false khi sang Topic mới.</li>
  *       <li>Còn lại → LOCKED.</li>
  *     </ul>
  *   </li>
+ *   <li>Bài TIMED_REVIEW ("ôn tập tính giờ" — mascot cạnh đường đi, không bắt buộc):
+ *     luôn UNLOCKED, không tham gia vào chuỗi gate ở trên.</li>
  * </ul>
  *
  * <p>Helper này chỉ <b>đọc</b> (read-only), không ghi database. Mọi thao tác ghi (upsert
@@ -91,6 +101,10 @@ public class LessonUnlockPolicy {
         Map<Long, Status> result = new HashMap<>();
         // Bài NORMAL đầu tiên toàn hệ thống luôn UNLOCKED mặc định.
         boolean previousNormalCompleted = true;
+        // Cong TOPIC_REVIEW: chua gap TOPIC_REVIEW nao chua qua duoc thi coi nhu da qua
+        // (khong co gi de chan). Bi ha xuong false ngay khi gap 1 TOPIC_REVIEW chua
+        // COMPLETED, va duoc reset lai ve true moi khi di qua 1 bai NORMAL.
+        boolean pendingTopicReviewCompleted = true;
 
         for (Topic topic : topicsOrdered) {
             List<Lesson> sortedLessons = topic.getLessons().stream()
@@ -100,11 +114,14 @@ public class LessonUnlockPolicy {
 
             for (Lesson lesson : sortedLessons) {
                 UserLessonProgress progress = progressByLesson.get(lesson.getId());
-                Status status = computeOne(lesson, previousNormalCompleted, progress);
+                Status status = computeOne(lesson, previousNormalCompleted, pendingTopicReviewCompleted, progress);
                 result.put(lesson.getId(), status);
 
                 if (lesson.getLessonType() == LessonType.NORMAL) {
                     previousNormalCompleted = isCompleted(progress);
+                    pendingTopicReviewCompleted = true;
+                } else if (lesson.getLessonType() == LessonType.TOPIC_REVIEW) {
+                    pendingTopicReviewCompleted = isCompleted(progress);
                 }
             }
         }
@@ -112,30 +129,39 @@ public class LessonUnlockPolicy {
     }
 
     /**
-     * Hàm lõi: tính trạng thái cho 1 lesson, với cờ "bài NORMAL trước đã COMPLETED"
-     * đã có sẵn (đã carry đúng qua các Topic trước đó).
+     * Hàm lõi: tính trạng thái cho 1 lesson, với cờ "bài NORMAL trước đã COMPLETED" và
+     * "TOPIC_REVIEW xen giữa đã COMPLETED" đã có sẵn (đã carry đúng qua các Topic trước đó).
      */
     public Status computeOne(Lesson lesson,
                              boolean previousNormalCompleted,
+                             boolean pendingTopicReviewCompleted,
                              UserLessonProgress progress) {
         if (isCompleted(progress)) {
             return Status.COMPLETED;
         }
-        if (lesson.getLessonType() == LessonType.JUMP_TEST) {
+        if (lesson.getLessonType() == LessonType.JUMP_TEST
+                || lesson.getLessonType() == LessonType.TIMED_REVIEW) {
             return Status.UNLOCKED;
         }
-        return previousNormalCompleted ? Status.UNLOCKED : Status.LOCKED;
+        if (lesson.getLessonType() == LessonType.TOPIC_REVIEW) {
+            return previousNormalCompleted ? Status.UNLOCKED : Status.LOCKED;
+        }
+        return (previousNormalCompleted && pendingTopicReviewCompleted) ? Status.UNLOCKED : Status.LOCKED;
     }
 
     /**
      * Tiện ích: tính số sao hiển thị cho 1 lesson.
-     * TIMED_REVIEW → lấy từ progress. Các loại khác → 0.
+     * TOPIC_REVIEW / TIMED_REVIEW → lấy từ progress (cả hai đều tính sao theo
+     * thời gian làm bài, xem {@code LessonAttemptServiceImpl.resolveStars}).
+     * Các loại khác (NORMAL, JUMP_TEST) → 0.
      */
     public int computeStars(Lesson lesson, UserLessonProgress progress) {
         if (progress == null) {
             return 0;
         }
-        if (lesson.getLessonType() != LessonType.TIMED_REVIEW) {
+        boolean scoredByStars = lesson.getLessonType() == LessonType.TOPIC_REVIEW
+                || lesson.getLessonType() == LessonType.TIMED_REVIEW;
+        if (!scoredByStars) {
             return 0;
         }
         return Objects.requireNonNullElse(progress.getStarsEarned(), 0);

@@ -24,11 +24,14 @@ public class CreateLessonRequest {
 
     private JsonNode configJson;
 
-    @AssertTrue(message = "orderIndex is required for NORMAL and TIMED_REVIEW lessons (must be null/omitted for JUMP_TEST)")
+    @AssertTrue(message = "orderIndex is required for NORMAL and TOPIC_REVIEW lessons (must be null/omitted for JUMP_TEST and TIMED_REVIEW)")
     public boolean isOrderIndexValid() {
         if (lessonType == null) return true;
-        boolean visualLesson = lessonType == LessonType.NORMAL || lessonType == LessonType.TIMED_REVIEW;
-        if (visualLesson) {
+        // TOPIC_REVIEW nam tren duong di chinh (nhu NORMAL) nen can orderIndex.
+        // TIMED_REVIEW ("on tap tinh gio") dung ben canh duong di, khong co vi tri
+        // tuan tu tren path, nen khong yeu cau orderIndex -- giong JUMP_TEST.
+        boolean pathLesson = lessonType == LessonType.NORMAL || lessonType == LessonType.TOPIC_REVIEW;
+        if (pathLesson) {
             return orderIndex != null;
         }
         return true;

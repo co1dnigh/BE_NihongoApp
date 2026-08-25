@@ -28,13 +28,13 @@ public class SubmitLessonResponse {
     Integer coinsEarned;
 
     /**
-     * Số sao đạt được (chỉ có ý nghĩa với TIMED_REVIEW).
+     * Số sao đạt được (chỉ có ý nghĩa với TOPIC_REVIEW).
      * Các loại bài khác luôn là 0.
      */
     Integer starsEarned;
 
     /**
-     * {@code true} nếu sau khi hoàn thành bài này, toàn bộ NORMAL + TIMED_REVIEW
+     * {@code true} nếu sau khi hoàn thành bài này, toàn bộ NORMAL + TOPIC_REVIEW
      * trong Topic đã xong. Dùng cho JUMP_TEST nhảy cóc (mark tất cả bài NORMAL
      * trong topic là COMPLETED → isTopicCompleted = true) hoặc cho bài cuối
      * của topic.

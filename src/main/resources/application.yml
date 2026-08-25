@@ -44,7 +44,7 @@ app:
     refresh-expiration-ms: ${JWT_REFRESH_EXPIRATION_MS:2592000000}
   social:
     google:
-      client-id: ${GOOGLE_CLIENT_ID:80954200956-kj500d8gmbdg1j78l7ggoto85t7vv60t.apps.googleusercontent.com}
+      client-id: ${GOOGLE_CLIENT_ID:80954200956-4icfk20o6he928rr9oqipunclmnkbifr.apps.googleusercontent.com}
     facebook:
       app-id: ${FACEBOOK_APP_ID:1776382180172619}
       app-secret: ${FACEBOOK_APP_SECRET:841b5dfa38420b588650586b09b7634e}

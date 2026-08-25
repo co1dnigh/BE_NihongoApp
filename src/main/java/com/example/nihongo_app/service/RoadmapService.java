@@ -7,7 +7,7 @@ public interface RoadmapService {
 
     /**
      * Lấy toàn bộ lộ trình học cho user hiện tại, kèm trạng thái "thời gian thực"
-     * của từng bài học (LOCKED / UNLOCKED / COMPLETED) và số sao đạt được (với TIMED_REVIEW).
+     * của từng bài học (LOCKED / UNLOCKED / COMPLETED) và số sao đạt được (với TOPIC_REVIEW).
      *
      * @param userId ID của user đang đăng nhập (lấy từ JWT thông qua {@code AppUserPrincipal}).
      * @return danh sách topic đang active, sắp xếp theo orderIndex; trong mỗi topic

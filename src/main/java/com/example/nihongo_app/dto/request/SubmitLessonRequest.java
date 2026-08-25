@@ -8,8 +8,8 @@ import lombok.Data;
 /**
  * Request cho {@code POST /api/v1/lessons/{id}/submit}.
  *
- * <p>Body này được thiết kế "tổng hợp" để chỉ cần 1 endpoint duy nhất cho cả 3 dạng bài
- * (NORMAL / TIMED_REVIEW / JUMP_TEST). Field nào không dùng cho bài hiện tại sẽ được
+ * <p>Body này được thiết kế "tổng hợp" để chỉ cần 1 endpoint duy nhất cho cả các dạng bài
+ * (NORMAL / TOPIC_REVIEW / JUMP_TEST / TIMED_REVIEW). Field nào không dùng cho bài hiện tại sẽ được
  * service bỏ qua (không validate quá chặt để tránh frontend phải switch-case gửi khác nhau).</p>
  *
  * <p>Các trường:</p>
@@ -36,10 +36,10 @@ public class SubmitLessonRequest {
     @Min(0)
     private Integer totalMistakes;
 
-    /** Bắt buộc cho TIMED_REVIEW. Có thể null với NORMAL / JUMP_TEST. */
+    /** Bắt buộc cho TOPIC_REVIEW (tính sao). Có thể null với NORMAL / JUMP_TEST. */
     private Integer timeTakenSeconds;
 
-    /** Bắt buộc cho JUMP_TEST. Có thể null với NORMAL / TIMED_REVIEW. */
+    /** Bắt buộc cho JUMP_TEST. Có thể null với NORMAL / TOPIC_REVIEW. */
     private Integer heartsRemaining;
 
     /**

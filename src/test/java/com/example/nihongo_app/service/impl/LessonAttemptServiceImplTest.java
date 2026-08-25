@@ -28,9 +28,11 @@ import com.example.nihongo_app.entity.LessonQuestion.QuestionType;
 import com.example.nihongo_app.entity.LessonQuestionOption;
 import com.example.nihongo_app.entity.QuestDefinition.QuestType;
 import com.example.nihongo_app.entity.ShopItem;
+import com.example.nihongo_app.entity.Topic;
 import com.example.nihongo_app.entity.User;
 import com.example.nihongo_app.entity.UserLessonProgress;
 import com.example.nihongo_app.entity.UserLessonProgress.ProgressStatus;
+import com.example.nihongo_app.entity.UserVocabularyProgress;
 import com.example.nihongo_app.exception.InsufficientEnergyException;
 import com.example.nihongo_app.exception.LessonLockedException;
 import com.example.nihongo_app.repository.CoinTransactionRepository;
@@ -39,17 +41,22 @@ import com.example.nihongo_app.repository.LessonQuestionOptionRepository;
 import com.example.nihongo_app.repository.LessonQuestionRepository;
 import com.example.nihongo_app.repository.LessonRepository;
 import com.example.nihongo_app.repository.RankRepository;
+import com.example.nihongo_app.repository.TopicRepository;
 import com.example.nihongo_app.repository.UserExpLogRepository;
 import com.example.nihongo_app.repository.UserLessonProgressRepository;
 import com.example.nihongo_app.repository.UserRepository;
+import com.example.nihongo_app.repository.UserVocabularyProgressRepository;
+import com.example.nihongo_app.repository.VocabularyRepository;
 import com.example.nihongo_app.service.AchievementProgress;
 import com.example.nihongo_app.service.AchievementService;
 import com.example.nihongo_app.service.DailyQuestService;
 import com.example.nihongo_app.service.EnergyService;
 import com.example.nihongo_app.service.LessonUnlockPolicy;
 import com.example.nihongo_app.service.MistakeService;
+import com.example.nihongo_app.service.VocabularyService;
 import com.example.nihongo_app.service.ShopService;
 import com.example.nihongo_app.service.StreakService;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -87,7 +94,11 @@ class LessonAttemptServiceImplTest {
     @Mock private ShopService shopService;
     @Mock private LessonAttemptAnswerRepository lessonAttemptAnswerRepository;
     @Mock private MistakeService mistakeService;
+    @Mock private VocabularyService vocabularyService;
     @Mock private AchievementService achievementService;
+    @Mock private TopicRepository topicRepository;
+    @Mock private VocabularyRepository vocabularyRepository;
+    @Mock private UserVocabularyProgressRepository vocabularyProgressRepository;
 
     @InjectMocks
     private LessonAttemptServiceImpl service;
@@ -188,13 +199,23 @@ class LessonAttemptServiceImplTest {
     }
 
     @Test
+    void submitTopicReview_perfect_awardsBaseAndPerfectBonusCoins() {
+        when(lessonRepository.findById(LESSON_ID)).thenReturn(Optional.of(lessonOfType(LessonType.TOPIC_REVIEW)));
+
+        SubmitLessonRequest req = request(10, 10, 0);
+        SubmitLessonResponse response = service.submitLesson(LESSON_ID, USER_ID, req);
+
+        assertThat(response.getCoinsEarned()).isEqualTo(9); // base 6 + perfect bonus 3
+    }
+
+    @Test
     void submitTimedReview_perfect_awardsBaseAndPerfectBonusCoins() {
         when(lessonRepository.findById(LESSON_ID)).thenReturn(Optional.of(lessonOfType(LessonType.TIMED_REVIEW)));
 
         SubmitLessonRequest req = request(10, 10, 0);
         SubmitLessonResponse response = service.submitLesson(LESSON_ID, USER_ID, req);
 
-        assertThat(response.getCoinsEarned()).isEqualTo(9); // base 6 + perfect bonus 3
+        assertThat(response.getCoinsEarned()).isEqualTo(6); // base 4 + perfect bonus 2
     }
 
     @Test
@@ -536,6 +557,91 @@ class LessonAttemptServiceImplTest {
         StartLessonResponse response = service.startLesson(LESSON_ID, USER_ID);
 
         assertThat(response.getQuestions()).hasSize(2); // gioi han theo questionsPerSession, khong phai ca 5 cau
+    }
+
+    private UserVocabularyProgress dueProgress(Long vocabularyId, LocalDateTime nextDueAt) {
+        return UserVocabularyProgress.builder()
+                .userId(USER_ID).vocabularyId(vocabularyId)
+                .repetitions(1).easeFactor(java.math.BigDecimal.valueOf(2.5))
+                .intervalMinutes(10).firstLearnedAt(LocalDateTime.now().minusDays(1))
+                .nextDueAt(nextDueAt).totalCorrect(1).totalWrong(0)
+                .build();
+    }
+
+    @Test
+    void startLesson_topicReview_prioritizesDueVocabularyQuestions() {
+        Lesson lesson = lessonWithConfig(LessonType.TOPIC_REVIEW, "{\"questionsPerSession\":2}");
+        when(lessonRepository.findById(LESSON_ID)).thenReturn(Optional.of(lesson));
+        when(unlockPolicy.evaluate(lesson, USER_ID)).thenReturn(Status.UNLOCKED);
+        user.setCurrentEnergy(10);
+
+        when(topicRepository.findAllActiveWithLessons()).thenReturn(
+                List.of(Topic.builder().id(TOPIC_ID).orderIndex(1).build()));
+
+        // Hai tu dang qua han on -- tu 501 qua han lau hon nen phai duoc uu tien.
+        when(vocabularyProgressRepository.findAllByUserIdAndNextDueAtLessThanEqualOrderByNextDueAtAsc(
+                eq(USER_ID), any(), any()))
+                .thenReturn(List.of(
+                        dueProgress(501L, LocalDateTime.now().minusDays(2)),
+                        dueProgress(502L, LocalDateTime.now().minusHours(1))));
+
+        // Moi tu chi co dung 1 cau ung vien -> khong the nham lan voi fallback random.
+        when(vocabularyRepository.findCandidateQuestionsForVocabulary(any(), any())).thenReturn(List.of(
+                new Object[] {501L, 701L},
+                new Object[] {502L, 702L}));
+
+        when(questionRepository.findAllById(any())).thenAnswer(invocation -> {
+            java.util.Set<Long> ids = new java.util.LinkedHashSet<>();
+            ((Iterable<Long>) invocation.getArgument(0)).forEach(ids::add);
+            return ids.stream()
+                    .map(id -> LessonQuestion.builder().id(id).lessonId(20L)
+                            .questionType(QuestionType.TRANSLATE_TO_JP).build())
+                    .toList();
+        });
+        when(optionRepository.findAllByQuestionIdOrderByOrderIndexAscIdAsc(any())).thenReturn(List.of());
+
+        StartLessonResponse response = service.startLesson(LESSON_ID, USER_ID);
+
+        assertThat(response.getQuestions())
+                .extracting(StartLessonResponse.StartLessonQuestion::getQuestionId)
+                .containsExactlyInAnyOrder(701L, 702L);
+        // Khong duoc roi vao pool ngau nhien tinh: fallback random khong bao gio duoc goi.
+        verify(lessonRepository, never()).findAllByTopicIdInAndLessonType(any(), any());
+    }
+
+    @Test
+    void startLesson_topicReview_fallsBackToRandomWhenNotEnoughDueVocabulary() {
+        Lesson lesson = lessonWithConfig(LessonType.TOPIC_REVIEW, "{\"questionsPerSession\":2}");
+        when(lessonRepository.findById(LESSON_ID)).thenReturn(Optional.of(lesson));
+        when(unlockPolicy.evaluate(lesson, USER_ID)).thenReturn(Status.UNLOCKED);
+        user.setCurrentEnergy(10);
+
+        when(topicRepository.findAllActiveWithLessons()).thenReturn(
+                List.of(Topic.builder().id(TOPIC_ID).orderIndex(1).build()));
+        // User qua moi: chua co tu nao dang den han hoac sap den han.
+        when(vocabularyProgressRepository.findAllByUserIdAndNextDueAtLessThanEqualOrderByNextDueAtAsc(
+                eq(USER_ID), any(), any())).thenReturn(List.of());
+        when(vocabularyProgressRepository
+                .findAllByUserIdAndFirstLearnedAtIsNotNullAndNextDueAtAfterOrderByNextDueAtAsc(
+                        eq(USER_ID), any(), any())).thenReturn(List.of());
+
+        List<Lesson> normalLessonsInTopic = List.of(
+                Lesson.builder().id(20L).topicId(TOPIC_ID).lessonType(LessonType.NORMAL).build());
+        when(lessonRepository.findAllByTopicIdInAndLessonType(List.of(TOPIC_ID), LessonType.NORMAL))
+                .thenReturn(normalLessonsInTopic);
+        when(questionRepository.findAllByLessonIdInOrderByIdAsc(List.of(20L))).thenReturn(List.of(
+                LessonQuestion.builder().id(801L).lessonId(20L).questionType(QuestionType.TRANSLATE_TO_JP).build(),
+                LessonQuestion.builder().id(802L).lessonId(20L).questionType(QuestionType.TRANSLATE_TO_JP).build(),
+                LessonQuestion.builder().id(803L).lessonId(20L).questionType(QuestionType.TRANSLATE_TO_JP).build()));
+        when(questionRepository.findAllById(any())).thenReturn(List.of());
+        when(optionRepository.findAllByQuestionIdOrderByOrderIndexAscIdAsc(any())).thenReturn(List.of());
+
+        StartLessonResponse response = service.startLesson(LESSON_ID, USER_ID);
+
+        assertThat(response.getQuestions()).hasSize(2); // van lap day du questionsPerSession
+        assertThat(response.getQuestions())
+                .extracting(StartLessonResponse.StartLessonQuestion::getQuestionId)
+                .allMatch(id -> List.of(801L, 802L, 803L).contains(id));
     }
 
     @Test

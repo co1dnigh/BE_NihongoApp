@@ -54,6 +54,11 @@ class LessonUnlockPolicyTest {
                 .orderIndex(orderIndex).lessonType(LessonType.JUMP_TEST).build();
     }
 
+    private Lesson topicReview(long id, int orderIndex) {
+        return Lesson.builder().id(id).topicId(0L).title("TopicReview " + id)
+                .orderIndex(orderIndex).lessonType(LessonType.TOPIC_REVIEW).build();
+    }
+
     private Topic topicWith(long id, int orderIndex, Lesson... lessons) {
         return Topic.builder().id(id).title("Topic " + id).orderIndex(orderIndex)
                 .lessons(List.of(lessons)).build();
@@ -141,6 +146,32 @@ class LessonUnlockPolicyTest {
         assertThat(statuses.get(2L)).isEqualTo(Status.UNLOCKED);
     }
 
+    @Test
+    void computeStatuses_topicReview_blocksNextNormal_untilCompleted() {
+        // NORMAL(1, done) -> TOPIC_REVIEW(2, chua lam) -> NORMAL(3).
+        // Bai 3 phai LOCKED du bai 1 da xong, vi TOPIC_REVIEW xen giua chua qua.
+        Topic topic = topicWith(1L, 1, normalLesson(1L, 1), topicReview(2L, 2), normalLesson(3L, 3));
+        Map<Long, UserLessonProgress> progress = progressMap(completedProgress(1L));
+
+        Map<Long, Status> statuses = policy.computeStatuses(List.of(topic), progress);
+
+        assertThat(statuses.get(1L)).isEqualTo(Status.COMPLETED);
+        assertThat(statuses.get(2L)).isEqualTo(Status.UNLOCKED); // node on tap: mo ngay sau bai 1
+        assertThat(statuses.get(3L)).isEqualTo(Status.LOCKED);   // bi chan boi TOPIC_REVIEW chua xong
+    }
+
+    @Test
+    void computeStatuses_topicReview_unblocksNextNormal_onceCompleted() {
+        Topic topic = topicWith(1L, 1, normalLesson(1L, 1), topicReview(2L, 2), normalLesson(3L, 3));
+        Map<Long, UserLessonProgress> progress =
+                progressMap(completedProgress(1L), completedProgress(2L));
+
+        Map<Long, Status> statuses = policy.computeStatuses(List.of(topic), progress);
+
+        assertThat(statuses.get(2L)).isEqualTo(Status.COMPLETED);
+        assertThat(statuses.get(3L)).isEqualTo(Status.UNLOCKED);
+    }
+
     // ===================== computeOne =====================
 
     @Test
@@ -148,22 +179,46 @@ class LessonUnlockPolicyTest {
         Lesson lesson = normalLesson(1L, 1);
         UserLessonProgress progress = completedProgress(1L);
 
-        assertThat(policy.computeOne(lesson, false, progress)).isEqualTo(Status.COMPLETED);
+        assertThat(policy.computeOne(lesson, false, true, progress)).isEqualTo(Status.COMPLETED);
     }
 
     @Test
     void computeOne_jumpTest_alwaysUnlocked() {
         Lesson lesson = jumpTest(1L, 1);
 
-        assertThat(policy.computeOne(lesson, false, null)).isEqualTo(Status.UNLOCKED);
+        assertThat(policy.computeOne(lesson, false, true, null)).isEqualTo(Status.UNLOCKED);
     }
 
     @Test
     void computeOne_normalLesson_unlockedOrLocked_basedOnPreviousFlag() {
         Lesson lesson = normalLesson(1L, 1);
 
-        assertThat(policy.computeOne(lesson, true, null)).isEqualTo(Status.UNLOCKED);
-        assertThat(policy.computeOne(lesson, false, null)).isEqualTo(Status.LOCKED);
+        assertThat(policy.computeOne(lesson, true, true, null)).isEqualTo(Status.UNLOCKED);
+        assertThat(policy.computeOne(lesson, false, true, null)).isEqualTo(Status.LOCKED);
+    }
+
+    @Test
+    void computeOne_normalLesson_lockedWhenPendingTopicReviewNotCompleted() {
+        // previousNormalCompleted = true nhung TOPIC_REVIEW xen giua chua xong
+        // -> bai NORMAL ke tiep van phai LOCKED (cong bat buoc).
+        Lesson lesson = normalLesson(1L, 1);
+
+        assertThat(policy.computeOne(lesson, true, false, null)).isEqualTo(Status.LOCKED);
+    }
+
+    @Test
+    void computeOne_topicReview_ignoresPendingFlag_onlyNeedsPreviousNormal() {
+        Lesson lesson = Lesson.builder().id(1L).lessonType(LessonType.TOPIC_REVIEW).build();
+
+        assertThat(policy.computeOne(lesson, true, false, null)).isEqualTo(Status.UNLOCKED);
+        assertThat(policy.computeOne(lesson, false, true, null)).isEqualTo(Status.LOCKED);
+    }
+
+    @Test
+    void computeOne_timedReview_alwaysUnlocked_regardlessOfFlags() {
+        Lesson lesson = Lesson.builder().id(1L).lessonType(LessonType.TIMED_REVIEW).build();
+
+        assertThat(policy.computeOne(lesson, false, false, null)).isEqualTo(Status.UNLOCKED);
     }
 
     // ===================== computeStars =====================
@@ -174,6 +229,14 @@ class LessonUnlockPolicyTest {
         UserLessonProgress progress = UserLessonProgress.builder().lessonId(1L).starsEarned(3).build();
 
         assertThat(policy.computeStars(lesson, progress)).isEqualTo(3);
+    }
+
+    @Test
+    void computeStars_topicReview_returnsStarsFromProgress() {
+        Lesson lesson = Lesson.builder().id(1L).lessonType(LessonType.TOPIC_REVIEW).build();
+        UserLessonProgress progress = UserLessonProgress.builder().lessonId(1L).starsEarned(2).build();
+
+        assertThat(policy.computeStars(lesson, progress)).isEqualTo(2);
     }
 
     @Test
