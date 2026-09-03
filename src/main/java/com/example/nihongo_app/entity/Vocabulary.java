@@ -27,7 +27,7 @@ import java.time.LocalDateTime;
 public class Vocabulary {
 
     public enum ItemType {
-        VOCAB, KANJI, KANA
+        VOCAB, KANJI, KANA, PHRASE
     }
 
     @Id

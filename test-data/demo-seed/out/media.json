@@ -1,11 +1,6 @@
 {
  "audio": [
   {
-   "rel": "words/ohayou-gozaimasu.mp3",
-   "text": "おはようございます",
-   "voice": "ja-JP-NanamiNeural"
-  },
-  {
    "rel": "words/ohayou.mp3",
    "text": "おはよう",
    "voice": "ja-JP-NanamiNeural"
@@ -21,8 +16,13 @@
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/oyasuminasai.mp3",
-   "text": "おやすみなさい",
+   "rel": "words/oyasumi.mp3",
+   "text": "おやすみ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/asa.mp3",
+   "text": "あさ",
    "voice": "ja-JP-NanamiNeural"
   },
   {
@@ -36,8 +36,8 @@
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/arigatou-gozaimasu.mp3",
-   "text": "ありがとうございます",
+   "rel": "sentences/oyasuminasai.mp3",
+   "text": "おやすみなさい。",
    "voice": "ja-JP-NanamiNeural"
   },
   {
@@ -46,8 +46,8 @@
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/dou-itashimashite.mp3",
-   "text": "どういたしまして",
+   "rel": "words/doumo.mp3",
+   "text": "どうも",
    "voice": "ja-JP-NanamiNeural"
   },
   {
@@ -56,13 +56,13 @@
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/gomen-nasai.mp3",
-   "text": "ごめんなさい",
+   "rel": "words/gomen.mp3",
+   "text": "ごめん",
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/daijoubu-desu.mp3",
-   "text": "だいじょうぶです",
+   "rel": "words/daijoubu.mp3",
+   "text": "だいじょうぶ",
    "voice": "ja-JP-NanamiNeural"
   },
   {
@@ -76,28 +76,33 @@
    "voice": "ja-JP-NanamiNeural"
   },
   {
+   "rel": "sentences/iie-dou-itashimashite.mp3",
+   "text": "いいえ、どういたしまして。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
    "rel": "words/hajimemashite.mp3",
    "text": "はじめまして",
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/yoroshiku-onegaishimasu.mp3",
-   "text": "よろしくおねがいします",
+   "rel": "words/yoroshiku.mp3",
+   "text": "よろしく",
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/ogenki-desu-ka.mp3",
-   "text": "おげんきですか",
+   "rel": "words/onegai.mp3",
+   "text": "おねがい",
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/genki-desu.mp3",
-   "text": "げんきです",
+   "rel": "words/genki.mp3",
+   "text": "げんき",
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/onamae-wa.mp3",
-   "text": "おなまえは",
+   "rel": "words/namae.mp3",
+   "text": "なまえ",
    "voice": "ja-JP-NanamiNeural"
   },
   {
@@ -116,18 +121,18 @@
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/mata-ashita.mp3",
-   "text": "またあした",
+   "rel": "words/ashita.mp3",
+   "text": "あした",
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/mata-ne.mp3",
-   "text": "またね",
+   "rel": "words/mata.mp3",
+   "text": "また",
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/shitsurei-shimasu.mp3",
-   "text": "しつれいします",
+   "rel": "words/shitsurei.mp3",
+   "text": "しつれい",
    "voice": "ja-JP-NanamiNeural"
   },
   {
@@ -151,18 +156,18 @@
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/itterasshai.mp3",
-   "text": "いってらっしゃい",
-   "voice": "ja-JP-NanamiNeural"
-  },
-  {
    "rel": "words/tadaima.mp3",
    "text": "ただいま",
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/okaerinasai.mp3",
-   "text": "おかえりなさい",
+   "rel": "words/okaeri.mp3",
+   "text": "おかえり",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/ie.mp3",
+   "text": "いえ",
    "voice": "ja-JP-NanamiNeural"
   },
   {
@@ -181,13 +186,8 @@
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/gochisousama-deshita.mp3",
-   "text": "ごちそうさまでした",
-   "voice": "ja-JP-NanamiNeural"
-  },
-  {
-   "rel": "words/otsukaresama-desu.mp3",
-   "text": "おつかれさまです",
+   "rel": "words/otsukaresama.mp3",
+   "text": "おつかれさま",
    "voice": "ja-JP-NanamiNeural"
   },
   {
@@ -196,18 +196,28 @@
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/omedetou-gozaimasu.mp3",
-   "text": "おめでとうございます",
+   "rel": "words/omedetou.mp3",
+   "text": "おめでとう",
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "sentences/itadakimasu-2.mp3",
-   "text": "いただきます。",
+   "rel": "words/shokuji.mp3",
+   "text": "しょくじ",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/itadakimasu-gochisousama-deshita.mp3",
+   "text": "いただきます。ごちそうさまでした。",
    "voice": "ja-JP-NanamiNeural"
   },
   {
    "rel": "sentences/otsukaresama-desu-ganbatte.mp3",
    "text": "おつかれさまです。がんばって。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/omedetou-gozaimasu.mp3",
+   "text": "おめでとうございます。",
    "voice": "ja-JP-NanamiNeural"
   },
   {
@@ -223,11 +233,6 @@
   {
    "rel": "words/ano-hito.mp3",
    "text": "あのひと",
-   "voice": "ja-JP-NanamiNeural"
-  },
-  {
-   "rel": "words/namae.mp3",
-   "text": "なまえ",
    "voice": "ja-JP-NanamiNeural"
   },
   {
@@ -356,8 +361,8 @@
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/sou-desu.mp3",
-   "text": "そうです",
+   "rel": "words/sou.mp3",
+   "text": "そう",
    "voice": "ja-JP-NanamiNeural"
   },
   {
@@ -386,18 +391,18 @@
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/ja-arimasen.mp3",
-   "text": "じゃありません",
-   "voice": "ja-JP-NanamiNeural"
-  },
-  {
-   "rel": "words/dewa-arimasen.mp3",
-   "text": "ではありません",
-   "voice": "ja-JP-NanamiNeural"
-  },
-  {
    "rel": "words/chigaimasu.mp3",
    "text": "ちがいます",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/ginkou.mp3",
+   "text": "ぎんこう",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "words/ginkouin.mp3",
+   "text": "ぎんこういん",
    "voice": "ja-JP-NanamiNeural"
   },
   {
@@ -408,11 +413,6 @@
   {
    "rel": "words/demo.mp3",
    "text": "でも",
-   "voice": "ja-JP-NanamiNeural"
-  },
-  {
-   "rel": "words/ginkouin.mp3",
-   "text": "ぎんこういん",
    "voice": "ja-JP-NanamiNeural"
   },
   {
@@ -881,8 +881,8 @@
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/mitsukemashita.mp3",
-   "text": "みつけました",
+   "rel": "words/mitsukemasu.mp3",
+   "text": "みつけます",
    "voice": "ja-JP-NanamiNeural"
   },
   {
@@ -906,8 +906,8 @@
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/nan-desu-ka.mp3",
-   "text": "なんですか",
+   "rel": "words/kotoba.mp3",
+   "text": "ことば",
    "voice": "ja-JP-NanamiNeural"
   },
   {
@@ -968,11 +968,6 @@
   {
    "rel": "words/gakkou.mp3",
    "text": "がっこう",
-   "voice": "ja-JP-NanamiNeural"
-  },
-  {
-   "rel": "words/ginkou.mp3",
-   "text": "ぎんこう",
    "voice": "ja-JP-NanamiNeural"
   },
   {
@@ -1136,8 +1131,8 @@
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/migi-ni-magatte.mp3",
-   "text": "みぎにまがって",
+   "rel": "words/magarimasu.mp3",
+   "text": "まがります",
    "voice": "ja-JP-NanamiNeural"
   },
   {
@@ -1236,11 +1231,6 @@
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/asa.mp3",
-   "text": "あさ",
-   "voice": "ja-JP-NanamiNeural"
-  },
-  {
    "rel": "words/hiru.mp3",
    "text": "ひる",
    "voice": "ja-JP-NanamiNeural"
@@ -1253,11 +1243,6 @@
   {
    "rel": "words/kyou.mp3",
    "text": "きょう",
-   "voice": "ja-JP-NanamiNeural"
-  },
-  {
-   "rel": "words/ashita.mp3",
-   "text": "あした",
    "voice": "ja-JP-NanamiNeural"
   },
   {
@@ -1511,8 +1496,8 @@
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/benkyou-shimasu.mp3",
-   "text": "べんきょうします",
+   "rel": "words/benkyou.mp3",
+   "text": "べんきょう",
    "voice": "ja-JP-NanamiNeural"
   },
   {
@@ -1541,18 +1526,18 @@
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/masen.mp3",
-   "text": "ません",
+   "rel": "words/maiasa.mp3",
+   "text": "まいあさ",
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/mashita.mp3",
-   "text": "ました",
+   "rel": "words/maiban.mp3",
+   "text": "まいばん",
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/masen-deshita.mp3",
-   "text": "ませんでした",
+   "rel": "words/koohii.mp3",
+   "text": "コーヒー",
    "voice": "ja-JP-NanamiNeural"
   },
   {
@@ -1563,6 +1548,11 @@
   {
    "rel": "sentences/koohii-wo-nomimasen.mp3",
    "text": "コーヒーをのみません。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/asagohan-wo-tabemasen-deshita.mp3",
+   "text": "あさごはんをたべませんでした。",
    "voice": "ja-JP-NanamiNeural"
   },
   {
@@ -1593,11 +1583,6 @@
   {
    "rel": "words/sorekara.mp3",
    "text": "それから",
-   "voice": "ja-JP-NanamiNeural"
-  },
-  {
-   "rel": "words/maiasa.mp3",
-   "text": "まいあさ",
    "voice": "ja-JP-NanamiNeural"
   },
   {
@@ -1663,11 +1648,6 @@
   {
    "rel": "words/ocha.mp3",
    "text": "おちゃ",
-   "voice": "ja-JP-NanamiNeural"
-  },
-  {
-   "rel": "words/koohii.mp3",
-   "text": "コーヒー",
    "voice": "ja-JP-NanamiNeural"
   },
   {
@@ -1746,11 +1726,6 @@
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/onegaishimasu.mp3",
-   "text": "おねがいします",
-   "voice": "ja-JP-NanamiNeural"
-  },
-  {
    "rel": "words/okaikei.mp3",
    "text": "おかいけい",
    "voice": "ja-JP-NanamiNeural"
@@ -1821,18 +1796,18 @@
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/irasshaimase.mp3",
-   "text": "いらっしゃいませ",
+   "rel": "words/seki.mp3",
+   "text": "せき",
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/nanmeisama.mp3",
-   "text": "なんめいさま",
+   "rel": "words/kyaku.mp3",
+   "text": "きゃく",
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/shoushou-omachi-kudasai.mp3",
-   "text": "しょうしょうおまちください",
+   "rel": "words/machimasu.mp3",
+   "text": "まちます",
    "voice": "ja-JP-NanamiNeural"
   },
   {
@@ -1853,6 +1828,11 @@
   {
    "rel": "sentences/futari-desu.mp3",
    "text": "ふたりです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/shoushou-omachi-kudasai.mp3",
+   "text": "しょうしょうおまちください。",
    "voice": "ja-JP-NanamiNeural"
   },
   {
@@ -1946,13 +1926,13 @@
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/otoko-no-hito.mp3",
-   "text": "おとこのひと",
+   "rel": "words/otoko.mp3",
+   "text": "おとこ",
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/onna-no-hito.mp3",
-   "text": "おんなのひと",
+   "rel": "words/onna.mp3",
+   "text": "おんな",
    "voice": "ja-JP-NanamiNeural"
   },
   {
@@ -2086,11 +2066,6 @@
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/genki.mp3",
-   "text": "げんき",
-   "voice": "ja-JP-NanamiNeural"
-  },
-  {
    "rel": "words/benri.mp3",
    "text": "べんり",
    "voice": "ja-JP-NanamiNeural"
@@ -2211,8 +2186,8 @@
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/kunai-desu.mp3",
-   "text": "くないです",
+   "rel": "words/warui.mp3",
+   "text": "わるい",
    "voice": "ja-JP-NanamiNeural"
   },
   {
@@ -2396,13 +2371,8 @@
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/choudo-ii.mp3",
-   "text": "ちょうどいい",
-   "voice": "ja-JP-NanamiNeural"
-  },
-  {
-   "rel": "words/arimasu-ka.mp3",
-   "text": "ありますか",
+   "rel": "words/choudo.mp3",
+   "text": "ちょうど",
    "voice": "ja-JP-NanamiNeural"
   },
   {
@@ -2436,8 +2406,8 @@
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/takasugimasu.mp3",
-   "text": "たかすぎます",
+   "rel": "words/nesage.mp3",
+   "text": "ねさげ",
    "voice": "ja-JP-NanamiNeural"
   },
   {
@@ -2451,28 +2421,28 @@
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/misete-kudasai.mp3",
-   "text": "みせてください",
+   "rel": "words/misemasu.mp3",
+   "text": "みせます",
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/kore-ni-shimasu.mp3",
-   "text": "これにします",
+   "rel": "words/erabimasu.mp3",
+   "text": "えらびます",
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/kekkou-desu.mp3",
-   "text": "けっこうです",
-   "voice": "ja-JP-NanamiNeural"
-  },
-  {
-   "rel": "words/chotto-matte-kudasai.mp3",
-   "text": "ちょっとまってください",
+   "rel": "words/kekkou.mp3",
+   "text": "けっこう",
    "voice": "ja-JP-NanamiNeural"
   },
   {
    "rel": "sentences/sore-o-misete-kudasai.mp3",
    "text": "それをみせてください。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/chotto-matte-kudasai.mp3",
+   "text": "ちょっとまってください。",
    "voice": "ja-JP-NanamiNeural"
   },
   {
@@ -2576,8 +2546,8 @@
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/norikaemasu.mp3",
-   "text": "のりかえます",
+   "rel": "words/norikae.mp3",
+   "text": "のりかえ",
    "voice": "ja-JP-NanamiNeural"
   },
   {
@@ -2676,23 +2646,18 @@
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/okurete.mp3",
-   "text": "おくれて",
+   "rel": "words/okuremasu.mp3",
+   "text": "おくれます",
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/machimasu.mp3",
-   "text": "まちます",
+   "rel": "words/komimasu.mp3",
+   "text": "こみます",
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/konde-imasu.mp3",
-   "text": "こんでいます",
-   "voice": "ja-JP-NanamiNeural"
-  },
-  {
-   "rel": "words/suite-imasu.mp3",
-   "text": "すいています",
+   "rel": "words/sukimasu.mp3",
+   "text": "すきます",
    "voice": "ja-JP-NanamiNeural"
   },
   {
@@ -2851,11 +2816,6 @@
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/suki-ja-arimasen.mp3",
-   "text": "すきじゃありません",
-   "voice": "ja-JP-NanamiNeural"
-  },
-  {
    "rel": "sentences/watashi-wa-sushi-ga-daisuki-desu.mp3",
    "text": "わたしはすしがだいすきです。",
    "voice": "ja-JP-NanamiNeural"
@@ -2996,11 +2956,6 @@
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/seki.mp3",
-   "text": "せき",
-   "voice": "ja-JP-NanamiNeural"
-  },
-  {
    "rel": "words/nodo.mp3",
    "text": "のど",
    "voice": "ja-JP-NanamiNeural"
@@ -3051,8 +3006,8 @@
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/tsukaremashita.mp3",
-   "text": "つかれました",
+   "rel": "words/tsukaremasu.mp3",
+   "text": "つかれます",
    "voice": "ja-JP-NanamiNeural"
   },
   {
@@ -3061,18 +3016,18 @@
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/kibun-ga-warui.mp3",
-   "text": "きぶんがわるい",
+   "rel": "words/kibun.mp3",
+   "text": "きぶん",
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/kimochi-ga-ii.mp3",
-   "text": "きもちがいい",
+   "rel": "words/kimochi.mp3",
+   "text": "きもち",
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/genki-ni-narimashita.mp3",
-   "text": "げんきになりました",
+   "rel": "words/karada.mp3",
+   "text": "からだ",
    "voice": "ja-JP-NanamiNeural"
   },
   {
@@ -3081,8 +3036,13 @@
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "sentences/asa-wa-itsumo-nemui-desu.mp3",
-   "text": "あさはいつもねむいです。",
+   "rel": "sentences/kibun-ga-warui-desu.mp3",
+   "text": "きぶんがわるいです。",
+   "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/genki-ni-narimashita.mp3",
+   "text": "げんきになりました。",
    "voice": "ja-JP-NanamiNeural"
   },
   {
@@ -3091,18 +3051,13 @@
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/yasunde-kudasai.mp3",
-   "text": "やすんでください",
-   "voice": "ja-JP-NanamiNeural"
-  },
-  {
    "rel": "words/odaijini.mp3",
    "text": "おだいじに",
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/muri-shinaide.mp3",
-   "text": "むりしないで",
+   "rel": "words/muri.mp3",
+   "text": "むり",
    "voice": "ja-JP-NanamiNeural"
   },
   {
@@ -3121,23 +3076,23 @@
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/dou-shimashita-ka.mp3",
-   "text": "どうしましたか",
+   "rel": "words/dou.mp3",
+   "text": "どう",
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/itsu-kara-desu-ka.mp3",
-   "text": "いつからですか",
+   "rel": "words/itsu.mp3",
+   "text": "いつ",
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/kinou-kara.mp3",
-   "text": "きのうから",
+   "rel": "words/kai.mp3",
+   "text": "かい",
    "voice": "ja-JP-NanamiNeural"
   },
   {
-   "rel": "words/mainichi-nomimasu.mp3",
-   "text": "まいにちのみます",
+   "rel": "words/ikkai.mp3",
+   "text": "いっかい",
    "voice": "ja-JP-NanamiNeural"
   },
   {
@@ -3149,18 +3104,18 @@
    "rel": "sentences/itsu-kara-desu-ka-kinou-kara-desu.mp3",
    "text": "いつからですか。きのうからです。",
    "voice": "ja-JP-NanamiNeural"
+  },
+  {
+   "rel": "sentences/kono-kusuri-o-mainichi-nomimasu.mp3",
+   "text": "このくすりをまいにちのみます。",
+   "voice": "ja-JP-NanamiNeural"
   }
  ],
  "image": [
   {
-   "rel": "vocab/ohayou-gozaimasu.png",
-   "emoji": "🌅",
-   "label": "chào buổi sáng (lịch sự)"
-  },
-  {
    "rel": "vocab/ohayou.png",
-   "emoji": "🌄",
-   "label": "chào buổi sáng (thân mật)"
+   "emoji": "🌅",
+   "label": "chào buổi sáng"
   },
   {
    "rel": "vocab/konnichiwa.png",
@@ -3173,24 +3128,24 @@
    "label": "chào buổi tối"
   },
   {
-   "rel": "vocab/oyasuminasai.png",
+   "rel": "vocab/oyasumi.png",
    "emoji": "🌙",
    "label": "chúc ngủ ngon"
   },
   {
-   "rel": "vocab/arigatou-gozaimasu.png",
-   "emoji": "🙏",
-   "label": "cảm ơn (lịch sự)"
+   "rel": "vocab/asa.png",
+   "emoji": "🌄",
+   "label": "buổi sáng"
   },
   {
    "rel": "vocab/arigatou.png",
    "emoji": "😊",
-   "label": "cảm ơn (thân mật)"
+   "label": "cảm ơn"
   },
   {
-   "rel": "vocab/dou-itashimashite.png",
+   "rel": "vocab/doumo.png",
    "emoji": "🤝",
-   "label": "không có chi"
+   "label": "rất / xin chào"
   },
   {
    "rel": "vocab/sumimasen.png",
@@ -3198,14 +3153,19 @@
    "label": "xin lỗi / cho hỏi"
   },
   {
-   "rel": "vocab/gomen-nasai.png",
+   "rel": "vocab/gomen.png",
    "emoji": "😔",
-   "label": "tôi xin lỗi"
+   "label": "xin lỗi (thân mật)"
   },
   {
-   "rel": "vocab/daijoubu-desu.png",
+   "rel": "vocab/daijoubu.png",
    "emoji": "👌",
-   "label": "không sao đâu"
+   "label": "không sao, ổn"
+  },
+  {
+   "rel": "vocab/ie.png",
+   "emoji": "🏡",
+   "label": "ngôi nhà"
   },
   {
    "rel": "vocab/hajimemashite.png",
@@ -3213,24 +3173,24 @@
    "label": "rất hân hạnh được gặp"
   },
   {
-   "rel": "vocab/yoroshiku-onegaishimasu.png",
+   "rel": "vocab/yoroshiku.png",
    "emoji": "🙇",
    "label": "mong được giúp đỡ"
   },
   {
-   "rel": "vocab/ogenki-desu-ka.png",
-   "emoji": "❓",
-   "label": "bạn có khỏe không?"
+   "rel": "vocab/onegai.png",
+   "emoji": "🙏",
+   "label": "làm ơn, xin nhờ"
   },
   {
-   "rel": "vocab/genki-desu.png",
+   "rel": "vocab/genki.png",
    "emoji": "💪",
-   "label": "tôi khỏe"
+   "label": "khỏe mạnh"
   },
   {
-   "rel": "vocab/onamae-wa.png",
+   "rel": "vocab/namae.png",
    "emoji": "📛",
-   "label": "tên bạn là gì?"
+   "label": "tên"
   },
   {
    "rel": "vocab/sayounara.png",
@@ -3238,19 +3198,19 @@
    "label": "tạm biệt"
   },
   {
-   "rel": "vocab/mata-ashita.png",
+   "rel": "vocab/ashita.png",
    "emoji": "📅",
-   "label": "hẹn mai gặp lại"
+   "label": "ngày mai"
   },
   {
-   "rel": "vocab/mata-ne.png",
+   "rel": "vocab/mata.png",
    "emoji": "✌️",
-   "label": "gặp lại nhé (thân mật)"
+   "label": "hẹn gặp lại"
   },
   {
-   "rel": "vocab/shitsurei-shimasu.png",
+   "rel": "vocab/shitsurei.png",
    "emoji": "🚪",
-   "label": "tôi xin phép (đi trước)"
+   "label": "thất lễ / xin phép"
   },
   {
    "rel": "vocab/ki-wo-tsukete.png",
@@ -3263,17 +3223,12 @@
    "label": "con/tôi đi đây"
   },
   {
-   "rel": "vocab/itterasshai.png",
-   "emoji": "👋",
-   "label": "đi rồi về nhé"
-  },
-  {
    "rel": "vocab/tadaima.png",
    "emoji": "🏠",
    "label": "con/tôi về rồi"
   },
   {
-   "rel": "vocab/okaerinasai.png",
+   "rel": "vocab/okaeri.png",
    "emoji": "🤗",
    "label": "mừng bạn về"
   },
@@ -3283,14 +3238,9 @@
    "label": "xin phép được ăn"
   },
   {
-   "rel": "vocab/gochisousama-deshita.png",
-   "emoji": "😋",
-   "label": "cảm ơn vì bữa ăn"
-  },
-  {
-   "rel": "vocab/otsukaresama-desu.png",
+   "rel": "vocab/otsukaresama.png",
    "emoji": "💼",
-   "label": "bạn vất vả rồi"
+   "label": "bạn đã vất vả"
   },
   {
    "rel": "vocab/ganbatte.png",
@@ -3298,9 +3248,14 @@
    "label": "cố lên nhé"
   },
   {
-   "rel": "vocab/omedetou-gozaimasu.png",
+   "rel": "vocab/omedetou.png",
    "emoji": "🎉",
-   "label": "xin chúc mừng"
+   "label": "chúc mừng"
+  },
+  {
+   "rel": "vocab/shokuji.png",
+   "emoji": "🍱",
+   "label": "bữa ăn"
   },
   {
    "rel": "vocab/watashi.png",
@@ -3308,19 +3263,14 @@
    "label": "tôi"
   },
   {
-   "rel": "vocab/enjinia.png",
-   "emoji": "👷",
-   "label": "kỹ sư"
+   "rel": "vocab/gakusei.png",
+   "emoji": "🎓",
+   "label": "học sinh, sinh viên"
   },
   {
-   "rel": "vocab/kaishain.png",
-   "emoji": "💼",
-   "label": "nhân viên công ty"
-  },
-  {
-   "rel": "vocab/kokku.png",
-   "emoji": "👨‍🍳",
-   "label": "đầu bếp"
+   "rel": "vocab/daigaku.png",
+   "emoji": "🏛️",
+   "label": "trường đại học"
   },
   {
    "rel": "vocab/anata.png",
@@ -3333,24 +3283,14 @@
    "label": "người kia"
   },
   {
-   "rel": "vocab/namae.png",
-   "emoji": "📛",
-   "label": "tên"
-  },
-  {
    "rel": "vocab/tomodachi.png",
    "emoji": "👫",
    "label": "bạn bè"
   },
   {
-   "rel": "vocab/ginkouin.png",
-   "emoji": "🏦",
-   "label": "nhân viên ngân hàng"
-  },
-  {
-   "rel": "vocab/chuugoku.png",
-   "emoji": "🇨🇳",
-   "label": "Trung Quốc"
+   "rel": "vocab/betonamujin.png",
+   "emoji": "👨‍🌾",
+   "label": "người Việt Nam"
   },
   {
    "rel": "vocab/san.png",
@@ -3361,6 +3301,16 @@
    "rel": "vocab/nihon.png",
    "emoji": "🇯🇵",
    "label": "Nhật Bản"
+  },
+  {
+   "rel": "vocab/ginkou.png",
+   "emoji": "🏦",
+   "label": "ngân hàng"
+  },
+  {
+   "rel": "vocab/nihongo.png",
+   "emoji": "🗣️",
+   "label": "tiếng Nhật"
   },
   {
    "rel": "vocab/betonamu.png",
@@ -3378,14 +3328,14 @@
    "label": "Hàn Quốc"
   },
   {
-   "rel": "vocab/betonamujin.png",
-   "emoji": "👨‍🌾",
-   "label": "người Việt Nam"
+   "rel": "vocab/isha.png",
+   "emoji": "👨‍⚕️",
+   "label": "bác sĩ"
   },
   {
-   "rel": "vocab/kaisha.png",
-   "emoji": "🏢",
-   "label": "công ty"
+   "rel": "vocab/chuugoku.png",
+   "emoji": "🇨🇳",
+   "label": "Trung Quốc"
   },
   {
    "rel": "vocab/nihonjin.png",
@@ -3393,24 +3343,9 @@
    "label": "người Nhật"
   },
   {
-   "rel": "vocab/daigaku.png",
-   "emoji": "🏛️",
-   "label": "trường đại học"
-  },
-  {
-   "rel": "vocab/nihongo.png",
-   "emoji": "🗣️",
-   "label": "tiếng Nhật"
-  },
-  {
    "rel": "vocab/eigo.png",
    "emoji": "🔤",
    "label": "tiếng Anh"
-  },
-  {
-   "rel": "vocab/gakusei.png",
-   "emoji": "🎓",
-   "label": "học sinh, sinh viên"
   },
   {
    "rel": "vocab/sensei.png",
@@ -3418,9 +3353,24 @@
    "label": "giáo viên"
   },
   {
-   "rel": "vocab/isha.png",
-   "emoji": "👨‍⚕️",
-   "label": "bác sĩ"
+   "rel": "vocab/kaishain.png",
+   "emoji": "💼",
+   "label": "nhân viên công ty"
+  },
+  {
+   "rel": "vocab/enjinia.png",
+   "emoji": "👷",
+   "label": "kỹ sư"
+  },
+  {
+   "rel": "vocab/kokku.png",
+   "emoji": "👨‍🍳",
+   "label": "đầu bếp"
+  },
+  {
+   "rel": "vocab/kaisha.png",
+   "emoji": "🏢",
+   "label": "công ty"
   },
   {
    "rel": "vocab/hai.png",
@@ -3433,9 +3383,9 @@
    "label": "không"
   },
   {
-   "rel": "vocab/sou-desu.png",
+   "rel": "vocab/sou.png",
    "emoji": "👍",
-   "label": "đúng vậy"
+   "label": "đúng như vậy"
   },
   {
    "rel": "vocab/dare.png",
@@ -3448,19 +3398,14 @@
    "label": "cái gì"
   },
   {
-   "rel": "vocab/ja-arimasen.png",
-   "emoji": "🚫",
-   "label": "không phải là…"
-  },
-  {
-   "rel": "vocab/dewa-arimasen.png",
-   "emoji": "📄",
-   "label": "không phải là… (trang trọng)"
-  },
-  {
    "rel": "vocab/chigaimasu.png",
    "emoji": "🙅",
    "label": "không phải, bạn nhầm rồi"
+  },
+  {
+   "rel": "vocab/ginkouin.png",
+   "emoji": "👔",
+   "label": "nhân viên ngân hàng"
   },
   {
    "rel": "vocab/mada.png",
@@ -3483,19 +3428,19 @@
    "label": "số 1"
   },
   {
-   "rel": "vocab/takai.png",
-   "emoji": "📈",
-   "label": "đắt"
+   "rel": "vocab/go.png",
+   "emoji": "5️⃣",
+   "label": "số 5"
   },
   {
-   "rel": "vocab/gohyaku.png",
-   "emoji": "🔢",
-   "label": "500"
+   "rel": "vocab/mise.png",
+   "emoji": "🏪",
+   "label": "cửa hàng"
   },
   {
-   "rel": "vocab/san-2.png",
-   "emoji": "3️⃣",
-   "label": "số 3"
+   "rel": "vocab/kudasai.png",
+   "emoji": "🛒",
+   "label": "cho tôi xin…"
   },
   {
    "rel": "vocab/ni.png",
@@ -3503,39 +3448,14 @@
    "label": "số 2"
   },
   {
+   "rel": "vocab/san-2.png",
+   "emoji": "3️⃣",
+   "label": "số 3"
+  },
+  {
    "rel": "vocab/yon.png",
    "emoji": "4️⃣",
    "label": "số 4"
-  },
-  {
-   "rel": "vocab/go.png",
-   "emoji": "5️⃣",
-   "label": "số 5"
-  },
-  {
-   "rel": "vocab/hatachi.png",
-   "emoji": "🎊",
-   "label": "20 tuổi"
-  },
-  {
-   "rel": "vocab/mittsu.png",
-   "emoji": "🤟",
-   "label": "ba cái"
-  },
-  {
-   "rel": "vocab/roku.png",
-   "emoji": "6️⃣",
-   "label": "số 6"
-  },
-  {
-   "rel": "vocab/nana.png",
-   "emoji": "7️⃣",
-   "label": "số 7"
-  },
-  {
-   "rel": "vocab/ichimai.png",
-   "emoji": "📄",
-   "label": "một tờ/tấm"
   },
   {
    "rel": "vocab/sanzen.png",
@@ -3548,6 +3468,26 @@
    "label": "số 8"
   },
   {
+   "rel": "vocab/roku.png",
+   "emoji": "6️⃣",
+   "label": "số 6"
+  },
+  {
+   "rel": "vocab/nana.png",
+   "emoji": "7️⃣",
+   "label": "số 7"
+  },
+  {
+   "rel": "vocab/yasui.png",
+   "emoji": "📉",
+   "label": "rẻ"
+  },
+  {
+   "rel": "vocab/gohyaku.png",
+   "emoji": "🔢",
+   "label": "500"
+  },
+  {
    "rel": "vocab/kyuu.png",
    "emoji": "9️⃣",
    "label": "số 9"
@@ -3558,14 +3498,9 @@
    "label": "số 10"
   },
   {
-   "rel": "vocab/juuichi.png",
-   "emoji": "🔢",
-   "label": "số 11"
-  },
-  {
-   "rel": "vocab/futari.png",
-   "emoji": "👬",
-   "label": "hai người"
+   "rel": "vocab/ichiman.png",
+   "emoji": "💰",
+   "label": "10.000 (một vạn)"
   },
   {
    "rel": "vocab/ippon.png",
@@ -3573,14 +3508,19 @@
    "label": "một cây/chai"
   },
   {
-   "rel": "vocab/mise.png",
-   "emoji": "🏪",
-   "label": "cửa hàng"
+   "rel": "vocab/juuichi.png",
+   "emoji": "🔢",
+   "label": "số 11"
   },
   {
-   "rel": "vocab/ichiman.png",
-   "emoji": "💰",
-   "label": "10.000 (một vạn)"
+   "rel": "vocab/en.png",
+   "emoji": "💴",
+   "label": "yên (tiền Nhật)"
+  },
+  {
+   "rel": "vocab/hatachi.png",
+   "emoji": "🎊",
+   "label": "20 tuổi"
   },
   {
    "rel": "vocab/juugo.png",
@@ -3598,9 +3538,14 @@
    "label": "số 30"
   },
   {
-   "rel": "vocab/hitotsu.png",
-   "emoji": "☝️",
-   "label": "một cái"
+   "rel": "vocab/denwa-bangou.png",
+   "emoji": "📱",
+   "label": "số điện thoại"
+  },
+  {
+   "rel": "vocab/takai.png",
+   "emoji": "📈",
+   "label": "đắt"
   },
   {
    "rel": "vocab/gojuu.png",
@@ -3623,11 +3568,6 @@
    "label": "200"
   },
   {
-   "rel": "vocab/en.png",
-   "emoji": "💴",
-   "label": "yên (tiền Nhật)"
-  },
-  {
    "rel": "vocab/futatsu.png",
    "emoji": "✌️",
    "label": "hai cái"
@@ -3636,6 +3576,11 @@
    "rel": "vocab/sen.png",
    "emoji": "🔢",
    "label": "1.000"
+  },
+  {
+   "rel": "vocab/mittsu.png",
+   "emoji": "🤟",
+   "label": "ba cái"
   },
   {
    "rel": "vocab/sai.png",
@@ -3648,11 +3593,6 @@
    "label": "bao nhiêu tuổi"
   },
   {
-   "rel": "vocab/denwa-bangou.png",
-   "emoji": "📱",
-   "label": "số điện thoại"
-  },
-  {
    "rel": "vocab/nanban.png",
    "emoji": "🔢",
    "label": "số mấy"
@@ -3663,9 +3603,14 @@
    "label": "bao nhiêu tiền"
   },
   {
-   "rel": "vocab/yasui.png",
-   "emoji": "📉",
-   "label": "rẻ"
+   "rel": "vocab/hitotsu.png",
+   "emoji": "☝️",
+   "label": "một cái"
+  },
+  {
+   "rel": "vocab/ichimai.png",
+   "emoji": "📄",
+   "label": "một tờ/tấm"
   },
   {
    "rel": "vocab/hitori.png",
@@ -3673,9 +3618,9 @@
    "label": "một người"
   },
   {
-   "rel": "vocab/kudasai.png",
-   "emoji": "🛒",
-   "label": "cho tôi xin…"
+   "rel": "vocab/futari.png",
+   "emoji": "👬",
+   "label": "hai người"
   },
   {
    "rel": "vocab/kore.png",
@@ -3698,34 +3643,19 @@
    "label": "cái nào"
   },
   {
-   "rel": "vocab/nan-desu-ka.png",
-   "emoji": "❓",
-   "label": "là cái gì vậy?"
-  },
-  {
    "rel": "vocab/hon.png",
    "emoji": "📖",
    "label": "quyển sách"
   },
   {
-   "rel": "vocab/pen.png",
-   "emoji": "🖊️",
-   "label": "cây bút"
+   "rel": "vocab/tokei.png",
+   "emoji": "⌚",
+   "label": "cái đồng hồ"
   },
   {
-   "rel": "vocab/jisho.png",
-   "emoji": "📕",
-   "label": "quyển từ điển"
-  },
-  {
-   "rel": "vocab/kagu.png",
-   "emoji": "🛋️",
-   "label": "đồ nội thất"
-  },
-  {
-   "rel": "vocab/nooto.png",
-   "emoji": "📓",
-   "label": "quyển vở"
+   "rel": "vocab/kotoba.png",
+   "emoji": "💬",
+   "label": "từ ngữ, tiếng nói"
   },
   {
    "rel": "vocab/enpitsu.png",
@@ -3733,14 +3663,19 @@
    "label": "bút chì"
   },
   {
-   "rel": "vocab/kagi.png",
-   "emoji": "🔑",
-   "label": "chìa khóa"
+   "rel": "vocab/nooto.png",
+   "emoji": "📓",
+   "label": "quyển vở"
   },
   {
-   "rel": "vocab/saifu.png",
-   "emoji": "👛",
-   "label": "cái ví"
+   "rel": "vocab/pen.png",
+   "emoji": "🖊️",
+   "label": "cây bút"
+  },
+  {
+   "rel": "vocab/betonamugo.png",
+   "emoji": "🇻🇳",
+   "label": "tiếng Việt"
   },
   {
    "rel": "vocab/keshigomu.png",
@@ -3753,9 +3688,9 @@
    "label": "cái cặp"
   },
   {
-   "rel": "vocab/tokei.png",
-   "emoji": "⌚",
-   "label": "cái đồng hồ"
+   "rel": "vocab/jisho.png",
+   "emoji": "📕",
+   "label": "quyển từ điển"
   },
   {
    "rel": "vocab/tsukue.png",
@@ -3768,14 +3703,29 @@
    "label": "của tôi"
   },
   {
-   "rel": "vocab/otoshimono.png",
-   "emoji": "💧",
-   "label": "đồ đánh rơi"
+   "rel": "vocab/wasuremono.png",
+   "emoji": "🧳",
+   "label": "đồ bỏ quên"
+  },
+  {
+   "rel": "vocab/kagu.png",
+   "emoji": "🛋️",
+   "label": "đồ nội thất"
+  },
+  {
+   "rel": "vocab/kagi.png",
+   "emoji": "🔑",
+   "label": "chìa khóa"
   },
   {
    "rel": "vocab/kasa.png",
    "emoji": "☂️",
    "label": "cái ô"
+  },
+  {
+   "rel": "vocab/saifu.png",
+   "emoji": "👛",
+   "label": "cái ví"
   },
   {
    "rel": "vocab/megane.png",
@@ -3788,9 +3738,9 @@
    "label": "điện thoại thông minh"
   },
   {
-   "rel": "vocab/betonamugo.png",
-   "emoji": "💬",
-   "label": "tiếng Việt"
+   "rel": "vocab/otoshimono.png",
+   "emoji": "💧",
+   "label": "đồ đánh rơi"
   },
   {
    "rel": "vocab/kono.png",
@@ -3823,14 +3773,9 @@
    "label": "của công ty"
   },
   {
-   "rel": "vocab/wasuremono.png",
-   "emoji": "🧳",
-   "label": "đồ bỏ quên"
-  },
-  {
-   "rel": "vocab/mitsukemashita.png",
+   "rel": "vocab/mitsukemasu.png",
    "emoji": "🔎",
-   "label": "tôi tìm thấy rồi"
+   "label": "tìm thấy"
   },
   {
    "rel": "vocab/koko.png",
@@ -3863,19 +3808,14 @@
    "label": "nhà ga"
   },
   {
-   "rel": "vocab/daidokoro.png",
-   "emoji": "🍳",
-   "label": "nhà bếp"
+   "rel": "vocab/ue.png",
+   "emoji": "⬆️",
+   "label": "phía trên"
   },
   {
-   "rel": "vocab/resutoran.png",
-   "emoji": "🍽️",
-   "label": "nhà hàng"
-  },
-  {
-   "rel": "vocab/genkan.png",
-   "emoji": "🚪",
-   "label": "lối vào để cởi giày"
+   "rel": "vocab/ushiro.png",
+   "emoji": "⏩",
+   "label": "phía sau"
   },
   {
    "rel": "vocab/byouin.png",
@@ -3888,24 +3828,9 @@
    "label": "trường học"
   },
   {
-   "rel": "vocab/ginkou.png",
-   "emoji": "🏦",
-   "label": "ngân hàng"
-  },
-  {
-   "rel": "vocab/tonari.png",
-   "emoji": "↔️",
-   "label": "bên cạnh"
-  },
-  {
-   "rel": "vocab/kouen.png",
-   "emoji": "🏞️",
-   "label": "công viên"
-  },
-  {
-   "rel": "vocab/massugu.png",
-   "emoji": "⬆️",
-   "label": "đi thẳng"
+   "rel": "vocab/magarimasu.png",
+   "emoji": "↩️",
+   "label": "rẽ, quẹo"
   },
   {
    "rel": "vocab/konbini.png",
@@ -3913,29 +3838,14 @@
    "label": "cửa hàng tiện lợi"
   },
   {
+   "rel": "vocab/resutoran.png",
+   "emoji": "🍽️",
+   "label": "nhà hàng"
+  },
+  {
    "rel": "vocab/yuubinkyoku.png",
    "emoji": "📮",
    "label": "bưu điện"
-  },
-  {
-   "rel": "vocab/imasu.png",
-   "emoji": "🧍",
-   "label": "có (người, động vật)"
-  },
-  {
-   "rel": "vocab/hidari.png",
-   "emoji": "⬅️",
-   "label": "bên trái"
-  },
-  {
-   "rel": "vocab/heya.png",
-   "emoji": "🛏️",
-   "label": "căn phòng"
-  },
-  {
-   "rel": "vocab/shita.png",
-   "emoji": "⬇️",
-   "label": "phía dưới"
   },
   {
    "rel": "vocab/ofuro.png",
@@ -3943,14 +3853,24 @@
    "label": "phòng tắm"
   },
   {
-   "rel": "vocab/migi.png",
-   "emoji": "➡️",
-   "label": "bên phải"
+   "rel": "vocab/chikaku.png",
+   "emoji": "📍",
+   "label": "gần đây"
   },
   {
-   "rel": "vocab/niwa.png",
-   "emoji": "🌳",
-   "label": "khu vườn"
+   "rel": "vocab/kouen.png",
+   "emoji": "🏞️",
+   "label": "công viên"
+  },
+  {
+   "rel": "vocab/heya.png",
+   "emoji": "🛏️",
+   "label": "căn phòng"
+  },
+  {
+   "rel": "vocab/daidokoro.png",
+   "emoji": "🍳",
+   "label": "nhà bếp"
   },
   {
    "rel": "vocab/mado.png",
@@ -3958,19 +3878,44 @@
    "label": "cửa sổ"
   },
   {
+   "rel": "vocab/mae.png",
+   "emoji": "⏪",
+   "label": "phía trước"
+  },
+  {
+   "rel": "vocab/hidari.png",
+   "emoji": "⬅️",
+   "label": "bên trái"
+  },
+  {
+   "rel": "vocab/massugu.png",
+   "emoji": "⬆️",
+   "label": "đi thẳng"
+  },
+  {
+   "rel": "vocab/niwa.png",
+   "emoji": "🌳",
+   "label": "khu vườn"
+  },
+  {
+   "rel": "vocab/genkan.png",
+   "emoji": "🚪",
+   "label": "lối vào để cởi giày"
+  },
+  {
+   "rel": "vocab/migi.png",
+   "emoji": "➡️",
+   "label": "bên phải"
+  },
+  {
    "rel": "vocab/arimasu.png",
    "emoji": "📦",
    "label": "có (đồ vật)"
   },
   {
-   "rel": "vocab/naka.png",
-   "emoji": "📥",
-   "label": "bên trong"
-  },
-  {
-   "rel": "vocab/mae.png",
-   "emoji": "⏪",
-   "label": "phía trước"
+   "rel": "vocab/imasu.png",
+   "emoji": "🧍",
+   "label": "có (người, động vật)"
   },
   {
    "rel": "vocab/ga.png",
@@ -3983,29 +3928,24 @@
    "label": "ở (chỉ nơi tồn tại)"
   },
   {
-   "rel": "vocab/ue.png",
-   "emoji": "⬆️",
-   "label": "phía trên"
-  },
-  {
    "rel": "vocab/michi.png",
    "emoji": "🛣️",
    "label": "con đường"
   },
   {
-   "rel": "vocab/ushiro.png",
-   "emoji": "⏩",
-   "label": "phía sau"
+   "rel": "vocab/shita.png",
+   "emoji": "⬇️",
+   "label": "phía dưới"
   },
   {
-   "rel": "vocab/migi-ni-magatte.png",
-   "emoji": "↩️",
-   "label": "rẽ phải"
+   "rel": "vocab/naka.png",
+   "emoji": "📥",
+   "label": "bên trong"
   },
   {
-   "rel": "vocab/chikaku.png",
-   "emoji": "📍",
-   "label": "gần đây"
+   "rel": "vocab/tonari.png",
+   "emoji": "↔️",
+   "label": "bên cạnh"
   },
   {
    "rel": "vocab/ichiji.png",
@@ -4013,19 +3953,19 @@
    "label": "1 giờ"
   },
   {
-   "rel": "vocab/kayoubi.png",
-   "emoji": "🔥",
-   "label": "thứ Ba"
+   "rel": "vocab/yasumi.png",
+   "emoji": "🏖️",
+   "label": "ngày nghỉ"
   },
   {
-   "rel": "vocab/doyoubi.png",
-   "emoji": "🏔️",
-   "label": "thứ Bảy"
+   "rel": "vocab/shichigatsu.png",
+   "emoji": "🎋",
+   "label": "tháng 7 (bất quy tắc)"
   },
   {
-   "rel": "vocab/getsuyoubi.png",
-   "emoji": "🌙",
-   "label": "thứ Hai"
+   "rel": "vocab/ashita-2.png",
+   "emoji": "➡️",
+   "label": "ngày mai"
   },
   {
    "rel": "vocab/sanji.png",
@@ -4043,19 +3983,9 @@
    "label": "7 giờ (bất quy tắc)"
   },
   {
-   "rel": "vocab/shigatsu.png",
-   "emoji": "🌸",
-   "label": "tháng 4 (bất quy tắc)"
-  },
-  {
-   "rel": "vocab/nichiyoubi.png",
-   "emoji": "☀️",
-   "label": "Chủ nhật"
-  },
-  {
-   "rel": "vocab/mainichi.png",
-   "emoji": "🔁",
-   "label": "hằng ngày"
+   "rel": "vocab/tsuitachi.png",
+   "emoji": "1️⃣",
+   "label": "ngày mùng 1"
   },
   {
    "rel": "vocab/kuji.png",
@@ -4078,14 +4008,14 @@
    "label": "5 phút"
   },
   {
-   "rel": "vocab/suiyoubi.png",
-   "emoji": "💧",
-   "label": "thứ Tư"
+   "rel": "vocab/hatsuka.png",
+   "emoji": "🔢",
+   "label": "ngày 20"
   },
   {
-   "rel": "vocab/yoru.png",
-   "emoji": "🌃",
-   "label": "buổi tối"
+   "rel": "vocab/tanjoubi.png",
+   "emoji": "🎂",
+   "label": "sinh nhật"
   },
   {
    "rel": "vocab/juppun.png",
@@ -4113,14 +4043,14 @@
    "label": "bây giờ"
   },
   {
-   "rel": "vocab/asa.png",
+   "rel": "vocab/asa-2.png",
    "emoji": "🌅",
    "label": "buổi sáng"
   },
   {
-   "rel": "vocab/kinyoubi.png",
-   "emoji": "💰",
-   "label": "thứ Sáu"
+   "rel": "vocab/mainichi.png",
+   "emoji": "🔁",
+   "label": "hằng ngày"
   },
   {
    "rel": "vocab/hiru.png",
@@ -4128,14 +4058,19 @@
    "label": "buổi trưa"
   },
   {
+   "rel": "vocab/yoru.png",
+   "emoji": "🌃",
+   "label": "buổi tối"
+  },
+  {
    "rel": "vocab/kyou.png",
    "emoji": "📅",
    "label": "hôm nay"
   },
   {
-   "rel": "vocab/ashita.png",
-   "emoji": "➡️",
-   "label": "ngày mai"
+   "rel": "vocab/getsuyoubi.png",
+   "emoji": "🌙",
+   "label": "thứ Hai"
   },
   {
    "rel": "vocab/kinou.png",
@@ -4143,24 +4078,39 @@
    "label": "hôm qua"
   },
   {
-   "rel": "vocab/yasumi.png",
-   "emoji": "🏖️",
-   "label": "ngày nghỉ"
-  },
-  {
-   "rel": "vocab/tanjoubi.png",
-   "emoji": "🎂",
-   "label": "sinh nhật"
-  },
-  {
    "rel": "vocab/mokuyoubi.png",
    "emoji": "🌳",
    "label": "thứ Năm"
   },
   {
-   "rel": "vocab/shigoto.png",
-   "emoji": "💼",
-   "label": "công việc"
+   "rel": "vocab/nichiyoubi.png",
+   "emoji": "☀️",
+   "label": "Chủ nhật"
+  },
+  {
+   "rel": "vocab/kayoubi.png",
+   "emoji": "🔥",
+   "label": "thứ Ba"
+  },
+  {
+   "rel": "vocab/suiyoubi.png",
+   "emoji": "💧",
+   "label": "thứ Tư"
+  },
+  {
+   "rel": "vocab/kinyoubi.png",
+   "emoji": "💰",
+   "label": "thứ Sáu"
+  },
+  {
+   "rel": "vocab/doyoubi.png",
+   "emoji": "🏔️",
+   "label": "thứ Bảy"
+  },
+  {
+   "rel": "vocab/shigatsu.png",
+   "emoji": "🌸",
+   "label": "tháng 4 (bất quy tắc)"
   },
   {
    "rel": "vocab/nanyoubi.png",
@@ -4173,29 +4123,14 @@
    "label": "tháng 1"
   },
   {
-   "rel": "vocab/futsuka.png",
-   "emoji": "2️⃣",
-   "label": "ngày mùng 2"
-  },
-  {
-   "rel": "vocab/shichigatsu.png",
-   "emoji": "🎋",
-   "label": "tháng 7 (bất quy tắc)"
-  },
-  {
    "rel": "vocab/kugatsu.png",
    "emoji": "🍁",
    "label": "tháng 9 (bất quy tắc)"
   },
   {
-   "rel": "vocab/tsuitachi.png",
-   "emoji": "1️⃣",
-   "label": "ngày mùng 1"
-  },
-  {
-   "rel": "vocab/hatsuka.png",
-   "emoji": "🔢",
-   "label": "ngày 20"
+   "rel": "vocab/futsuka.png",
+   "emoji": "2️⃣",
+   "label": "ngày mùng 2"
   },
   {
    "rel": "vocab/kara.png",
@@ -4208,24 +4143,24 @@
    "label": "đến…"
   },
   {
+   "rel": "vocab/shigoto.png",
+   "emoji": "💼",
+   "label": "công việc"
+  },
+  {
    "rel": "vocab/okimasu.png",
    "emoji": "⏰",
    "label": "thức dậy"
   },
   {
-   "rel": "vocab/densha.png",
-   "emoji": "🚃",
-   "label": "tàu điện"
-  },
-  {
-   "rel": "vocab/tabemasu.png",
+   "rel": "vocab/gohan.png",
    "emoji": "🍚",
-   "label": "ăn"
+   "label": "cơm, bữa ăn"
   },
   {
-   "rel": "vocab/asagohan.png",
-   "emoji": "🍳",
-   "label": "bữa sáng"
+   "rel": "vocab/kimasu.png",
+   "emoji": "🏃",
+   "label": "đến"
   },
   {
    "rel": "vocab/nemasu.png",
@@ -4233,19 +4168,24 @@
    "label": "đi ngủ"
   },
   {
+   "rel": "vocab/tabemasu.png",
+   "emoji": "🍚",
+   "label": "ăn"
+  },
+  {
    "rel": "vocab/nomimasu.png",
    "emoji": "🥤",
    "label": "uống"
   },
   {
-   "rel": "vocab/hirugohan.png",
-   "emoji": "🍱",
-   "label": "bữa trưa"
+   "rel": "vocab/maiasa.png",
+   "emoji": "🌅",
+   "label": "mỗi buổi sáng"
   },
   {
-   "rel": "vocab/gohan.png",
-   "emoji": "🍚",
-   "label": "cơm, bữa ăn"
+   "rel": "vocab/kaerimasu.png",
+   "emoji": "🏠",
+   "label": "về nhà"
   },
   {
    "rel": "vocab/mimasu.png",
@@ -4263,29 +4203,24 @@
    "label": "đi"
   },
   {
-   "rel": "vocab/benkyou-shimasu.png",
+   "rel": "vocab/ongaku.png",
+   "emoji": "🎵",
+   "label": "âm nhạc"
+  },
+  {
+   "rel": "vocab/benkyou.png",
    "emoji": "📚",
-   "label": "học bài"
-  },
-  {
-   "rel": "vocab/hatarakimasu.png",
-   "emoji": "💼",
-   "label": "làm việc"
-  },
-  {
-   "rel": "vocab/kimasu.png",
-   "emoji": "🏃",
-   "label": "đến"
-  },
-  {
-   "rel": "vocab/kaerimasu.png",
-   "emoji": "🏠",
-   "label": "về nhà"
+   "label": "việc học bài"
   },
   {
    "rel": "vocab/e.png",
    "emoji": "➡️",
    "label": "đến (chỉ hướng)"
+  },
+  {
+   "rel": "vocab/densha.png",
+   "emoji": "🚃",
+   "label": "tàu điện"
   },
   {
    "rel": "vocab/wo.png",
@@ -4308,9 +4243,9 @@
    "label": "nhà (của mình)"
   },
   {
-   "rel": "vocab/ongaku.png",
-   "emoji": "🎵",
-   "label": "âm nhạc"
+   "rel": "vocab/hatarakimasu.png",
+   "emoji": "💼",
+   "label": "làm việc"
   },
   {
    "rel": "vocab/de.png",
@@ -4323,44 +4258,24 @@
    "label": "mua"
   },
   {
-   "rel": "vocab/yomimasu.png",
-   "emoji": "📖",
-   "label": "đọc"
-  },
-  {
-   "rel": "vocab/masen.png",
-   "emoji": "🚫",
-   "label": "không… (phủ định)"
-  },
-  {
-   "rel": "vocab/mashita.png",
-   "emoji": "⏮️",
-   "label": "đã… (quá khứ)"
-  },
-  {
-   "rel": "vocab/masen-deshita.png",
-   "emoji": "❎",
-   "label": "đã không…"
-  },
-  {
-   "rel": "vocab/ni-3.png",
-   "emoji": "🕐",
-   "label": "vào lúc (thời điểm)"
-  },
-  {
    "rel": "vocab/bangohan.png",
    "emoji": "🍲",
    "label": "bữa tối"
   },
   {
-   "rel": "vocab/sorekara.png",
-   "emoji": "➡️",
-   "label": "sau đó"
+   "rel": "vocab/yomimasu.png",
+   "emoji": "📖",
+   "label": "đọc"
   },
   {
-   "rel": "vocab/maiasa.png",
-   "emoji": "🌅",
-   "label": "mỗi buổi sáng"
+   "rel": "vocab/koohii.png",
+   "emoji": "☕",
+   "label": "cà phê"
+  },
+  {
+   "rel": "vocab/maiban.png",
+   "emoji": "🌃",
+   "label": "mỗi buổi tối"
   },
   {
    "rel": "vocab/toshokan.png",
@@ -4368,19 +4283,39 @@
    "label": "thư viện"
   },
   {
-   "rel": "vocab/mise-no-hito.png",
-   "emoji": "🧑‍💼",
-   "label": "nhân viên cửa hàng"
+   "rel": "vocab/asagohan.png",
+   "emoji": "🍳",
+   "label": "bữa sáng"
   },
   {
-   "rel": "vocab/sakana.png",
-   "emoji": "🐟",
-   "label": "cá"
+   "rel": "vocab/ni-3.png",
+   "emoji": "🕐",
+   "label": "vào lúc (thời điểm)"
   },
   {
-   "rel": "vocab/atsui.png",
-   "emoji": "♨️",
-   "label": "nóng"
+   "rel": "vocab/hirugohan.png",
+   "emoji": "🍱",
+   "label": "bữa trưa"
+  },
+  {
+   "rel": "vocab/sorekara.png",
+   "emoji": "➡️",
+   "label": "sau đó"
+  },
+  {
+   "rel": "vocab/gyuunyuu.png",
+   "emoji": "🥛",
+   "label": "sữa bò"
+  },
+  {
+   "rel": "vocab/biiru.png",
+   "emoji": "🍺",
+   "label": "bia"
+  },
+  {
+   "rel": "vocab/chuumon.png",
+   "emoji": "✍️",
+   "label": "gọi món, đặt hàng"
   },
   {
    "rel": "vocab/pan.png",
@@ -4393,19 +4328,19 @@
    "label": "thịt"
   },
   {
-   "rel": "vocab/mazui.png",
-   "emoji": "😖",
-   "label": "dở, không ngon"
+   "rel": "vocab/sakana.png",
+   "emoji": "🐟",
+   "label": "cá"
   },
   {
-   "rel": "vocab/chuumon.png",
-   "emoji": "✍️",
-   "label": "gọi món, đặt hàng"
+   "rel": "vocab/karai.png",
+   "emoji": "🌶️",
+   "label": "cay"
   },
   {
-   "rel": "vocab/bentou.png",
-   "emoji": "🍱",
-   "label": "cơm hộp"
+   "rel": "vocab/raamen.png",
+   "emoji": "🍜",
+   "label": "mì ramen"
   },
   {
    "rel": "vocab/tamago.png",
@@ -4423,49 +4358,14 @@
    "label": "trái cây"
   },
   {
-   "rel": "vocab/udon.png",
-   "emoji": "🍲",
-   "label": "mì udon"
+   "rel": "vocab/mise-no-hito.png",
+   "emoji": "🧑‍💼",
+   "label": "nhân viên cửa hàng"
   },
   {
-   "rel": "vocab/genkin.png",
-   "emoji": "💴",
-   "label": "tiền mặt"
-  },
-  {
-   "rel": "vocab/koohii.png",
-   "emoji": "☕",
-   "label": "cà phê"
-  },
-  {
-   "rel": "vocab/ocha.png",
-   "emoji": "🍵",
-   "label": "trà"
-  },
-  {
-   "rel": "vocab/gyuunyuu.png",
-   "emoji": "🥛",
-   "label": "sữa bò"
-  },
-  {
-   "rel": "vocab/raamen.png",
-   "emoji": "🍜",
-   "label": "mì ramen"
-  },
-  {
-   "rel": "vocab/shoppai.png",
-   "emoji": "🧂",
-   "label": "mặn"
-  },
-  {
-   "rel": "vocab/juusu.png",
-   "emoji": "🧃",
-   "label": "nước ép"
-  },
-  {
-   "rel": "vocab/biiru.png",
-   "emoji": "🍺",
-   "label": "bia"
+   "rel": "vocab/atsui.png",
+   "emoji": "♨️",
+   "label": "nóng"
   },
   {
    "rel": "vocab/osake.png",
@@ -4473,19 +4373,9 @@
    "label": "rượu"
   },
   {
-   "rel": "vocab/irasshaimase.png",
-   "emoji": "🙇",
-   "label": "kính chào quý khách"
-  },
-  {
-   "rel": "vocab/sushi.png",
-   "emoji": "🍣",
-   "label": "sushi"
-  },
-  {
-   "rel": "vocab/shoushou-omachi-kudasai.png",
-   "emoji": "⏳",
-   "label": "xin đợi một lát"
+   "rel": "vocab/tenpura.png",
+   "emoji": "🍤",
+   "label": "món tempura chiên"
   },
   {
    "rel": "vocab/tsumetai.png",
@@ -4493,29 +4383,9 @@
    "label": "lạnh (đồ uống)"
   },
   {
-   "rel": "vocab/tenpura.png",
-   "emoji": "🍤",
-   "label": "món tempura chiên"
-  },
-  {
-   "rel": "vocab/onigiri.png",
-   "emoji": "🍙",
-   "label": "cơm nắm"
-  },
-  {
-   "rel": "vocab/karee.png",
-   "emoji": "🍛",
-   "label": "cà ri"
-  },
-  {
-   "rel": "vocab/menyuu.png",
-   "emoji": "📋",
-   "label": "thực đơn"
-  },
-  {
-   "rel": "vocab/onegaishimasu.png",
-   "emoji": "🙏",
-   "label": "làm ơn cho tôi…"
+   "rel": "vocab/ocha.png",
+   "emoji": "🍵",
+   "label": "trà"
   },
   {
    "rel": "vocab/okaikei.png",
@@ -4523,14 +4393,54 @@
    "label": "tính tiền"
   },
   {
-   "rel": "vocab/karai.png",
-   "emoji": "🌶️",
-   "label": "cay"
+   "rel": "vocab/mazui.png",
+   "emoji": "😖",
+   "label": "dở, không ngon"
+  },
+  {
+   "rel": "vocab/juusu.png",
+   "emoji": "🧃",
+   "label": "nước ép"
+  },
+  {
+   "rel": "vocab/udon.png",
+   "emoji": "🍲",
+   "label": "mì udon"
+  },
+  {
+   "rel": "vocab/sushi.png",
+   "emoji": "🍣",
+   "label": "sushi"
+  },
+  {
+   "rel": "vocab/karee.png",
+   "emoji": "🍛",
+   "label": "cà ri"
+  },
+  {
+   "rel": "vocab/kyaku.png",
+   "emoji": "👥",
+   "label": "khách hàng"
+  },
+  {
+   "rel": "vocab/onigiri.png",
+   "emoji": "🍙",
+   "label": "cơm nắm"
+  },
+  {
+   "rel": "vocab/bentou.png",
+   "emoji": "🍱",
+   "label": "cơm hộp"
   },
   {
    "rel": "vocab/amai.png",
    "emoji": "🍬",
    "label": "ngọt"
+  },
+  {
+   "rel": "vocab/menyuu.png",
+   "emoji": "📋",
+   "label": "thực đơn"
   },
   {
    "rel": "vocab/oishii.png",
@@ -4543,9 +4453,24 @@
    "label": "thẻ thanh toán"
   },
   {
-   "rel": "vocab/nanmeisama.png",
-   "emoji": "👥",
-   "label": "quý khách mấy người"
+   "rel": "vocab/genkin.png",
+   "emoji": "💴",
+   "label": "tiền mặt"
+  },
+  {
+   "rel": "vocab/shoppai.png",
+   "emoji": "🧂",
+   "label": "mặn"
+  },
+  {
+   "rel": "vocab/machimasu.png",
+   "emoji": "⏳",
+   "label": "chờ đợi"
+  },
+  {
+   "rel": "vocab/seki.png",
+   "emoji": "🪑",
+   "label": "chỗ ngồi, bàn ăn"
   },
   {
    "rel": "vocab/kazoku.png",
@@ -4553,19 +4478,19 @@
    "label": "gia đình"
   },
   {
-   "rel": "vocab/otoko-no-hito.png",
-   "emoji": "👨",
-   "label": "người đàn ông"
+   "rel": "vocab/otouto.png",
+   "emoji": "🧒",
+   "label": "em trai tôi"
   },
   {
-   "rel": "vocab/gokazoku.png",
-   "emoji": "👨‍👩‍👧",
-   "label": "gia đình (của bạn)"
+   "rel": "vocab/douryou.png",
+   "emoji": "🤝",
+   "label": "đồng nghiệp"
   },
   {
-   "rel": "vocab/ane.png",
-   "emoji": "👧",
-   "label": "chị gái tôi"
+   "rel": "vocab/onna.png",
+   "emoji": "👩",
+   "label": "nữ giới, con gái"
   },
   {
    "rel": "vocab/chichi.png",
@@ -4583,49 +4508,14 @@
    "label": "anh trai tôi"
   },
   {
-   "rel": "vocab/okaasan.png",
-   "emoji": "👩",
-   "label": "mẹ (của bạn)"
+   "rel": "vocab/yonin.png",
+   "emoji": "👨‍👩‍👧‍👦",
+   "label": "bốn người"
   },
   {
-   "rel": "vocab/gonin.png",
-   "emoji": "👨‍👩‍👧‍👧",
-   "label": "năm người"
-  },
-  {
-   "rel": "vocab/otousan.png",
-   "emoji": "👨",
-   "label": "bố (của bạn)"
-  },
-  {
-   "rel": "vocab/otouto.png",
-   "emoji": "🧒",
-   "label": "em trai tôi"
-  },
-  {
-   "rel": "vocab/imouto.png",
-   "emoji": "👶",
-   "label": "em gái tôi"
-  },
-  {
-   "rel": "vocab/sannin.png",
-   "emoji": "👨‍👩‍👦",
-   "label": "ba người"
-  },
-  {
-   "rel": "vocab/hito.png",
-   "emoji": "🧍",
-   "label": "người"
-  },
-  {
-   "rel": "vocab/oniisan.png",
-   "emoji": "👦",
-   "label": "anh trai (của bạn)"
-  },
-  {
-   "rel": "vocab/oneesan.png",
+   "rel": "vocab/ane.png",
    "emoji": "👧",
-   "label": "chị gái (của bạn)"
+   "label": "chị gái tôi"
   },
   {
    "rel": "vocab/kodomo.png",
@@ -4633,14 +4523,49 @@
    "label": "trẻ con"
   },
   {
-   "rel": "vocab/onna-no-hito.png",
-   "emoji": "👩",
-   "label": "người phụ nữ"
+   "rel": "vocab/imouto.png",
+   "emoji": "👶",
+   "label": "em gái tôi"
   },
   {
-   "rel": "vocab/douryou.png",
-   "emoji": "🤝",
-   "label": "đồng nghiệp"
+   "rel": "vocab/oneesan.png",
+   "emoji": "👧",
+   "label": "chị gái (của bạn)"
+  },
+  {
+   "rel": "vocab/otousan.png",
+   "emoji": "👨",
+   "label": "bố (của bạn)"
+  },
+  {
+   "rel": "vocab/okaasan.png",
+   "emoji": "👩",
+   "label": "mẹ (của bạn)"
+  },
+  {
+   "rel": "vocab/oniisan.png",
+   "emoji": "👦",
+   "label": "anh trai (của bạn)"
+  },
+  {
+   "rel": "vocab/gokazoku.png",
+   "emoji": "👨‍👩‍👧",
+   "label": "gia đình (của bạn)"
+  },
+  {
+   "rel": "vocab/hito.png",
+   "emoji": "🧍",
+   "label": "người"
+  },
+  {
+   "rel": "vocab/sannin.png",
+   "emoji": "👨‍👩‍👦",
+   "label": "ba người"
+  },
+  {
+   "rel": "vocab/otoko.png",
+   "emoji": "👨",
+   "label": "nam giới, con trai"
   },
   {
    "rel": "vocab/nannin.png",
@@ -4648,9 +4573,9 @@
    "label": "mấy người"
   },
   {
-   "rel": "vocab/yonin.png",
-   "emoji": "👨‍👩‍👧‍👦",
-   "label": "bốn người"
+   "rel": "vocab/gonin.png",
+   "emoji": "👨‍👩‍👧‍👧",
+   "label": "năm người"
   },
   {
    "rel": "vocab/zenbu-de.png",
@@ -4673,19 +4598,19 @@
    "label": "to, lớn"
   },
   {
+   "rel": "vocab/kumori.png",
+   "emoji": "☁️",
+   "label": "trời nhiều mây"
+  },
+  {
    "rel": "vocab/kiiroi.png",
    "emoji": "🟡",
    "label": "màu vàng"
   },
   {
-   "rel": "vocab/hare.png",
-   "emoji": "☀️",
-   "label": "trời nắng"
-  },
-  {
-   "rel": "vocab/shiroi.png",
-   "emoji": "⚪",
-   "label": "màu trắng"
+   "rel": "vocab/kuroi.png",
+   "emoji": "⚫",
+   "label": "màu đen"
   },
   {
    "rel": "vocab/chiisai.png",
@@ -4703,14 +4628,14 @@
    "label": "rẻ"
   },
   {
-   "rel": "vocab/samui.png",
-   "emoji": "🥶",
-   "label": "lạnh (thời tiết)"
+   "rel": "vocab/haru.png",
+   "emoji": "🌸",
+   "label": "mùa xuân"
   },
   {
-   "rel": "vocab/aoi.png",
-   "emoji": "🔵",
-   "label": "màu xanh dương"
+   "rel": "vocab/suki.png",
+   "emoji": "❤️",
+   "label": "thích"
   },
   {
    "rel": "vocab/atarashii.png",
@@ -4728,19 +4653,9 @@
    "label": "tốt"
   },
   {
-   "rel": "vocab/suki.png",
-   "emoji": "❤️",
-   "label": "thích"
-  },
-  {
    "rel": "vocab/midori.png",
    "emoji": "🟢",
    "label": "màu xanh lá"
-  },
-  {
-   "rel": "vocab/akai.png",
-   "emoji": "🔴",
-   "label": "màu đỏ"
   },
   {
    "rel": "vocab/muzukashii.png",
@@ -4751,11 +4666,6 @@
    "rel": "vocab/kirei.png",
    "emoji": "🌸",
    "label": "đẹp, sạch sẽ"
-  },
-  {
-   "rel": "vocab/aki.png",
-   "emoji": "🍁",
-   "label": "mùa thu"
   },
   {
    "rel": "vocab/shizuka.png",
@@ -4773,9 +4683,14 @@
    "label": "nổi tiếng"
   },
   {
-   "rel": "vocab/genki.png",
-   "emoji": "💪",
-   "label": "khỏe mạnh"
+   "rel": "vocab/hare.png",
+   "emoji": "☀️",
+   "label": "trời nắng"
+  },
+  {
+   "rel": "vocab/ame.png",
+   "emoji": "🌧️",
+   "label": "mưa"
   },
   {
    "rel": "vocab/benri.png",
@@ -4788,34 +4703,9 @@
    "label": "màu nâu"
   },
   {
-   "rel": "vocab/yuki.png",
-   "emoji": "❄️",
-   "label": "tuyết"
-  },
-  {
-   "rel": "vocab/kuroi.png",
-   "emoji": "⚫",
-   "label": "màu đen"
-  },
-  {
-   "rel": "vocab/kumori.png",
-   "emoji": "☁️",
-   "label": "trời nhiều mây"
-  },
-  {
-   "rel": "vocab/ame.png",
-   "emoji": "🌧️",
-   "label": "mưa"
-  },
-  {
-   "rel": "vocab/haru.png",
-   "emoji": "🌸",
-   "label": "mùa xuân"
-  },
-  {
-   "rel": "vocab/natsu.png",
-   "emoji": "🏖️",
-   "label": "mùa hè"
+   "rel": "vocab/akai.png",
+   "emoji": "🔴",
+   "label": "màu đỏ"
   },
   {
    "rel": "vocab/fuyu.png",
@@ -4823,9 +4713,39 @@
    "label": "mùa đông"
   },
   {
-   "rel": "vocab/kunai-desu.png",
-   "emoji": "🚫",
-   "label": "không… (tính từ い)"
+   "rel": "vocab/aoi.png",
+   "emoji": "🔵",
+   "label": "màu xanh dương"
+  },
+  {
+   "rel": "vocab/shiroi.png",
+   "emoji": "⚪",
+   "label": "màu trắng"
+  },
+  {
+   "rel": "vocab/natsu.png",
+   "emoji": "🏖️",
+   "label": "mùa hè"
+  },
+  {
+   "rel": "vocab/yuki.png",
+   "emoji": "❄️",
+   "label": "tuyết"
+  },
+  {
+   "rel": "vocab/samui.png",
+   "emoji": "🥶",
+   "label": "lạnh (thời tiết)"
+  },
+  {
+   "rel": "vocab/aki.png",
+   "emoji": "🍁",
+   "label": "mùa thu"
+  },
+  {
+   "rel": "vocab/warui.png",
+   "emoji": "👎",
+   "label": "xấu, tồi"
   },
   {
    "rel": "vocab/amari.png",
@@ -4868,14 +4788,9 @@
    "label": "đợt giảm giá"
   },
   {
-   "rel": "vocab/kekkou-desu.png",
-   "emoji": "🙅",
-   "label": "thôi, không cần ạ"
-  },
-  {
-   "rel": "vocab/honya.png",
-   "emoji": "📚",
-   "label": "hiệu sách"
+   "rel": "vocab/kusuriya.png",
+   "emoji": "💊",
+   "label": "hiệu thuốc"
   },
   {
    "rel": "vocab/depaato.png",
@@ -4883,19 +4798,24 @@
    "label": "trung tâm thương mại"
   },
   {
+   "rel": "vocab/honya.png",
+   "emoji": "📚",
+   "label": "hiệu sách"
+  },
+  {
    "rel": "vocab/yaoya.png",
    "emoji": "🥬",
    "label": "hàng rau quả"
   },
   {
-   "rel": "vocab/kusuriya.png",
-   "emoji": "💊",
-   "label": "hiệu thuốc"
+   "rel": "vocab/kekkou.png",
+   "emoji": "🙅",
+   "label": "được rồi / thôi"
   },
   {
-   "rel": "vocab/pointo-kaado.png",
-   "emoji": "💳",
-   "label": "thẻ tích điểm"
+   "rel": "vocab/iro.png",
+   "emoji": "🎨",
+   "label": "màu sắc"
   },
   {
    "rel": "vocab/nikuya.png",
@@ -4908,24 +4828,24 @@
    "label": "tiệm bánh mì"
   },
   {
-   "rel": "vocab/zubon.png",
-   "emoji": "👖",
-   "label": "quần dài"
-  },
-  {
-   "rel": "vocab/hangaku.png",
-   "emoji": "💸",
-   "label": "nửa giá"
-  },
-  {
    "rel": "vocab/fuku.png",
    "emoji": "👕",
    "label": "quần áo"
   },
   {
-   "rel": "vocab/iro.png",
-   "emoji": "🎨",
-   "label": "màu sắc"
+   "rel": "vocab/zubon.png",
+   "emoji": "👖",
+   "label": "quần dài"
+  },
+  {
+   "rel": "vocab/pointo-kaado.png",
+   "emoji": "💳",
+   "label": "thẻ tích điểm"
+  },
+  {
+   "rel": "vocab/nedan.png",
+   "emoji": "🏷️",
+   "label": "giá cả"
   },
   {
    "rel": "vocab/shatsu.png",
@@ -4938,14 +4858,9 @@
    "label": "váy"
   },
   {
-   "rel": "vocab/muryou.png",
-   "emoji": "🆓",
-   "label": "miễn phí"
-  },
-  {
-   "rel": "vocab/kore-ni-shimasu.png",
-   "emoji": "✅",
-   "label": "tôi lấy cái này"
+   "rel": "vocab/nagai.png",
+   "emoji": "〰️",
+   "label": "dài"
   },
   {
    "rel": "vocab/kooto.png",
@@ -4963,24 +4878,14 @@
    "label": "mũ, nón"
   },
   {
+   "rel": "vocab/nesage.png",
+   "emoji": "📉",
+   "label": "giảm giá"
+  },
+  {
    "rel": "vocab/reji.png",
    "emoji": "🧾",
    "label": "quầy tính tiền"
-  },
-  {
-   "rel": "vocab/nedan.png",
-   "emoji": "🏷️",
-   "label": "giá cả"
-  },
-  {
-   "rel": "vocab/choudo-ii.png",
-   "emoji": "👌",
-   "label": "vừa vặn, vừa đủ"
-  },
-  {
-   "rel": "vocab/otsuri.png",
-   "emoji": "🪙",
-   "label": "tiền thừa, tiền thối"
   },
   {
    "rel": "vocab/saizu.png",
@@ -4988,9 +4893,49 @@
    "label": "cỡ, kích thước"
   },
   {
-   "rel": "vocab/misete-kudasai.png",
+   "rel": "vocab/otsuri.png",
+   "emoji": "🪙",
+   "label": "tiền thừa, tiền thối"
+  },
+  {
+   "rel": "vocab/fukuro.png",
+   "emoji": "🛍️",
+   "label": "túi đựng đồ"
+  },
+  {
+   "rel": "vocab/reshiito.png",
+   "emoji": "📄",
+   "label": "hoá đơn"
+  },
+  {
+   "rel": "vocab/mijikai.png",
+   "emoji": "▫️",
+   "label": "ngắn"
+  },
+  {
+   "rel": "vocab/choudo.png",
+   "emoji": "👌",
+   "label": "vừa vặn, vừa đủ"
+  },
+  {
+   "rel": "vocab/hangaku.png",
+   "emoji": "💸",
+   "label": "nửa giá"
+  },
+  {
+   "rel": "vocab/muryou.png",
+   "emoji": "🆓",
+   "label": "miễn phí"
+  },
+  {
+   "rel": "vocab/misemasu.png",
    "emoji": "👀",
-   "label": "cho tôi xem với"
+   "label": "cho xem"
+  },
+  {
+   "rel": "vocab/erabimasu.png",
+   "emoji": "✅",
+   "label": "chọn lựa"
   },
   {
    "rel": "vocab/basu.png",
@@ -4998,19 +4943,19 @@
    "label": "xe buýt"
   },
   {
-   "rel": "vocab/kippu.png",
-   "emoji": "🎫",
-   "label": "vé"
+   "rel": "vocab/jikan.png",
+   "emoji": "⏰",
+   "label": "tiếng đồng hồ"
   },
   {
-   "rel": "vocab/shingou.png",
-   "emoji": "🚦",
-   "label": "đèn giao thông"
+   "rel": "vocab/hikouki.png",
+   "emoji": "✈️",
+   "label": "máy bay"
   },
   {
-   "rel": "vocab/kakarimasu.png",
-   "emoji": "⏳",
-   "label": "mất (thời gian)"
+   "rel": "vocab/kousaten.png",
+   "emoji": "➕",
+   "label": "ngã tư"
   },
   {
    "rel": "vocab/takushii.png",
@@ -5028,24 +4973,14 @@
    "label": "ô tô"
   },
   {
-   "rel": "vocab/hashi.png",
-   "emoji": "🌉",
-   "label": "cây cầu"
+   "rel": "vocab/kado.png",
+   "emoji": "📐",
+   "label": "góc phố"
   },
   {
-   "rel": "vocab/deguchi.png",
-   "emoji": "🚪",
-   "label": "lối ra"
-  },
-  {
-   "rel": "vocab/jikan.png",
-   "emoji": "⏰",
-   "label": "tiếng đồng hồ"
-  },
-  {
-   "rel": "vocab/hikouki.png",
-   "emoji": "✈️",
-   "label": "máy bay"
+   "rel": "vocab/okuremasu.png",
+   "emoji": "⌛",
+   "label": "bị trễ, bị muộn"
   },
   {
    "rel": "vocab/chikatetsu.png",
@@ -5058,14 +4993,19 @@
    "label": "tàu siêu tốc"
   },
   {
-   "rel": "vocab/osoi.png",
-   "emoji": "🐌",
-   "label": "chậm, muộn"
+   "rel": "vocab/chikai.png",
+   "emoji": "📍",
+   "label": "gần"
   },
   {
-   "rel": "vocab/hayai.png",
-   "emoji": "💨",
-   "label": "nhanh, sớm"
+   "rel": "vocab/hashi.png",
+   "emoji": "🌉",
+   "label": "cây cầu"
+  },
+  {
+   "rel": "vocab/kippu.png",
+   "emoji": "🎫",
+   "label": "vé"
   },
   {
    "rel": "vocab/hoomu.png",
@@ -5073,9 +5013,114 @@
    "label": "sân ga"
   },
   {
+   "rel": "vocab/deguchi.png",
+   "emoji": "🚪",
+   "label": "lối ra"
+  },
+  {
+   "rel": "vocab/kaisatsu.png",
+   "emoji": "🎟️",
+   "label": "cửa soát vé"
+  },
+  {
    "rel": "vocab/aruite.png",
    "emoji": "🚶",
    "label": "đi bộ"
+  },
+  {
+   "rel": "vocab/iriguchi.png",
+   "emoji": "🚪",
+   "label": "lối vào"
+  },
+  {
+   "rel": "vocab/bansen.png",
+   "emoji": "🛤️",
+   "label": "đường ray số mấy"
+  },
+  {
+   "rel": "vocab/norimasu.png",
+   "emoji": "🚗",
+   "label": "lên xe, đi (phương tiện)"
+  },
+  {
+   "rel": "vocab/kakarimasu.png",
+   "emoji": "⏳",
+   "label": "mất (thời gian)"
+  },
+  {
+   "rel": "vocab/orimasu.png",
+   "emoji": "🚶",
+   "label": "xuống xe"
+  },
+  {
+   "rel": "vocab/norikae.png",
+   "emoji": "🔄",
+   "label": "đổi tuyến, chuyển tàu"
+  },
+  {
+   "rel": "vocab/tsugi.png",
+   "emoji": "⏭️",
+   "label": "tiếp theo"
+  },
+  {
+   "rel": "vocab/shingou.png",
+   "emoji": "🚦",
+   "label": "đèn giao thông"
+  },
+  {
+   "rel": "vocab/osoi.png",
+   "emoji": "🐌",
+   "label": "chậm, muộn"
+  },
+  {
+   "rel": "vocab/saishuu.png",
+   "emoji": "🏁",
+   "label": "chuyến cuối cùng"
+  },
+  {
+   "rel": "vocab/tooi.png",
+   "emoji": "🔭",
+   "label": "xa"
+  },
+  {
+   "rel": "vocab/hayai.png",
+   "emoji": "💨",
+   "label": "nhanh, sớm"
+  },
+  {
+   "rel": "vocab/dono-kurai.png",
+   "emoji": "❓",
+   "label": "khoảng bao lâu"
+  },
+  {
+   "rel": "vocab/komimasu.png",
+   "emoji": "👥",
+   "label": "đông đúc"
+  },
+  {
+   "rel": "vocab/sukimasu.png",
+   "emoji": "🪑",
+   "label": "vắng người"
+  },
+  {
+   "rel": "vocab/shumi.png",
+   "emoji": "🎯",
+   "label": "sở thích"
+  },
+  {
+   "rel": "vocab/daisuki.png",
+   "emoji": "❤️",
+   "label": "rất thích"
+  },
+  {
+   "rel": "vocab/shimasu.png",
+   "emoji": "🎮",
+   "label": "làm, chơi (môn gì)"
+  },
+  {
+   "rel": "vocab/suiei.png",
+   "emoji": "🏊",
+   "label": "bơi lội"
   },
   {
    "rel": "vocab/ryokou.png",
@@ -5093,24 +5138,14 @@
    "label": "nấu ăn"
   },
   {
-   "rel": "vocab/jouzu.png",
-   "emoji": "👍",
-   "label": "giỏi, khéo"
-  },
-  {
-   "rel": "vocab/geemu.png",
-   "emoji": "🎮",
-   "label": "trò chơi điện tử"
-  },
-  {
-   "rel": "vocab/shashin.png",
-   "emoji": "📷",
-   "label": "ảnh, chụp ảnh"
-  },
-  {
    "rel": "vocab/kaimono.png",
    "emoji": "🛍️",
    "label": "mua sắm"
+  },
+  {
+   "rel": "vocab/dekimasu.png",
+   "emoji": "💪",
+   "label": "làm được, có thể"
   },
   {
    "rel": "vocab/supootsu.png",
@@ -5118,14 +5153,14 @@
    "label": "thể thao"
   },
   {
-   "rel": "vocab/shuumatsu.png",
-   "emoji": "🗓️",
-   "label": "cuối tuần"
+   "rel": "vocab/shashin.png",
+   "emoji": "📷",
+   "label": "ảnh, chụp ảnh"
   },
   {
-   "rel": "vocab/kirai.png",
-   "emoji": "👎",
-   "label": "ghét, không thích"
+   "rel": "vocab/tenisu.png",
+   "emoji": "🎾",
+   "label": "quần vợt"
   },
   {
    "rel": "vocab/sakkaa.png",
@@ -5138,24 +5173,14 @@
    "label": "bóng chày"
   },
   {
-   "rel": "vocab/tenisu.png",
-   "emoji": "🎾",
-   "label": "quần vợt"
+   "rel": "vocab/daikirai.png",
+   "emoji": "💢",
+   "label": "rất ghét"
   },
   {
-   "rel": "vocab/uta.png",
-   "emoji": "🎵",
-   "label": "bài hát"
-  },
-  {
-   "rel": "vocab/heta.png",
-   "emoji": "😅",
-   "label": "kém, vụng"
-  },
-  {
-   "rel": "vocab/suiei.png",
-   "emoji": "🏊",
-   "label": "bơi lội"
+   "rel": "vocab/jouzu.png",
+   "emoji": "👍",
+   "label": "giỏi, khéo"
   },
   {
    "rel": "vocab/jogingu.png",
@@ -5163,9 +5188,24 @@
    "label": "chạy bộ"
   },
   {
+   "rel": "vocab/heta.png",
+   "emoji": "😅",
+   "label": "kém, vụng"
+  },
+  {
    "rel": "vocab/eiga.png",
    "emoji": "🎬",
    "label": "phim"
+  },
+  {
+   "rel": "vocab/geemu.png",
+   "emoji": "🎮",
+   "label": "trò chơi điện tử"
+  },
+  {
+   "rel": "vocab/uta.png",
+   "emoji": "🎵",
+   "label": "bài hát"
   },
   {
    "rel": "vocab/utaimasu.png",
@@ -5173,14 +5213,54 @@
    "label": "hát"
   },
   {
-   "rel": "vocab/daisuki.png",
-   "emoji": "❤️",
-   "label": "rất thích"
+   "rel": "vocab/suki-2.png",
+   "emoji": "👍",
+   "label": "thích"
   },
   {
-   "rel": "vocab/daikirai.png",
-   "emoji": "💢",
-   "label": "rất ghét"
+   "rel": "vocab/anime.png",
+   "emoji": "📺",
+   "label": "phim hoạt hình"
+  },
+  {
+   "rel": "vocab/manga.png",
+   "emoji": "📚",
+   "label": "truyện tranh"
+  },
+  {
+   "rel": "vocab/kirai.png",
+   "emoji": "👎",
+   "label": "ghét, không thích"
+  },
+  {
+   "rel": "vocab/tokui.png",
+   "emoji": "🌟",
+   "label": "sở trường, làm tốt"
+  },
+  {
+   "rel": "vocab/shuumatsu.png",
+   "emoji": "🗓️",
+   "label": "cuối tuần"
+  },
+  {
+   "rel": "vocab/itsumo.png",
+   "emoji": "🔁",
+   "label": "luôn luôn"
+  },
+  {
+   "rel": "vocab/yoku.png",
+   "emoji": "📈",
+   "label": "thường xuyên"
+  },
+  {
+   "rel": "vocab/tokidoki.png",
+   "emoji": "⏳",
+   "label": "thỉnh thoảng"
+  },
+  {
+   "rel": "vocab/zenzen.png",
+   "emoji": "🚫",
+   "label": "hoàn toàn không"
   },
   {
    "rel": "vocab/me.png",
@@ -5188,19 +5268,19 @@
    "label": "mắt"
   },
   {
-   "rel": "vocab/kaze.png",
-   "emoji": "🤧",
-   "label": "cảm, cảm lạnh"
+   "rel": "vocab/kai.png",
+   "emoji": "🔢",
+   "label": "lần (số lần)"
   },
   {
-   "rel": "vocab/netsu.png",
-   "emoji": "🤒",
-   "label": "sốt"
+   "rel": "vocab/karada.png",
+   "emoji": "🧍",
+   "label": "cơ thể"
   },
   {
-   "rel": "vocab/nemui.png",
-   "emoji": "😴",
-   "label": "buồn ngủ"
+   "rel": "vocab/kimochi.png",
+   "emoji": "😌",
+   "label": "cảm giác"
   },
   {
    "rel": "vocab/hana.png",
@@ -5223,9 +5303,59 @@
    "label": "chân"
   },
   {
+   "rel": "vocab/seki-2.png",
+   "emoji": "😷",
+   "label": "ho"
+  },
+  {
    "rel": "vocab/te.png",
    "emoji": "✋",
    "label": "tay"
+  },
+  {
+   "rel": "vocab/atama.png",
+   "emoji": "🤕",
+   "label": "đầu"
+  },
+  {
+   "rel": "vocab/odaijini.png",
+   "emoji": "💐",
+   "label": "giữ gìn sức khoẻ nhé"
+  },
+  {
+   "rel": "vocab/onaka.png",
+   "emoji": "🤰",
+   "label": "bụng"
+  },
+  {
+   "rel": "vocab/itai.png",
+   "emoji": "😣",
+   "label": "đau"
+  },
+  {
+   "rel": "vocab/kibun.png",
+   "emoji": "🌡️",
+   "label": "tâm trạng, trong người"
+  },
+  {
+   "rel": "vocab/tsukaremasu.png",
+   "emoji": "😫",
+   "label": "mệt mỏi"
+  },
+  {
+   "rel": "vocab/netsu.png",
+   "emoji": "🤒",
+   "label": "sốt"
+  },
+  {
+   "rel": "vocab/kaze.png",
+   "emoji": "🤧",
+   "label": "cảm, cảm lạnh"
+  },
+  {
+   "rel": "vocab/nodo.png",
+   "emoji": "🧣",
+   "label": "cổ họng"
   },
   {
    "rel": "vocab/kusuri.png",
@@ -5233,9 +5363,9 @@
    "label": "thuốc"
   },
   {
-   "rel": "vocab/itai.png",
-   "emoji": "😣",
-   "label": "đau"
+   "rel": "vocab/yukkuri.png",
+   "emoji": "🐢",
+   "label": "từ từ, thong thả"
   },
   {
    "rel": "vocab/chuusha.png",
@@ -5248,14 +5378,44 @@
    "label": "xét nghiệm, kiểm tra"
   },
   {
-   "rel": "vocab/tsukaremashita.png",
-   "emoji": "😫",
-   "label": "mệt rồi"
+   "rel": "vocab/byouki.png",
+   "emoji": "🏥",
+   "label": "bệnh, ốm"
   },
   {
-   "rel": "vocab/yasunde-kudasai.png",
+   "rel": "vocab/shinsatsu.png",
+   "emoji": "👨‍⚕️",
+   "label": "việc khám bệnh"
+  },
+  {
+   "rel": "vocab/nemui.png",
+   "emoji": "😴",
+   "label": "buồn ngủ"
+  },
+  {
+   "rel": "vocab/yasumimasu.png",
    "emoji": "🛌",
-   "label": "hãy nghỉ ngơi đi"
+   "label": "nghỉ, nghỉ làm"
+  },
+  {
+   "rel": "vocab/muri.png",
+   "emoji": "⚠️",
+   "label": "quá sức, vô lý"
+  },
+  {
+   "rel": "vocab/dou.png",
+   "emoji": "❓",
+   "label": "như thế nào"
+  },
+  {
+   "rel": "vocab/itsu.png",
+   "emoji": "📅",
+   "label": "khi nào, bao giờ"
+  },
+  {
+   "rel": "vocab/ikkai.png",
+   "emoji": "1️⃣",
+   "label": "một lần"
   }
  ]
 }

@@ -8,6 +8,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import com.example.nihongo_app.entity.Vocabulary;
+
 public interface UserVocabularyProgressRepository
         extends JpaRepository<UserVocabularyProgress, UserVocabularyProgressId> {
 
@@ -36,4 +40,16 @@ public interface UserVocabularyProgressRepository
             Long userId, Pageable pageable);
 
     long countByUserIdAndFirstLearnedAtIsNotNull(Long userId);
+
+    @Query("SELECT p FROM UserVocabularyProgress p JOIN Vocabulary v ON p.vocabularyId = v.id WHERE p.userId = :userId AND p.nextDueAt <= :now AND v.itemType IN :itemTypes ORDER BY p.nextDueAt ASC")
+    List<UserVocabularyProgress> findAllByUserIdAndNextDueAtLessThanEqualAndItemTypeInOrderByNextDueAtAsc(
+            @Param("userId") Long userId, @Param("now") LocalDateTime now, @Param("itemTypes") List<Vocabulary.ItemType> itemTypes, Pageable pageable);
+
+    @Query("SELECT COUNT(p) FROM UserVocabularyProgress p JOIN Vocabulary v ON p.vocabularyId = v.id WHERE p.userId = :userId AND p.nextDueAt <= :now AND v.itemType IN :itemTypes")
+    long countByUserIdAndNextDueAtLessThanEqualAndItemTypeIn(
+            @Param("userId") Long userId, @Param("now") LocalDateTime now, @Param("itemTypes") List<Vocabulary.ItemType> itemTypes);
+
+    @Query("SELECT COUNT(p) FROM UserVocabularyProgress p JOIN Vocabulary v ON p.vocabularyId = v.id WHERE p.userId = :userId AND p.firstLearnedAt IS NOT NULL AND v.itemType IN :itemTypes")
+    long countByUserIdAndFirstLearnedAtIsNotNullAndItemTypeIn(
+            @Param("userId") Long userId, @Param("itemTypes") List<Vocabulary.ItemType> itemTypes);
 }

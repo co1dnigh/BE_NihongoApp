@@ -48,6 +48,12 @@ public interface VocabularyService {
     /** Sổ tay: các từ người học đã gặp, mới nhất trước. */
     VocabularyDueResponse getLearned(Long userId, int limit);
 
+    /** Những câu phát âm đã tới hạn ôn */
+    VocabularyDueResponse getPronunciationDue(Long userId, int limit);
+
+    /** Sổ tay: các câu phát âm đã học */
+    VocabularyDueResponse getPronunciationLearned(Long userId, int limit);
+
     /**
      * Toàn bộ kho từ để client cache làm từ điển tra tại chỗ.
      *

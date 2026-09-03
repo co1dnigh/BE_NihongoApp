@@ -62,7 +62,7 @@ public class PostServiceImpl implements PostService {
     @Transactional
     public void createSystemAchievementPost(Long userId, Achievement achievement) {
         // Khong validate do nay den tu he Achievement noi bo, khong phai input tu FE.
-        String content = "Da dat thanh tich \"" + achievement.getName() + "\"!"
+        String content = "Đã đạt thành tích \"" + achievement.getName() + "\"!"
                 + (achievement.getDescription() == null || achievement.getDescription().isBlank()
                         ? "" : " " + achievement.getDescription());
         postRepository.save(Post.builder()

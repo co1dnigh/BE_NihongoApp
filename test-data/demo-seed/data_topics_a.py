@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Chuong trinh hoc chu de 3 -> 7 (sau khi hoc xong bang chu cai).
+Chuong trinh hoc chu de 1 -> 5 (sau khi hoc xong bang chu cai).
 
 Moi bai gom:
   vocab     : tu vung moi cua bai (kana / romaji / nghia tieng Viet / emoji minh hoa)
@@ -27,17 +27,19 @@ TOPICS_A = [
                         "của tiếng Việt. Chào sai buổi nghe rất kỳ, nên hãy nhớ mốc thời gian: "
                         "sáng đến ~10h, trưa chiều đến ~18h, sau đó là buổi tối.",
                 "vocab": [
-                    {"kana": "おはようございます", "romaji": "ohayou gozaimasu", "vn": "chào buổi sáng (lịch sự)", "emoji": "🌅"},
-                    {"kana": "おはよう", "romaji": "ohayou", "vn": "chào buổi sáng (thân mật)", "emoji": "🌄"},
+                    {"kana": "おはよう", "romaji": "ohayou", "vn": "chào buổi sáng", "emoji": "🌅"},
                     {"kana": "こんにちは", "romaji": "konnichiwa", "vn": "xin chào (ban ngày)", "emoji": "☀️"},
                     {"kana": "こんばんは", "romaji": "konbanwa", "vn": "chào buổi tối", "emoji": "🌆"},
-                    {"kana": "おやすみなさい", "romaji": "oyasuminasai", "vn": "chúc ngủ ngon", "emoji": "🌙"},
+                    {"kana": "おやすみ", "romaji": "oyasumi", "vn": "chúc ngủ ngon", "emoji": "🌙"},
+                    {"kana": "あさ", "romaji": "asa", "vn": "buổi sáng", "emoji": "🌄"},
                 ],
                 "sentences": [
                     {"jp": "せんせい、おはようございます。", "romaji": "Sensei, ohayou gozaimasu.",
                      "vn": "Chào buổi sáng ạ, thưa thầy.", "blocks": ["せんせい", "、", "おはよう", "ございます"]},
                     {"jp": "みなさん、こんにちは。", "romaji": "Minasan, konnichiwa.",
                      "vn": "Xin chào mọi người.", "blocks": ["みなさん", "、", "こんにちは"]},
+                    {"jp": "おやすみなさい。", "romaji": "Oyasuminasai.",
+                     "vn": "Chúc ngủ ngon ạ.", "blocks": ["おやすみ", "なさい"]},
                 ],
             },
             {
@@ -46,18 +48,19 @@ TOPICS_A = [
                         "làm phiền chút để gọi người khác, vừa có thể thay cho cảm ơn khi ai đó "
                         "giúp mình. Còn ごめんなさい chỉ dùng để xin lỗi khi mình có lỗi thật.",
                 "vocab": [
-                    {"kana": "ありがとうございます", "romaji": "arigatou gozaimasu", "vn": "cảm ơn (lịch sự)", "emoji": "🙏"},
-                    {"kana": "ありがとう", "romaji": "arigatou", "vn": "cảm ơn (thân mật)", "emoji": "😊"},
-                    {"kana": "どういたしまして", "romaji": "dou itashimashite", "vn": "không có chi", "emoji": "🤝"},
+                    {"kana": "ありがとう", "romaji": "arigatou", "vn": "cảm ơn", "emoji": "😊"},
+                    {"kana": "どうも", "romaji": "doumo", "vn": "rất / xin chào", "emoji": "🤝"},
                     {"kana": "すみません", "romaji": "sumimasen", "vn": "xin lỗi / cho hỏi", "emoji": "🙇"},
-                    {"kana": "ごめんなさい", "romaji": "gomen nasai", "vn": "tôi xin lỗi", "emoji": "😔"},
-                    {"kana": "だいじょうぶです", "romaji": "daijoubu desu", "vn": "không sao đâu", "emoji": "👌"},
+                    {"kana": "ごめん", "romaji": "gomen", "vn": "xin lỗi (thân mật)", "emoji": "😔"},
+                    {"kana": "だいじょうぶ", "romaji": "daijoubu", "vn": "không sao, ổn", "emoji": "👌"},
                 ],
                 "sentences": [
                     {"jp": "どうもありがとうございます。", "romaji": "Doumo arigatou gozaimasu.",
                      "vn": "Cảm ơn bạn rất nhiều.", "blocks": ["どうも", "ありがとう", "ございます"]},
                     {"jp": "すみません、だいじょうぶです。", "romaji": "Sumimasen, daijoubu desu.",
                      "vn": "Xin lỗi, không sao đâu.", "blocks": ["すみません", "、", "だいじょうぶ", "です"]},
+                    {"jp": "いいえ、どういたしまして。", "romaji": "Iie, dou itashimashite.",
+                     "vn": "Không có chi đâu ạ.", "blocks": ["いいえ", "、", "どう", "いたしまして"]},
                 ],
             },
             {
@@ -67,10 +70,10 @@ TOPICS_A = [
                         "sang tiếng Việt, nghĩa gần nhất là mong được bạn giúp đỡ từ nay về sau.",
                 "vocab": [
                     {"kana": "はじめまして", "romaji": "hajimemashite", "vn": "rất hân hạnh được gặp", "emoji": "🤝"},
-                    {"kana": "よろしくおねがいします", "romaji": "yoroshiku onegaishimasu", "vn": "mong được giúp đỡ", "emoji": "🙇"},
-                    {"kana": "おげんきですか", "romaji": "ogenki desu ka", "vn": "bạn có khỏe không?", "emoji": "❓"},
-                    {"kana": "げんきです", "romaji": "genki desu", "vn": "tôi khỏe", "emoji": "💪"},
-                    {"kana": "おなまえは", "romaji": "onamae wa", "vn": "tên bạn là gì?", "emoji": "📛"},
+                    {"kana": "よろしく", "romaji": "yoroshiku", "vn": "mong được giúp đỡ", "emoji": "🙇"},
+                    {"kana": "おねがい", "romaji": "onegai", "vn": "làm ơn, xin nhờ", "emoji": "🙏"},
+                    {"kana": "げんき", "romaji": "genki", "vn": "khỏe mạnh", "emoji": "💪"},
+                    {"kana": "なまえ", "romaji": "namae", "vn": "tên", "emoji": "📛"},
                 ],
                 "sentences": [
                     {"jp": "はじめまして、よろしくおねがいします。", "romaji": "Hajimemashite, yoroshiku onegaishimasu.",
@@ -85,9 +88,9 @@ TOPICS_A = [
                         "với bạn bè hằng ngày. Đi làm, đi học thì dùng またあした hoặc しつれいします.",
                 "vocab": [
                     {"kana": "さようなら", "romaji": "sayounara", "vn": "tạm biệt", "emoji": "👋"},
-                    {"kana": "またあした", "romaji": "mata ashita", "vn": "hẹn mai gặp lại", "emoji": "📅"},
-                    {"kana": "またね", "romaji": "mata ne", "vn": "gặp lại nhé (thân mật)", "emoji": "✌️"},
-                    {"kana": "しつれいします", "romaji": "shitsurei shimasu", "vn": "tôi xin phép (đi trước)", "emoji": "🚪"},
+                    {"kana": "あした", "romaji": "ashita", "vn": "ngày mai", "emoji": "📅"},
+                    {"kana": "また", "romaji": "mata", "vn": "hẹn gặp lại", "emoji": "✌️"},
+                    {"kana": "しつれい", "romaji": "shitsurei", "vn": "thất lễ / xin phép", "emoji": "🚪"},
                     {"kana": "きをつけて", "romaji": "ki wo tsukete", "vn": "đi cẩn thận nhé", "emoji": "⚠️"},
                 ],
                 "sentences": [
@@ -104,15 +107,15 @@ TOPICS_A = [
                         "và おかえりなさい. Bạn sẽ nghe chúng trong mọi bộ phim, anime Nhật.",
                 "vocab": [
                     {"kana": "いってきます", "romaji": "ittekimasu", "vn": "con/tôi đi đây", "emoji": "🚶"},
-                    {"kana": "いってらっしゃい", "romaji": "itterasshai", "vn": "đi rồi về nhé", "emoji": "👋"},
                     {"kana": "ただいま", "romaji": "tadaima", "vn": "con/tôi về rồi", "emoji": "🏠"},
-                    {"kana": "おかえりなさい", "romaji": "okaerinasai", "vn": "mừng bạn về", "emoji": "🤗"},
+                    {"kana": "おかえり", "romaji": "okaeri", "vn": "mừng bạn về", "emoji": "🤗"},
+                    {"kana": "いえ", "romaji": "ie", "vn": "ngôi nhà", "emoji": "🏡"},
                 ],
                 "sentences": [
                     {"jp": "いってきます。いってらっしゃい。", "romaji": "Ittekimasu. Itterasshai.",
                      "vn": "Con đi đây. Đi rồi về nhé.", "blocks": ["いってきます", "。", "いってらっしゃい"]},
                     {"jp": "ただいま。おかえりなさい。", "romaji": "Tadaima. Okaerinasai.",
-                     "vn": "Con về rồi. Mừng con về.", "blocks": ["ただいま", "。", "おかえりなさい"]},
+                     "vn": "Con về rồi. Mừng con về.", "blocks": ["ただいま", "。", "おかえり", "なさい"]},
                 ],
             },
             {
@@ -122,16 +125,18 @@ TOPICS_A = [
                         "trong công ty Nhật, dùng được cả khi gặp lẫn khi chia tay đồng nghiệp.",
                 "vocab": [
                     {"kana": "いただきます", "romaji": "itadakimasu", "vn": "xin phép được ăn", "emoji": "🍽️"},
-                    {"kana": "ごちそうさまでした", "romaji": "gochisousama deshita", "vn": "cảm ơn vì bữa ăn", "emoji": "😋"},
-                    {"kana": "おつかれさまです", "romaji": "otsukaresama desu", "vn": "bạn vất vả rồi", "emoji": "💼"},
+                    {"kana": "おつかれさま", "romaji": "otsukaresama", "vn": "bạn đã vất vả", "emoji": "💼"},
                     {"kana": "がんばって", "romaji": "ganbatte", "vn": "cố lên nhé", "emoji": "🔥"},
-                    {"kana": "おめでとうございます", "romaji": "omedetou gozaimasu", "vn": "xin chúc mừng", "emoji": "🎉"},
+                    {"kana": "おめでとう", "romaji": "omedetou", "vn": "chúc mừng", "emoji": "🎉"},
+                    {"kana": "しょくじ", "romaji": "shokuji", "vn": "bữa ăn", "emoji": "🍱"},
                 ],
                 "sentences": [
-                    {"jp": "いただきます。", "romaji": "Itadakimasu.",
-                     "vn": "Con xin phép ăn ạ.", "blocks": ["いただきます"]},
+                    {"jp": "いただきます。ごちそうさまでした。", "romaji": "Itadakimasu. Gochisousama deshita.",
+                     "vn": "Con xin phép ăn. Cảm ơn vì bữa ăn.", "blocks": ["いただきます", "。", "ごちそうさま", "でした"]},
                     {"jp": "おつかれさまです。がんばって。", "romaji": "Otsukaresama desu. Ganbatte.",
                      "vn": "Bạn vất vả rồi. Cố lên nhé.", "blocks": ["おつかれさま", "です", "。", "がんばって"]},
+                    {"jp": "おめでとうございます。", "romaji": "Omedetou gozaimasu.",
+                     "vn": "Xin chúc mừng bạn.", "blocks": ["おめでとう", "ございます"]},
                 ],
             },
         ],
@@ -214,7 +219,7 @@ TOPICS_A = [
                 "vocab": [
                     {"kana": "はい", "romaji": "hai", "vn": "vâng, đúng vậy", "emoji": "⭕"},
                     {"kana": "いいえ", "romaji": "iie", "vn": "không", "emoji": "❌"},
-                    {"kana": "そうです", "romaji": "sou desu", "vn": "đúng vậy", "emoji": "👍"},
+                    {"kana": "そう", "romaji": "sou", "vn": "đúng như vậy", "emoji": "👍"},
                     {"kana": "だれ", "romaji": "dare", "vn": "ai", "emoji": "🕵️"},
                     {"kana": "なん", "romaji": "nan", "vn": "cái gì", "emoji": "❓"},
                 ],
@@ -233,12 +238,11 @@ TOPICS_A = [
                         "(không phải sinh viên). Dạng trang trọng hơn là ではありません, thường gặp trong "
                         "văn viết và thông báo chính thức.",
                 "vocab": [
-                    {"kana": "じゃありません", "romaji": "ja arimasen", "vn": "không phải là…", "emoji": "🚫"},
-                    {"kana": "ではありません", "romaji": "dewa arimasen", "vn": "không phải là… (trang trọng)", "emoji": "📄"},
                     {"kana": "ちがいます", "romaji": "chigaimasu", "vn": "không phải, bạn nhầm rồi", "emoji": "🙅"},
+                    {"kana": "ぎんこう", "romaji": "ginkou", "vn": "ngân hàng", "emoji": "🏦"},
+                    {"kana": "ぎんこういん", "romaji": "ginkouin", "vn": "nhân viên ngân hàng", "emoji": "👔"},
                     {"kana": "まだ", "romaji": "mada", "vn": "vẫn chưa", "emoji": "⏳"},
                     {"kana": "でも", "romaji": "demo", "vn": "nhưng mà", "emoji": "🔄"},
-                    {"kana": "ぎんこういん", "romaji": "ginkouin", "vn": "nhân viên ngân hàng", "emoji": "🏦"},
                 ],
                 "sentences": [
                     {"jp": "わたしはにほんじんじゃありません。", "romaji": "Watashi wa nihonjin ja arimasen.",
@@ -489,7 +493,7 @@ TOPICS_A = [
                     {"kana": "かいしゃの", "romaji": "kaisha no", "vn": "của công ty", "emoji": "🏢"},
                     {"kana": "わすれもの", "romaji": "wasuremono", "vn": "đồ bỏ quên", "emoji": "🧳"},
                     {"kana": "おとしもの", "romaji": "otoshimono", "vn": "đồ đánh rơi", "emoji": "💧"},
-                    {"kana": "みつけました", "romaji": "mitsukemashita", "vn": "tôi tìm thấy rồi", "emoji": "🔎"},
+                    {"kana": "みつけます", "romaji": "mitsukemasu", "vn": "tìm thấy", "emoji": "🔎"},
                 ],
                 "sentences": [
                     {"jp": "これはだれのかさですか。", "romaji": "Kore wa dare no kasa desu ka.",
@@ -510,9 +514,9 @@ TOPICS_A = [
                         "lạ bất kỳ và hỏi. Khi trả lời sai, người Nhật lịch sự sẽ nói ちがいます "
                         "chứ ít khi nói thẳng là bạn sai.",
                 "vocab": [
-                    {"kana": "なんですか", "romaji": "nan desu ka", "vn": "là cái gì vậy?", "emoji": "❓"},
+                    {"kana": "ことば", "romaji": "kotoba", "vn": "từ ngữ, tiếng nói", "emoji": "💬"},
                     {"kana": "にほんご", "romaji": "nihongo", "vn": "tiếng Nhật", "emoji": "🗣️"},
-                    {"kana": "ベトナムご", "romaji": "betonamugo", "vn": "tiếng Việt", "emoji": "💬"},
+                    {"kana": "ベトナムご", "romaji": "betonamugo", "vn": "tiếng Việt", "emoji": "🇻🇳"},
                 ],
                 "sentences": [
                     {"jp": "これはにほんごでなんですか。", "romaji": "Kore wa nihongo de nan desu ka.",
@@ -634,7 +638,7 @@ TOPICS_A = [
                     {"kana": "みち", "romaji": "michi", "vn": "con đường", "emoji": "🛣️"},
                     {"kana": "ちかく", "romaji": "chikaku", "vn": "gần đây", "emoji": "📍"},
                     {"kana": "まっすぐ", "romaji": "massugu", "vn": "đi thẳng", "emoji": "⬆️"},
-                    {"kana": "みぎにまがって", "romaji": "migi ni magatte", "vn": "rẽ phải", "emoji": "↩️"},
+                    {"kana": "まがります", "romaji": "magarimasu", "vn": "rẽ, quẹo", "emoji": "↩️"},
                 ],
                 "sentences": [
                     {"jp": "すみません、えきはどこですか。", "romaji": "Sumimasen, eki wa doko desu ka.",

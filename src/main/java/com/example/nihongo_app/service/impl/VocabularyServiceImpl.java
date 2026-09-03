@@ -217,12 +217,13 @@ public class VocabularyServiceImpl implements VocabularyService {
         LocalDateTime now = LocalDateTime.now();
         Pageable pageable = PageRequest.of(0, sanitizeLimit(limit));
 
+        List<Vocabulary.ItemType> types = List.of(Vocabulary.ItemType.VOCAB, Vocabulary.ItemType.KANJI, Vocabulary.ItemType.KANA);
         List<UserVocabularyProgress> due = progressRepository
-                .findAllByUserIdAndNextDueAtLessThanEqualOrderByNextDueAtAsc(userId, now, pageable);
+                .findAllByUserIdAndNextDueAtLessThanEqualAndItemTypeInOrderByNextDueAtAsc(userId, now, types, pageable);
 
         return VocabularyDueResponse.builder()
-                .dueCount(progressRepository.countByUserIdAndNextDueAtLessThanEqual(userId, now))
-                .learnedCount(progressRepository.countByUserIdAndFirstLearnedAtIsNotNull(userId))
+                .dueCount(progressRepository.countByUserIdAndNextDueAtLessThanEqualAndItemTypeIn(userId, now, types))
+                .learnedCount(progressRepository.countByUserIdAndFirstLearnedAtIsNotNullAndItemTypeIn(userId, types))
                 .items(toItems(due, now))
                 .build();
     }
@@ -233,13 +234,45 @@ public class VocabularyServiceImpl implements VocabularyService {
         LocalDateTime now = LocalDateTime.now();
         Pageable pageable = PageRequest.of(0, sanitizeLimit(limit));
 
+        List<Vocabulary.ItemType> types = List.of(Vocabulary.ItemType.VOCAB, Vocabulary.ItemType.KANJI, Vocabulary.ItemType.KANA);
+
         List<UserVocabularyProgress> learned = progressRepository
                 .findAllByUserIdAndFirstLearnedAtIsNotNullOrderByFirstLearnedAtDesc(userId, pageable);
 
         return VocabularyDueResponse.builder()
-                .dueCount(progressRepository.countByUserIdAndNextDueAtLessThanEqual(userId, now))
-                .learnedCount(progressRepository.countByUserIdAndFirstLearnedAtIsNotNull(userId))
+                .dueCount(progressRepository.countByUserIdAndNextDueAtLessThanEqualAndItemTypeIn(userId, now, types))
+                .learnedCount(progressRepository.countByUserIdAndFirstLearnedAtIsNotNullAndItemTypeIn(userId, types))
                 .items(toItems(learned, now))
+                .build();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public VocabularyDueResponse getPronunciationDue(Long userId, int limit) {
+        LocalDateTime now = LocalDateTime.now();
+        Pageable pageable = PageRequest.of(0, sanitizeLimit(limit));
+
+        List<Vocabulary.ItemType> types = List.of(Vocabulary.ItemType.PHRASE);
+        List<UserVocabularyProgress> due = progressRepository
+                .findAllByUserIdAndNextDueAtLessThanEqualAndItemTypeInOrderByNextDueAtAsc(userId, now, types, pageable);
+
+        return VocabularyDueResponse.builder()
+                .dueCount(progressRepository.countByUserIdAndNextDueAtLessThanEqualAndItemTypeIn(userId, now, types))
+                .learnedCount(progressRepository.countByUserIdAndFirstLearnedAtIsNotNullAndItemTypeIn(userId, types))
+                .items(toItems(due, now))
+                .build();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public VocabularyDueResponse getPronunciationLearned(Long userId, int limit) {
+        LocalDateTime now = LocalDateTime.now();
+        
+        List<Vocabulary.ItemType> types = List.of(Vocabulary.ItemType.PHRASE);
+        return VocabularyDueResponse.builder()
+                .dueCount(progressRepository.countByUserIdAndNextDueAtLessThanEqualAndItemTypeIn(userId, now, types))
+                .learnedCount(progressRepository.countByUserIdAndFirstLearnedAtIsNotNullAndItemTypeIn(userId, types))
+                .items(List.of()) // No pagination support for learned phrases yet
                 .build();
     }
 
