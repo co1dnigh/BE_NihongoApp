@@ -1,0 +1,8 @@
+target/
+backup.sql
+*.sql
+.git/
+.idea/
+*.log
+uploads/
+test-data/
